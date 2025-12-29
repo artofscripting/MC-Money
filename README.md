@@ -115,7 +115,7 @@ shopItems = [
 ```
 
 ### ATM10 Modpack Template
-An `atm10-shop-template.toml` file is included with 350+ items from popular mods including:
+An [`atm10-shop-template.toml`](https://raw.githubusercontent.com/artofscripting/MC-Money/refs/heads/main/atm10-shop-template.toml) file is included with 350+ items from popular mods including:
 - Mekanism, Applied Energistics 2, Thermal Series
 - Ars Nouveau, Botania, Create
 - And many more!
