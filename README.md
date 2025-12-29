@@ -2,6 +2,12 @@
 
 A NeoForge mod for Minecraft 1.21.1 that adds a complete currency system with coins, a personal bank, and a configurable shop.
 
+## Screens
+
+![Shop Interface](https://media.forgecdn.net/attachments/1443/940/screenshot-2025-12-29-132154-png.png)
+
+![Bank Interface](https://media.forgecdn.net/attachments/1443/941/screenshot-2025-12-29-132223-png.png)
+
 ## Features
 
 ### 💰 Coins
