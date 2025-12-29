@@ -4,9 +4,9 @@ A NeoForge mod for Minecraft 1.21.1 that adds a complete currency system with co
 
 ## Screens
 
-![Shop Interface](https://media.forgecdn.net/attachments/1443/940/screenshot-2025-12-29-132154-png.png)
+![Shop Interface](https://github.com/artofscripting/MC-Money/blob/main/screens/Screenshot%202025-12-29%20132154.png?raw=true)
 
-![Bank Interface](https://media.forgecdn.net/attachments/1443/941/screenshot-2025-12-29-132223-png.png)
+![Bank Interface](https://github.com/artofscripting/MC-Money/blob/main/screens/Screenshot%202025-12-29%20132223.png?raw=true)
 
 ## Features
 
