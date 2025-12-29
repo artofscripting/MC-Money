@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "minecraftmoney:block/shop_block"
+        }
+    }
+}

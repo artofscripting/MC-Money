@@ -1,0 +1,22 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Runtime
+run/
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Old project reference
+goldcurrency-1.0.9 (2)/

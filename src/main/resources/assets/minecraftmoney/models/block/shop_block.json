@@ -1,0 +1,12 @@
+{
+    "parent": "minecraft:block/cube",
+    "textures": {
+        "up": "minecraftmoney:block/shop_counter_top",
+        "down": "minecraft:block/oak_planks",
+        "north": "minecraftmoney:block/shop_counter_front",
+        "south": "minecraftmoney:block/shop_counter_side",
+        "east": "minecraftmoney:block/shop_counter_side",
+        "west": "minecraftmoney:block/shop_counter_side",
+        "particle": "minecraftmoney:block/shop_counter_side"
+    }
+}

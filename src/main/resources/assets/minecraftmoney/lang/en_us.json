@@ -1,0 +1,37 @@
+{
+    "item.minecraftmoney.copper_coin": "Copper Coin",
+    "item.minecraftmoney.silver_coin": "Silver Coin",
+    "item.minecraftmoney.gold_coin": "Gold Coin",
+    "item.minecraftmoney.platinum_coin": "Platinum Coin",
+    
+    "block.minecraftmoney.bank_block": "Personal Bank",
+    "block.minecraftmoney.shop_block": "Shop",
+    
+    "itemGroup.minecraftmoney.currency_tab": "Currency",
+    
+    "tooltip.minecraftmoney.coin_value": "Value: %s",
+    "tooltip.minecraftmoney.right_click_deposit": "Right-click to deposit into your balance",
+    
+    "message.minecraftmoney.deposited": "Deposited %s currency!",
+    "message.minecraftmoney.shop_purchased": "Purchased %s!",
+    "message.minecraftmoney.shop_insufficient": "Not enough currency!",
+    "message.minecraftmoney.shop_sold": "Sold %s for %s currency!",
+    "message.minecraftmoney.shop_no_item": "You don't have that item to sell!",
+    
+    "command.minecraftmoney.balance": "Your balance: %s",
+    "command.minecraftmoney.balance_other": "%s's balance: %s",
+    "command.minecraftmoney.added": "Added %s currency to %s",
+    "command.minecraftmoney.removed": "Removed %s currency from %s",
+    "command.minecraftmoney.set": "Set %s's currency to %s",
+    "command.minecraftmoney.insufficient": "Insufficient funds!",
+    "command.minecraftmoney.paid": "Paid %s to %s",
+    "command.minecraftmoney.received": "Received %s from %s",
+    "command.minecraftmoney.pay_self": "You cannot pay yourself!",
+    "command.minecraftmoney.withdrawn": "Withdrew %s as coins",
+    
+    "gui.minecraftmoney.deposit": "Deposit",
+    "gui.minecraftmoney.withdraw": "Withdraw",
+    "gui.minecraftmoney.bank_balance": "Bank Balance: %s",
+    "gui.minecraftmoney.wallet_balance": "Wallet Balance: %s",
+    "gui.minecraftmoney.your_balance": "Your Balance: %s"
+}

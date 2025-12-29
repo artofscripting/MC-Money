@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "EEE",
+        "PCP",
+        "PPP"
+    ],
+    "key": {
+        "E": {
+            "item": "minecraft:emerald"
+        },
+        "P": {
+            "tag": "minecraft:planks"
+        },
+        "C": {
+            "item": "minecraft:chest"
+        }
+    },
+    "result": {
+        "id": "minecraftmoney:shop_block",
+        "count": 1
+    }
+}

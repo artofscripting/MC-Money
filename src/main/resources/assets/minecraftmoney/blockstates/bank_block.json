@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "minecraftmoney:block/bank_block"
+        }
+    }
+}
