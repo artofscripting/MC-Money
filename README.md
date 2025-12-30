@@ -40,28 +40,30 @@ A configurable shop block for buying and selling items.
 - **Sell items** back at 50% of buy price
 - **Search bar** to quickly find items
 - **@mod search** - Type `@modid` to filter by mod (e.g., `@mekanism`)
+- **Item tooltips** - Hover over any item row to see item icon, prices, and inventory count
+- **Big screen mode** - Optional config to show 20 items per page instead of 10
 - **Item validation** - Invalid items are automatically skipped with warnings
 - **Shift-click** to buy/sell 64 at once
 - Prices shown in green (affordable) or red (too expensive)
 - Sell prices shown in orange (have item) or red (don't have item)
-- 10 items per page with navigation
+- 10 items per page with navigation (20 in big screen mode)
 
 ## Commands
 
 ### Player Commands
 | Command | Description |
 |---------|-------------|
-| `/currency` | Check your current wallet balance |
-| `/currency pay <player> <amount>` | Send currency to another player |
-| `/currency withdraw <amount>` | Convert wallet balance to coins |
+| /currency | Check your current wallet balance |
+| /currency pay <player> <amount> | Send currency to another player |
+| /currency withdraw <amount> | Convert wallet balance to coins |
 
 ### Admin Commands (Permission Level 2+)
 | Command | Description |
 |---------|-------------|
-| `/currency balance <player>` | Check another player's balance |
-| `/currency add <player> <amount>` | Add currency to a player |
-| `/currency remove <player> <amount>` | Remove currency from a player |
-| `/currency set <player> <amount>` | Set a player's balance to a specific amount |
+| /currency balance <player> | Check another player's balance |
+| /currency add <player> <amount> | Add currency to a player |
+| /currency remove <player> <amount> | Remove currency from a player |
+| /currency set <player> <amount> | Set a player's balance to a specific amount |
 
 ## Crafting Recipes
 
@@ -102,6 +104,9 @@ The shop is fully configurable via `config/minecraftmoney-shop.toml`:
 ```toml
 # Sell price multiplier (0.5 = 50% of buy price)
 sellPriceMultiplier = 0.5
+
+# Enable big screen mode (20 rows instead of 10)
+bigScreen = false
 
 # Shop items format: "modid:item_id,price,Display Name"
 shopItems = [

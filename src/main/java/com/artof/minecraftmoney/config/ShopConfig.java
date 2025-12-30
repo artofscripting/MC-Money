@@ -21,12 +21,14 @@ public class ShopConfig {
     
     private static final ModConfigSpec.ConfigValue<List<? extends String>> SHOP_ITEMS;
     private static final ModConfigSpec.DoubleValue SELL_PRICE_MULTIPLIER;
+    private static final ModConfigSpec.BooleanValue BIG_SCREEN;
     
     public static final ModConfigSpec SPEC;
     
     // Parsed shop items
     private static final List<ShopEntry> parsedShopItems = new ArrayList<>();
     private static double sellMultiplier = 0.5;
+    private static boolean bigScreen = false;
     
     static {
         BUILDER.comment("Shop Configuration")
@@ -404,6 +406,11 @@ public class ShopConfig {
                         "Default is 0.5 (50% of buy price)")
                 .defineInRange("sellPriceMultiplier", 0.5, 0.0, 1.0);
         
+        BIG_SCREEN = BUILDER
+                .comment("Enable big screen mode for the shop GUI.",
+                        "When true, the shop displays 20 rows instead of 10.")
+                .define("bigScreen", false);
+        
         BUILDER.pop();
         SPEC = BUILDER.build();
     }
@@ -412,8 +419,13 @@ public class ShopConfig {
     static void onLoad(final ModConfigEvent event) {
         if (event.getConfig().getSpec() == SPEC) {
             sellMultiplier = SELL_PRICE_MULTIPLIER.get();
+            bigScreen = BIG_SCREEN.get();
             parseShopItems();
         }
+    }
+    
+    public static boolean isBigScreen() {
+        return BIG_SCREEN.get();
     }
     
     private static void parseShopItems() {

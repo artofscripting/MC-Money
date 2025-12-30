@@ -6,6 +6,7 @@ import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.menu.ShopMenu;
 import com.artof.minecraftmoney.network.ShopBuyPacket;
 import com.artof.minecraftmoney.network.ShopSellPacket;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -22,8 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
-    private static final int ITEMS_PER_PAGE = 10;
     private static final int ROW_HEIGHT = 12;
+    private final int itemsPerPage;
     private int currentPage = 0;
     private int maxPages = 1;
     private final List<ShopConfig.ShopEntry> allShopItems = new ArrayList<>();
@@ -32,12 +33,17 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     private EditBox searchBox;
     private String searchQuery = "";
     private final Inventory playerInventory;
+    private int hoveredRowIndex = -1;
     
     public ShopScreen(ShopMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.playerInventory = playerInventory;
         this.imageWidth = 256;
-        this.imageHeight = 180;
+        // Big screen mode: 20 rows, normal: 10 rows
+        boolean bigScreen = ShopConfig.isBigScreen();
+        this.itemsPerPage = bigScreen ? 20 : 10;
+        // Height: base 60 + (rows * ROW_HEIGHT) + footer 20
+        this.imageHeight = bigScreen ? 300 : 180;
     }
     
     @Override
@@ -102,7 +108,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                                  entry.itemId().toLowerCase().contains(searchQuery))
                 .collect(Collectors.toList()));
         }
-        maxPages = Math.max(1, (int) Math.ceil((double) filteredItems.size() / ITEMS_PER_PAGE));
+        maxPages = Math.max(1, (int) Math.ceil((double) filteredItems.size() / itemsPerPage));
         if (currentPage >= maxPages) {
             currentPage = maxPages - 1;
         }
@@ -123,8 +129,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         int centerY = (height - imageHeight) / 2;
         
         // Add buy and sell buttons for current page
-        int startIndex = currentPage * ITEMS_PER_PAGE;
-        for (int i = 0; i < ITEMS_PER_PAGE; i++) {
+        int startIndex = currentPage * itemsPerPage;
+        for (int i = 0; i < itemsPerPage; i++) {
             int itemIndex = startIndex + i;
             if (itemIndex < filteredItems.size()) {
                 ShopConfig.ShopEntry entry = filteredItems.get(itemIndex);
@@ -151,13 +157,14 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         
         // Navigation buttons
         if (maxPages > 1) {
+            int navY = centerY + imageHeight - 18;
             // Previous page
             Button prevButton = Button.builder(Component.literal("<"), button -> {
                 if (currentPage > 0) {
                     currentPage--;
                     rebuildButtons();
                 }
-            }).bounds(centerX + 10, centerY + 162, 20, 14).build();
+            }).bounds(centerX + 10, navY, 20, 14).build();
             addRenderableWidget(prevButton);
             actionButtons.add(prevButton);
             
@@ -167,7 +174,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                     currentPage++;
                     rebuildButtons();
                 }
-            }).bounds(centerX + 226, centerY + 162, 20, 14).build();
+            }).bounds(centerX + 226, navY, 20, 14).build();
             addRenderableWidget(nextButton);
             actionButtons.add(nextButton);
         }
@@ -192,8 +199,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         guiGraphics.fill(x + 8, y + 28, x + imageWidth - 8, y + 38, 0x60000000);
         
         // Draw item rows
-        int startIndex = currentPage * ITEMS_PER_PAGE;
-        for (int i = 0; i < ITEMS_PER_PAGE; i++) {
+        int startIndex = currentPage * itemsPerPage;
+        for (int i = 0; i < itemsPerPage; i++) {
             int itemIndex = startIndex + i;
             if (itemIndex < filteredItems.size()) {
                 int rowY = y + 38 + i * ROW_HEIGHT;
@@ -219,8 +226,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         guiGraphics.drawString(font, "Sell", 180, 30, 0xFFAA00);
         
         // Draw shop items
-        int startIndex = currentPage * ITEMS_PER_PAGE;
-        for (int i = 0; i < ITEMS_PER_PAGE; i++) {
+        int startIndex = currentPage * itemsPerPage;
+        for (int i = 0; i < itemsPerPage; i++) {
             int itemIndex = startIndex + i;
             if (itemIndex < filteredItems.size()) {
                 ShopConfig.ShopEntry entry = filteredItems.get(itemIndex);
@@ -249,7 +256,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         // Page indicator
         if (maxPages > 1) {
             String pageText = (currentPage + 1) + "/" + maxPages;
-            guiGraphics.drawCenteredString(font, pageText, imageWidth / 2, 164, 0xAAAAAA);
+            guiGraphics.drawCenteredString(font, pageText, imageWidth / 2, imageHeight - 16, 0xAAAAAA);
         }
         
         // No results message
@@ -261,7 +268,133 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        
+        // Calculate hovered row
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        hoveredRowIndex = -1;
+        
+        // Check if mouse is within the item row area (excluding button columns at the right)
+        if (mouseX >= x + 8 && mouseX < x + 180) {
+            int startIndex = currentPage * itemsPerPage;
+            for (int i = 0; i < itemsPerPage; i++) {
+                int itemIndex = startIndex + i;
+                if (itemIndex < filteredItems.size()) {
+                    int rowY = y + 38 + i * ROW_HEIGHT;
+                    if (mouseY >= rowY && mouseY < rowY + ROW_HEIGHT) {
+                        hoveredRowIndex = itemIndex;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Render item tooltip if hovering over a row
+        if (hoveredRowIndex >= 0 && hoveredRowIndex < filteredItems.size()) {
+            ShopConfig.ShopEntry entry = filteredItems.get(hoveredRowIndex);
+            renderItemTooltip(guiGraphics, entry, mouseX, mouseY);
+        } else {
+            renderTooltip(guiGraphics, mouseX, mouseY);
+        }
+    }
+    
+    private void renderItemTooltip(GuiGraphics guiGraphics, ShopConfig.ShopEntry entry, int mouseX, int mouseY) {
+        ResourceLocation itemLoc = ResourceLocation.tryParse(entry.itemId());
+        if (itemLoc == null) return;
+        
+        var item = BuiltInRegistries.ITEM.get(itemLoc);
+        if (item == null) return;
+        
+        ItemStack stack = new ItemStack(item);
+        
+        // Build tooltip lines - add spacing at start for item icon
+        List<Component> tooltipLines = new ArrayList<>();
+        
+        // Item name from the stack (localized)
+        tooltipLines.add(Component.literal("       ").append(stack.getHoverName().copy().withStyle(ChatFormatting.WHITE)));
+        
+        // Empty line
+        tooltipLines.add(Component.empty());
+        
+        // Pricing info
+        int buyPrice = entry.price();
+        int sellPrice = entry.getSellPrice();
+        int balance = ClientCurrencyData.getClientCurrency();
+        
+        ChatFormatting buyColor = balance >= buyPrice ? ChatFormatting.GREEN : ChatFormatting.RED;
+        tooltipLines.add(Component.literal("Buy Price: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(buyPrice)).withStyle(buyColor)));
+        
+        boolean hasItem = playerHasItem(entry.itemId());
+        ChatFormatting sellColor = hasItem ? ChatFormatting.GOLD : ChatFormatting.RED;
+        tooltipLines.add(Component.literal("Sell Price: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(sellPrice)).withStyle(sellColor)));
+        
+        // Inventory count
+        int inventoryCount = getPlayerItemCount(entry.itemId());
+        tooltipLines.add(Component.empty());
+        tooltipLines.add(Component.literal("In Inventory: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(inventoryCount)).withStyle(ChatFormatting.AQUA)));
+        
+        // Shift-click hint
+        tooltipLines.add(Component.empty());
+        tooltipLines.add(Component.literal("Shift+Click to buy/sell 64").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+        
+        // Calculate tooltip width for positioning (add padding that Minecraft uses)
+        int tooltipWidth = 0;
+        for (Component line : tooltipLines) {
+            int lineWidth = font.width(line);
+            if (lineWidth > tooltipWidth) {
+                tooltipWidth = lineWidth;
+            }
+        }
+        // Minecraft adds 3 pixels padding on each side
+        int fullTooltipWidth = tooltipWidth + 8;
+        
+        // Calculate tooltip position (matches Minecraft's internal logic more closely)
+        int tooltipX = mouseX + 12;
+        int tooltipY = mouseY - 12;
+        int tooltipHeight = tooltipLines.size() * 10 + 8;
+        
+        // Adjust if tooltip would go off right edge - use same threshold as Minecraft
+        if (tooltipX + fullTooltipWidth > width) {
+            tooltipX = mouseX - fullTooltipWidth - 4;
+        }
+        // Adjust if tooltip would go off bottom
+        if (tooltipY + tooltipHeight + 6 > height) {
+            tooltipY = height - tooltipHeight - 6;
+        }
+        // Adjust if tooltip would go off top
+        if (tooltipY < 4) {
+            tooltipY = 4;
+        }
+        
+        // Render the tooltip first
+        guiGraphics.renderTooltip(font, tooltipLines, java.util.Optional.empty(), mouseX, mouseY);
+        
+        // Render item icon on top of the tooltip at high Z level
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, 0, 400);
+        guiGraphics.renderFakeItem(stack, tooltipX + 5, tooltipY + 5);
+        guiGraphics.pose().popPose();
+    }
+    
+    private int getPlayerItemCount(String itemId) {
+        if (minecraft == null || minecraft.player == null) return 0;
+        ResourceLocation itemLoc = ResourceLocation.tryParse(itemId);
+        if (itemLoc == null) return 0;
+        var item = BuiltInRegistries.ITEM.get(itemLoc);
+        if (item == null) return 0;
+        
+        int count = 0;
+        var inv = minecraft.player.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack slotStack = inv.getItem(i);
+            if (slotStack.is(item)) {
+                count += slotStack.getCount();
+            }
+        }
+        return count;
     }
     
     @Override
