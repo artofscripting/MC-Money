@@ -1,12 +1,14 @@
 package com.artof.minecraftmoney.block.entity;
 
 import com.artof.minecraftmoney.config.ShopConfig;
+import com.artof.minecraftmoney.data.OfflineEarningsManager;
 import com.artof.minecraftmoney.data.PlayerCurrencyData;
 import com.artof.minecraftmoney.menu.PersonalSellerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -15,6 +17,8 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
@@ -40,6 +44,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
     private String ownerName = "";
     private int tickCounter = 0;
     private int totalEarned = 0;
+    private int pendingEarnings = 0; // Earnings while owner was offline
     
     public PersonalSellerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PERSONAL_SELLER_BLOCK_ENTITY.get(), pos, state);
@@ -65,6 +70,22 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
     
     public int getTotalEarned() {
         return totalEarned;
+    }
+    
+    public int getPendingEarnings() {
+        return pendingEarnings;
+    }
+    
+    /**
+     * Called when the owner logs in to claim pending earnings
+     */
+    public int claimPendingEarnings() {
+        int claimed = pendingEarnings;
+        pendingEarnings = 0;
+        if (claimed > 0) {
+            setChanged();
+        }
+        return claimed;
     }
     
     public static void serverTick(Level level, BlockPos pos, BlockState state, PersonalSellerBlockEntity entity) {
@@ -107,6 +128,10 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
                         inventory.set(i, ItemStack.EMPTY);
                     }
                     soldAny = true;
+                    
+                    // Play sound and spawn particles
+                    playSellEffects(serverLevel);
+                    
                     break; // Sell one item per tick cycle
                 }
             }
@@ -118,9 +143,24 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
     }
     
     private void addOfflineEarnings(Level level, int earnings) {
-        // For offline earnings, we store it and pay when they log in
-        // This is handled via the block entity save - we'll check on player join
-        // For now, the totalEarned tracks it and can be claimed
+        // Store earnings in the global manager for when the owner logs in
+        if (ownerUUID != null && level instanceof ServerLevel serverLevel) {
+            OfflineEarningsManager manager = OfflineEarningsManager.get(serverLevel.getServer());
+            manager.addEarnings(ownerUUID, earnings);
+        }
+    }
+    
+    private void playSellEffects(ServerLevel level) {
+        double x = worldPosition.getX() + 0.5;
+        double y = worldPosition.getY() + 1.0;
+        double z = worldPosition.getZ() + 0.5;
+        
+        // Play coin sound (experience pickup sound works well)
+        level.playSound(null, worldPosition, SoundEvents.EXPERIENCE_ORB_PICKUP, 
+                SoundSource.BLOCKS, 0.3f, 1.2f + level.random.nextFloat() * 0.2f);
+        
+        // Spawn happy villager particles (green sparkles)
+        level.sendParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 3, 0.3, 0.2, 0.3, 0.0);
     }
     
     private int getSellPriceForItem(ItemStack stack) {
@@ -146,6 +186,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
             tag.putString("OwnerName", ownerName);
         }
         tag.putInt("TotalEarned", totalEarned);
+        tag.putInt("PendingEarnings", pendingEarnings);
     }
     
     @Override
@@ -159,6 +200,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
             ownerName = tag.getString("OwnerName");
         }
         totalEarned = tag.getInt("TotalEarned");
+        pendingEarnings = tag.getInt("PendingEarnings");
     }
     
     @Nullable

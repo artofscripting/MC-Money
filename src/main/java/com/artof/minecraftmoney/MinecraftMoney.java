@@ -4,6 +4,7 @@ import com.artof.minecraftmoney.block.ModBlocks;
 import com.artof.minecraftmoney.block.entity.ModBlockEntities;
 import com.artof.minecraftmoney.command.CurrencyCommand;
 import com.artof.minecraftmoney.config.ShopConfig;
+import com.artof.minecraftmoney.data.OfflineEarningsManager;
 import com.artof.minecraftmoney.data.PlayerCurrencyData;
 import com.artof.minecraftmoney.item.ModItems;
 import com.artof.minecraftmoney.menu.ModMenuTypes;
@@ -66,6 +67,17 @@ public class MinecraftMoney {
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
             int currency = PlayerCurrencyData.getCurrency(serverPlayer);
+            
+            // Check for pending earnings from Personal Seller blocks
+            OfflineEarningsManager manager = OfflineEarningsManager.get(serverPlayer.getServer());
+            int pendingEarnings = manager.claimEarnings(serverPlayer.getUUID());
+            if (pendingEarnings > 0) {
+                PlayerCurrencyData.addCurrency(serverPlayer, pendingEarnings);
+                currency += pendingEarnings;
+                serverPlayer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                        "§a[Personal Seller] §eYou earned §6" + pendingEarnings + " coins§e while offline!"));
+            }
+            
             PacketDistributor.sendToPlayer(serverPlayer, new SyncCurrencyPacket(currency));
         }
     }

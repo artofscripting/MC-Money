@@ -2,12 +2,20 @@ package com.artof.minecraftmoney.client.screen;
 
 import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.client.ClientCurrencyData;
+import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.menu.PersonalSellerMenu;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSellerMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
@@ -30,6 +38,41 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTooltip(guiGraphics, mouseX, mouseY);
+        
+        // Add sell price info to item tooltips when hovering seller slots
+        renderSellPriceTooltip(guiGraphics, mouseX, mouseY);
+    }
+    
+    private void renderSellPriceTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        // Check if hovering over a seller slot (slots 0-8)
+        Slot hoveredSlot = this.hoveredSlot;
+        if (hoveredSlot != null && hoveredSlot.index < 9 && hoveredSlot.hasItem()) {
+            ItemStack stack = hoveredSlot.getItem();
+            int sellPrice = getSellPriceForItem(stack);
+            
+            if (sellPrice > 0) {
+                List<Component> tooltip = new ArrayList<>();
+                tooltip.add(Component.literal("§aSell Price: §6" + sellPrice + " coins§a each"));
+                tooltip.add(Component.literal("§7Stack value: §6" + (sellPrice * stack.getCount()) + " coins"));
+                
+                // Render below the normal tooltip
+                int tooltipX = mouseX + 8;
+                int tooltipY = mouseY + 20;
+                guiGraphics.renderTooltip(font, tooltip, java.util.Optional.empty(), tooltipX, tooltipY);
+            }
+        }
+    }
+    
+    private int getSellPriceForItem(ItemStack stack) {
+        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        String itemIdStr = itemId.toString();
+        
+        for (ShopConfig.ShopEntry entry : ShopConfig.getShopItems()) {
+            if (entry.itemId().equals(itemIdStr)) {
+                return entry.getSellPrice();
+            }
+        }
+        return 0;
     }
     
     @Override
@@ -90,8 +133,15 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
         
         // Total earned
         int earned = menu.getBlockEntity().getTotalEarned();
-        String earnedText = "Earned: " + earned;
+        String earnedText = "Total Earned: " + earned;
         guiGraphics.drawString(font, earnedText, 8, 73, 0x55FF55);
+        
+        // Pending earnings (if any)
+        int pending = menu.getBlockEntity().getPendingEarnings();
+        if (pending > 0) {
+            String pendingText = "Pending: " + pending;
+            guiGraphics.drawString(font, pendingText, imageWidth - font.width(pendingText) - 8, 73, 0xFFAA00);
+        }
         
         // Inventory label
         guiGraphics.drawString(font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xCCCCCC);
