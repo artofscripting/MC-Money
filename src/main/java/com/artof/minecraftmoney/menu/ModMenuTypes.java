@@ -19,6 +19,9 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<ShopMenu>> SHOP_MENU = MENUS.register("shop_menu",
             () -> IMenuTypeExtension.create(ShopMenu::new));
     
+    public static final Supplier<MenuType<PersonalSellerMenu>> PERSONAL_SELLER_MENU = MENUS.register("personal_seller_menu",
+            () -> IMenuTypeExtension.create(PersonalSellerMenu::new));
+    
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);
     }

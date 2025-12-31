@@ -19,6 +19,9 @@ public class ModBlockEntities {
     public static final Supplier<BlockEntityType<ShopBlockEntity>> SHOP_BLOCK_ENTITY = BLOCK_ENTITIES.register("shop_block_entity",
             () -> BlockEntityType.Builder.of(ShopBlockEntity::new, ModBlocks.SHOP_BLOCK.get()).build(null));
     
+    public static final Supplier<BlockEntityType<PersonalSellerBlockEntity>> PERSONAL_SELLER_BLOCK_ENTITY = BLOCK_ENTITIES.register("personal_seller_block_entity",
+            () -> BlockEntityType.Builder.of(PersonalSellerBlockEntity::new, ModBlocks.PERSONAL_SELLER_BLOCK.get()).build(null));
+    
     public static void register(IEventBus modEventBus) {
         BLOCK_ENTITIES.register(modEventBus);
     }

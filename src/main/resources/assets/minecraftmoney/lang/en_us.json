@@ -6,6 +6,7 @@
     
     "block.minecraftmoney.bank_block": "Personal Bank",
     "block.minecraftmoney.shop_block": "Shop",
+    "block.minecraftmoney.personal_seller_block": "Personal Seller",
     
     "itemGroup.minecraftmoney.currency_tab": "Currency",
     

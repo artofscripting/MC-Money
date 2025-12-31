@@ -31,6 +31,14 @@ public class ModBlocks {
     public static final Supplier<BlockItem> SHOP_BLOCK_ITEM = BLOCK_ITEMS.register("shop_block",
             () -> new BlockItem(SHOP_BLOCK.get(), new Item.Properties()));
     
+    public static final Supplier<PersonalSellerBlock> PERSONAL_SELLER_BLOCK = BLOCKS.register("personal_seller_block",
+            () -> new PersonalSellerBlock(BlockBehaviour.Properties.of()
+                    .strength(3.5f)
+                    .requiresCorrectToolForDrops()));
+    
+    public static final Supplier<BlockItem> PERSONAL_SELLER_BLOCK_ITEM = BLOCK_ITEMS.register("personal_seller_block",
+            () -> new BlockItem(PERSONAL_SELLER_BLOCK.get(), new Item.Properties()));
+    
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         BLOCK_ITEMS.register(modEventBus);

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "HHH",
+        "ICI",
+        "III"
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "H": {
+            "item": "minecraft:hopper"
+        },
+        "C": {
+            "item": "minecraft:chest"
+        }
+    },
+    "result": {
+        "id": "minecraftmoney:personal_seller_block",
+        "count": 1
+    }
+}

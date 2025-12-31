@@ -2,6 +2,7 @@ package com.artof.minecraftmoney.client;
 
 import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.client.screen.BankScreen;
+import com.artof.minecraftmoney.client.screen.PersonalSellerScreen;
 import com.artof.minecraftmoney.client.screen.ShopScreen;
 import com.artof.minecraftmoney.menu.ModMenuTypes;
 import net.neoforged.api.distmarker.Dist;
@@ -16,5 +17,6 @@ public class ClientSetup {
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.BANK_MENU.get(), BankScreen::new);
         event.register(ModMenuTypes.SHOP_MENU.get(), ShopScreen::new);
+        event.register(ModMenuTypes.PERSONAL_SELLER_MENU.get(), PersonalSellerScreen::new);
     }
 }
