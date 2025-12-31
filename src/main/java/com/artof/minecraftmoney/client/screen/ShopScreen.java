@@ -313,6 +313,10 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         // Item name from the stack (localized)
         tooltipLines.add(Component.literal("       ").append(stack.getHoverName().copy().withStyle(ChatFormatting.WHITE)));
         
+        // Mod ID
+        String modId = itemLoc.getNamespace();
+        tooltipLines.add(Component.literal(modId).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC));
+        
         // Empty line
         tooltipLines.add(Component.empty());
         
