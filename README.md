@@ -11,18 +11,25 @@ A NeoForge mod for Minecraft 1.21.1 that adds a complete currency system with co
 ## Features
 
 ### 💰 Coins
-Four tiers of coins with different values that can be picked up, deposited, and traded:
+Ten tiers of coins with different values that can be picked up, deposited, and traded:
 
 | Coin | Value | Description |
 |------|-------|-------------|
 | Copper Coin | 1 | Basic currency unit |
 | Silver Coin | 10 | Worth 10 copper coins |
 | Gold Coin | 100 | Worth 100 copper coins |
-| Platinum Coin | 1000 | Worth 1000 copper coins |
+| Platinum Coin | 1,000 | Worth 1,000 copper coins |
+| Ten Thousand Coin | 10,000 | For larger transactions |
+| Million Coin | 1,000,000 | High-value currency |
+| Ten Million Coin | 10,000,000 | Very high-value currency |
+| Billion Coin | 1,000,000,000 | Massive value |
+| Ten Billion Coin | 10,000,000,000 | Extreme value |
+| Trillion Coin | 1,000,000,000,000 | Maximum denomination |
 
 - **Right-click** any coin to deposit it into your wallet
 - Coins stack up to 64
-- On death, your wallet balance drops as coins
+- On death, your wallet balance drops as coins (using optimal denominations)
+- Currency supports values up to trillions
 
 ### 🏦 Personal Bank
 A secure block where you can store currency separately from your wallet.
@@ -31,6 +38,7 @@ A secure block where you can store currency separately from your wallet.
 - Withdraw from bank back to wallet
 - Bank balance persists and is separate from your wallet
 - Shift-click for bulk transfers
+- Supports up to 15-digit amounts
 
 ### 🏪 Shop
 A configurable shop block for buying and selling items.
@@ -40,6 +48,8 @@ A configurable shop block for buying and selling items.
 - **Sell items** back at 50% of buy price
 - **Search bar** to quickly find items
 - **@mod search** - Type `@modid` to filter by mod (e.g., `@mekanism`)
+- **Advanced @mod search** - Type `@modid keywords` to filter by mod AND item name (e.g., `@mek energy cube`)
+- **Scroll wheel navigation** - Use mouse scroll to navigate between pages
 - **Item tooltips** - Hover over any item row to see item icon, prices, and inventory count
 - **Big screen mode** - Optional config to show 20 items per page instead of 10
 - **Item validation** - Invalid items are automatically skipped with warnings
@@ -47,6 +57,16 @@ A configurable shop block for buying and selling items.
 - Prices shown in green (affordable) or red (too expensive)
 - Sell prices shown in orange (have item) or red (don't have item)
 - 10 items per page with navigation (20 in big screen mode)
+
+### 🤖 Personal Seller
+An automation-friendly block for passive income.
+
+- Place items in the 9 inventory slots
+- Items are automatically sold at shop prices when the block ticks
+- Earnings are stored and credited to your wallet when you log in
+- **Works offline** - Earnings accumulate even when you're not online
+- **Automation compatible** - Supports hoppers, pipes, and mod item handlers (AE2 Export Bus, etc.)
+- Owner-locked - Only you can access your Personal Seller
 
 ## Commands
 
@@ -96,6 +116,21 @@ A configurable shop block for buying and selling items.
 └─────────┴─────────┴─────────┘
 ```
 - 3 Emeralds + 5 Planks (any wood type) + 1 Chest
+
+### Personal Seller
+```
+┌─────────┬─────────┬─────────┐
+│         │         │         │
+│ Hopper  │ Hopper  │ Hopper  │
+├─────────┼─────────┼─────────┤
+│  Iron   │         │  Iron   │
+│  Ingot  │  Chest  │  Ingot  │
+├─────────┼─────────┼─────────┤
+│  Iron   │  Iron   │  Iron   │
+│  Ingot  │  Ingot  │  Ingot  │
+└─────────┴─────────┴─────────┘
+```
+- 3 Hoppers + 5 Iron Ingots + 1 Chest
 
 ## Configuration
 
