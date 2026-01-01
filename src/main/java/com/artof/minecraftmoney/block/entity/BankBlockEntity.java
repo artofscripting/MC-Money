@@ -21,17 +21,17 @@ import java.util.Map;
 import java.util.UUID;
 
 public class BankBlockEntity extends BlockEntity implements MenuProvider {
-    private final Map<UUID, Integer> playerBalances = new HashMap<>();
+    private final Map<UUID, Long> playerBalances = new HashMap<>();
     
     public BankBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.BANK_BLOCK_ENTITY.get(), pos, state);
     }
     
-    public int getBalance(Player player) {
-        return playerBalances.getOrDefault(player.getUUID(), 0);
+    public long getBalance(Player player) {
+        return playerBalances.getOrDefault(player.getUUID(), 0L);
     }
     
-    public void setBalance(Player player, int amount) {
+    public void setBalance(Player player, long amount) {
         playerBalances.put(player.getUUID(), Math.max(0, amount));
         setChanged();
         if (level != null && !level.isClientSide) {
@@ -39,12 +39,12 @@ public class BankBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
     
-    public void deposit(Player player, int amount) {
+    public void deposit(Player player, long amount) {
         setBalance(player, getBalance(player) + amount);
     }
     
-    public boolean withdraw(Player player, int amount) {
-        int balance = getBalance(player);
+    public boolean withdraw(Player player, long amount) {
+        long balance = getBalance(player);
         if (balance >= amount) {
             setBalance(player, balance - amount);
             return true;
@@ -56,8 +56,8 @@ public class BankBlockEntity extends BlockEntity implements MenuProvider {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         CompoundTag balancesTag = new CompoundTag();
-        for (Map.Entry<UUID, Integer> entry : playerBalances.entrySet()) {
-            balancesTag.putInt(entry.getKey().toString(), entry.getValue());
+        for (Map.Entry<UUID, Long> entry : playerBalances.entrySet()) {
+            balancesTag.putLong(entry.getKey().toString(), entry.getValue());
         }
         tag.put("PlayerBalances", balancesTag);
     }
@@ -71,7 +71,7 @@ public class BankBlockEntity extends BlockEntity implements MenuProvider {
             for (String key : balancesTag.getAllKeys()) {
                 try {
                     UUID uuid = UUID.fromString(key);
-                    playerBalances.put(uuid, balancesTag.getInt(key));
+                    playerBalances.put(uuid, balancesTag.getLong(key));
                 } catch (IllegalArgumentException ignored) {}
             }
         }

@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record BankActionPacket(BlockPos pos, boolean isDeposit, int amount) implements CustomPacketPayload {
+public record BankActionPacket(BlockPos pos, boolean isDeposit, long amount) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<BankActionPacket> TYPE = 
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MinecraftMoney.MOD_ID, "bank_action"));
     
@@ -22,7 +22,7 @@ public record BankActionPacket(BlockPos pos, boolean isDeposit, int amount) impl
             BankActionPacket::pos,
             ByteBufCodecs.BOOL,
             BankActionPacket::isDeposit,
-            ByteBufCodecs.VAR_INT,
+            ByteBufCodecs.VAR_LONG,
             BankActionPacket::amount,
             BankActionPacket::new
     );

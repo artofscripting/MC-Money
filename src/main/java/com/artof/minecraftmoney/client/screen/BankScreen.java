@@ -37,14 +37,14 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
         
         // Amount input field
         amountField = new EditBox(font, centerX + 38, centerY + 50, 100, 16, Component.literal("Amount"));
-        amountField.setMaxLength(10);
+        amountField.setMaxLength(15);
         amountField.setValue("100");
         amountField.setFilter(s -> s.isEmpty() || s.matches("\\d+"));
         addRenderableWidget(amountField);
         
         // Deposit button
         addRenderableWidget(Button.builder(Component.translatable("gui.minecraftmoney.deposit"), button -> {
-            int amount = getAmount();
+            long amount = getAmount();
             if (amount > 0) {
                 PacketDistributor.sendToServer(new BankActionPacket(menu.getBlockEntity().getBlockPos(), true, amount));
             }
@@ -52,7 +52,7 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
         
         // Withdraw button
         addRenderableWidget(Button.builder(Component.translatable("gui.minecraftmoney.withdraw"), button -> {
-            int amount = getAmount();
+            long amount = getAmount();
             if (amount > 0) {
                 PacketDistributor.sendToServer(new BankActionPacket(menu.getBlockEntity().getBlockPos(), false, amount));
             }
@@ -62,9 +62,9 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
         updateBalances();
     }
     
-    private int getAmount() {
+    private long getAmount() {
         try {
-            return Integer.parseInt(amountField.getValue());
+            return Long.parseLong(amountField.getValue());
         } catch (NumberFormatException e) {
             return 0;
         }
