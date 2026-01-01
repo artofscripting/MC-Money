@@ -112,10 +112,18 @@ public class MinecraftMoney {
     }
     
     private void dropCoinsAtLocation(net.minecraft.server.level.ServerPlayer player, int amount) {
-        // Convert to highest denomination first
+        // Convert to highest denomination first for fewest coins
         int remaining = amount;
         
-        // Platinum coins (1000 each)
+        // Million coins (1,000,000 each)
+        int millionCount = remaining / ModItems.MILLION_VALUE;
+        remaining %= ModItems.MILLION_VALUE;
+        
+        // 10K coins (10,000 each)
+        int tenThousandCount = remaining / ModItems.TEN_THOUSAND_VALUE;
+        remaining %= ModItems.TEN_THOUSAND_VALUE;
+        
+        // Platinum coins (1,000 each)
         int platinumCount = remaining / ModItems.PLATINUM_VALUE;
         remaining %= ModItems.PLATINUM_VALUE;
         
@@ -131,6 +139,8 @@ public class MinecraftMoney {
         int copperCount = remaining;
         
         // Drop the coins
+        dropCoinStacks(player, ModItems.MILLION_COIN.get(), millionCount);
+        dropCoinStacks(player, ModItems.TEN_THOUSAND_COIN.get(), tenThousandCount);
         dropCoinStacks(player, ModItems.PLATINUM_COIN.get(), platinumCount);
         dropCoinStacks(player, ModItems.GOLD_COIN.get(), goldCount);
         dropCoinStacks(player, ModItems.SILVER_COIN.get(), silverCount);
