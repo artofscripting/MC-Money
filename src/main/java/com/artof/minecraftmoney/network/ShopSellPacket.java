@@ -78,7 +78,7 @@ public record ShopSellPacket(int itemIndex, int quantity) implements CustomPacke
                             }
                             
                             int soldCount = toSell - remaining;
-                            int sellPrice = entry.getSellPrice() * soldCount;
+                            long sellPrice = entry.getSellPrice() * soldCount;
                             PlayerCurrencyData.addCurrency(serverPlayer, sellPrice);
                             
                             // Force sync inventory to client

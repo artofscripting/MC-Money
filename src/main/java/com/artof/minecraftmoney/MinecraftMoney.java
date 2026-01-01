@@ -70,7 +70,7 @@ public class MinecraftMoney {
             
             // Check for pending earnings from Personal Seller blocks
             OfflineEarningsManager manager = OfflineEarningsManager.get(serverPlayer.getServer());
-            int pendingEarnings = manager.claimEarnings(serverPlayer.getUUID());
+            long pendingEarnings = manager.claimEarnings(serverPlayer.getUUID());
             if (pendingEarnings > 0) {
                 PlayerCurrencyData.addCurrency(serverPlayer, pendingEarnings);
                 currency += pendingEarnings;

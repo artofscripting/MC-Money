@@ -17,7 +17,7 @@ import java.util.UUID;
 public class OfflineEarningsManager extends SavedData {
     private static final String DATA_NAME = "minecraftmoney_offline_earnings";
     
-    private final Map<UUID, Integer> pendingEarnings = new HashMap<>();
+    private final Map<UUID, Long> pendingEarnings = new HashMap<>();
     
     public OfflineEarningsManager() {
     }
@@ -38,7 +38,7 @@ public class OfflineEarningsManager extends SavedData {
             for (int i = 0; i < earningsList.size(); i++) {
                 CompoundTag entry = earningsList.getCompound(i);
                 UUID uuid = entry.getUUID("Player");
-                int amount = entry.getInt("Amount");
+                long amount = entry.getLong("Amount");
                 manager.pendingEarnings.put(uuid, amount);
             }
         }
@@ -50,10 +50,10 @@ public class OfflineEarningsManager extends SavedData {
     public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         ListTag earningsList = new ListTag();
         
-        for (Map.Entry<UUID, Integer> entry : pendingEarnings.entrySet()) {
+        for (Map.Entry<UUID, Long> entry : pendingEarnings.entrySet()) {
             CompoundTag entryTag = new CompoundTag();
             entryTag.putUUID("Player", entry.getKey());
-            entryTag.putInt("Amount", entry.getValue());
+            entryTag.putLong("Amount", entry.getValue());
             earningsList.add(entryTag);
         }
         
@@ -64,8 +64,8 @@ public class OfflineEarningsManager extends SavedData {
     /**
      * Add earnings for an offline player.
      */
-    public void addEarnings(UUID playerUUID, int amount) {
-        pendingEarnings.merge(playerUUID, amount, Integer::sum);
+    public void addEarnings(UUID playerUUID, long amount) {
+        pendingEarnings.merge(playerUUID, amount, Long::sum);
         setDirty();
     }
     
@@ -73,8 +73,8 @@ public class OfflineEarningsManager extends SavedData {
      * Claim all pending earnings for a player.
      * @return The amount claimed
      */
-    public int claimEarnings(UUID playerUUID) {
-        Integer amount = pendingEarnings.remove(playerUUID);
+    public long claimEarnings(UUID playerUUID) {
+        Long amount = pendingEarnings.remove(playerUUID);
         if (amount != null && amount > 0) {
             setDirty();
             return amount;
@@ -85,7 +85,7 @@ public class OfflineEarningsManager extends SavedData {
     /**
      * Get pending earnings without claiming them.
      */
-    public int getPendingEarnings(UUID playerUUID) {
-        return pendingEarnings.getOrDefault(playerUUID, 0);
+    public long getPendingEarnings(UUID playerUUID) {
+        return pendingEarnings.getOrDefault(playerUUID, 0L);
     }
 }

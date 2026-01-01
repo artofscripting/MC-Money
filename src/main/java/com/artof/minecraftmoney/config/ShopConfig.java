@@ -438,7 +438,7 @@ public class ShopConfig {
             if (parts.length == 3) {
                 try {
                     String itemId = parts[0].trim();
-                    int price = Integer.parseInt(parts[1].trim());
+                    long price = Long.parseLong(parts[1].trim());
                     String displayName = parts[2].trim();
                     
                     // Validate that the item exists in the registry
@@ -494,12 +494,12 @@ public class ShopConfig {
         return sellMultiplier;
     }
     
-    public static int getSellPrice(int buyPrice) {
-        return (int) Math.floor(buyPrice * sellMultiplier);
+    public static long getSellPrice(long buyPrice) {
+        return (long) Math.floor(buyPrice * sellMultiplier);
     }
     
-    public record ShopEntry(String itemId, int price, String displayName) {
-        public int getSellPrice() {
+    public record ShopEntry(String itemId, long price, String displayName) {
+        public long getSellPrice() {
             return ShopConfig.getSellPrice(price);
         }
     }

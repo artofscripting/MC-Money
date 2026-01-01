@@ -63,7 +63,7 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
         Slot hoveredSlot = this.hoveredSlot;
         if (hoveredSlot != null && hoveredSlot.index < 9 && hoveredSlot.hasItem()) {
             ItemStack stack = hoveredSlot.getItem();
-            int sellPrice = getSellPriceForItem(stack);
+            long sellPrice = getSellPriceForItem(stack);
             
             if (sellPrice > 0) {
                 List<Component> tooltip = new ArrayList<>();
@@ -78,7 +78,7 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
         }
     }
     
-    private int getSellPriceForItem(ItemStack stack) {
+    private long getSellPriceForItem(ItemStack stack) {
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         String itemIdStr = itemId.toString();
         

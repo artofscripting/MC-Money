@@ -41,7 +41,7 @@ public record ShopBuyPacket(int itemIndex, int quantity) implements CustomPacket
                 if (packet.itemIndex() >= 0 && packet.itemIndex() < shopItems.size()) {
                     ShopConfig.ShopEntry entry = shopItems.get(packet.itemIndex());
                     int quantity = Math.max(1, Math.min(64, packet.quantity()));
-                    int totalCost = entry.price() * quantity;
+                    long totalCost = entry.price() * quantity;
                     
                     // Check if player has enough currency
                     if (PlayerCurrencyData.removeCurrency(serverPlayer, totalCost)) {

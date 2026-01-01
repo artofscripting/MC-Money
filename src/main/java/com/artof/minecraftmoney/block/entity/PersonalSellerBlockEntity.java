@@ -107,11 +107,11 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.get(i);
             if (!stack.isEmpty()) {
-                int sellPrice = getSellPriceForItem(stack);
+                long sellPrice = getSellPriceForItem(stack);
                 if (sellPrice > 0) {
                     // Sell one item at a time
                     int soldCount = Math.min(stack.getCount(), 1);
-                    int earnings = sellPrice * soldCount;
+                    long earnings = sellPrice * soldCount;
                     
                     // Add currency to owner
                     if (owner != null) {
@@ -142,7 +142,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         }
     }
     
-    private void addOfflineEarnings(Level level, int earnings) {
+    private void addOfflineEarnings(Level level, long earnings) {
         // Store earnings in the global manager for when the owner logs in
         if (ownerUUID != null && level instanceof ServerLevel serverLevel) {
             OfflineEarningsManager manager = OfflineEarningsManager.get(serverLevel.getServer());
@@ -163,7 +163,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 3, 0.3, 0.2, 0.3, 0.0);
     }
     
-    private int getSellPriceForItem(ItemStack stack) {
+    private long getSellPriceForItem(ItemStack stack) {
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         String itemIdStr = itemId.toString();
         

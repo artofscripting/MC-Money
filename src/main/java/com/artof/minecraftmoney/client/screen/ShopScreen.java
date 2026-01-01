@@ -243,12 +243,12 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 guiGraphics.drawString(font, name, 12, rowY + 2, 0xFFFFFF);
                 
                 // Buy price
-                int buyPrice = entry.price();
+                long buyPrice = entry.price();
                 int buyColor = balance >= buyPrice ? 0x55FF55 : 0xFF5555;
                 guiGraphics.drawString(font, CurrencyFormatter.format(buyPrice), 140, rowY + 2, buyColor);
                 
                 // Sell price - check if player has item in inventory
-                int sellPrice = entry.getSellPrice();
+                long sellPrice = entry.getSellPrice();
                 boolean hasItem = playerHasItem(entry.itemId());
                 int sellColor = hasItem ? 0xFFAA00 : 0xFF5555;
                 guiGraphics.drawString(font, CurrencyFormatter.format(sellPrice), 180, rowY + 2, sellColor);
@@ -333,8 +333,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         tooltipLines.add(Component.empty());
         
         // Pricing info
-        int buyPrice = entry.price();
-        int sellPrice = entry.getSellPrice();
+        long buyPrice = entry.price();
+        long sellPrice = entry.getSellPrice();
         long balance = ClientCurrencyData.getClientCurrency();
         
         ChatFormatting buyColor = balance >= buyPrice ? ChatFormatting.GREEN : ChatFormatting.RED;
