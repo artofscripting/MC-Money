@@ -5,13 +5,13 @@ package com.artof.minecraftmoney.client;
  * This is synced from the server via network packets.
  */
 public class ClientCurrencyData {
-    private static int clientCurrency = 0;
+    private static long clientCurrency = 0;
     
-    public static int getClientCurrency() {
+    public static long getClientCurrency() {
         return clientCurrency;
     }
     
-    public static void setClientCurrency(int currency) {
+    public static void setClientCurrency(long currency) {
         clientCurrency = currency;
     }
     

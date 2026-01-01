@@ -9,12 +9,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SyncCurrencyPacket(int currency) implements CustomPacketPayload {
+public record SyncCurrencyPacket(long currency) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncCurrencyPacket> TYPE = 
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MinecraftMoney.MOD_ID, "sync_currency"));
     
     public static final StreamCodec<FriendlyByteBuf, SyncCurrencyPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT,
+            ByteBufCodecs.VAR_LONG,
             SyncCurrencyPacket::currency,
             SyncCurrencyPacket::new
     );

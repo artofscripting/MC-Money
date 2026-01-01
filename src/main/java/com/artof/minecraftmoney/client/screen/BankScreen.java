@@ -19,8 +19,8 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(MinecraftMoney.MOD_ID, "textures/gui/bank.png");
     
     private EditBox amountField;
-    private int displayedBankBalance = 0;
-    private int displayedPlayerBalance = 0;
+    private long displayedBankBalance = 0;
+    private long displayedPlayerBalance = 0;
     
     public BankScreen(BankMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

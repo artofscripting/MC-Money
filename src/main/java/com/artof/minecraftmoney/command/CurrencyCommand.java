@@ -19,11 +19,11 @@ public class CurrencyCommand {
                 // Check own balance
                 .executes(context -> {
                     ServerPlayer player = context.getSource().getPlayerOrException();
-                    int balance = PlayerCurrencyData.getCurrency(player);
+                    long balance = PlayerCurrencyData.getCurrency(player);
                     context.getSource().sendSuccess(() -> 
                             Component.translatable("command.minecraftmoney.balance", balance)
                                     .withStyle(ChatFormatting.GOLD), false);
-                    return balance;
+                    return (int) Math.min(balance, Integer.MAX_VALUE);
                 })
                 
                 // Check another player's balance
@@ -32,12 +32,12 @@ public class CurrencyCommand {
                                 .requires(source -> source.hasPermission(2))
                                 .executes(context -> {
                                     ServerPlayer target = EntityArgument.getPlayer(context, "player");
-                                    int balance = PlayerCurrencyData.getCurrency(target);
+                                    long balance = PlayerCurrencyData.getCurrency(target);
                                     context.getSource().sendSuccess(() -> 
                                             Component.translatable("command.minecraftmoney.balance_other", 
                                                     target.getDisplayName(), balance)
                                                     .withStyle(ChatFormatting.GOLD), false);
-                                    return balance;
+                                    return (int) Math.min(balance, Integer.MAX_VALUE);
                                 })))
                 
                 // Add currency to a player
@@ -154,33 +154,75 @@ public class CurrencyCommand {
         );
     }
     
-    private static void giveCoinsToPlayer(ServerPlayer player, int amount) {
-        int remaining = amount;
+    private static void giveCoinsToPlayer(ServerPlayer player, long amount) {
+        long remaining = amount;
         
-        // Give platinum coins
-        int platinum = remaining / ModItems.PLATINUM_VALUE;
+        // Give trillion coins (1,000,000,000,000 each)
+        int trillionCount = (int) (remaining / ModItems.TRILLION_VALUE);
+        remaining %= ModItems.TRILLION_VALUE;
+        if (trillionCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.TRILLION_COIN.get(), trillionCount));
+        }
+        
+        // Give 10 billion coins (10,000,000,000 each)
+        int tenBillionCount = (int) (remaining / ModItems.TEN_BILLION_VALUE);
+        remaining %= ModItems.TEN_BILLION_VALUE;
+        if (tenBillionCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.TEN_BILLION_COIN.get(), tenBillionCount));
+        }
+        
+        // Give billion coins (1,000,000,000 each)
+        int billionCount = (int) (remaining / ModItems.BILLION_VALUE);
+        remaining %= ModItems.BILLION_VALUE;
+        if (billionCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.BILLION_COIN.get(), billionCount));
+        }
+        
+        // Give 10 million coins (10,000,000 each)
+        int tenMillionCount = (int) (remaining / ModItems.TEN_MILLION_VALUE);
+        remaining %= ModItems.TEN_MILLION_VALUE;
+        if (tenMillionCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.TEN_MILLION_COIN.get(), tenMillionCount));
+        }
+        
+        // Give million coins (1,000,000 each)
+        int millionCount = (int) (remaining / ModItems.MILLION_VALUE);
+        remaining %= ModItems.MILLION_VALUE;
+        if (millionCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.MILLION_COIN.get(), millionCount));
+        }
+        
+        // Give 10 thousand coins (10,000 each)
+        int tenThousandCount = (int) (remaining / ModItems.TEN_THOUSAND_VALUE);
+        remaining %= ModItems.TEN_THOUSAND_VALUE;
+        if (tenThousandCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.TEN_THOUSAND_COIN.get(), tenThousandCount));
+        }
+        
+        // Give platinum coins (1000 each)
+        int platinumCount = (int) (remaining / ModItems.PLATINUM_VALUE);
         remaining %= ModItems.PLATINUM_VALUE;
-        if (platinum > 0) {
-            giveItemToPlayer(player, new ItemStack(ModItems.PLATINUM_COIN.get(), platinum));
+        if (platinumCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.PLATINUM_COIN.get(), platinumCount));
         }
         
-        // Give gold coins
-        int gold = remaining / ModItems.GOLD_VALUE;
+        // Give gold coins (100 each)
+        int goldCount = (int) (remaining / ModItems.GOLD_VALUE);
         remaining %= ModItems.GOLD_VALUE;
-        if (gold > 0) {
-            giveItemToPlayer(player, new ItemStack(ModItems.GOLD_COIN.get(), gold));
+        if (goldCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.GOLD_COIN.get(), goldCount));
         }
         
-        // Give silver coins
-        int silver = remaining / ModItems.SILVER_VALUE;
+        // Give silver coins (10 each)
+        int silverCount = (int) (remaining / ModItems.SILVER_VALUE);
         remaining %= ModItems.SILVER_VALUE;
-        if (silver > 0) {
-            giveItemToPlayer(player, new ItemStack(ModItems.SILVER_COIN.get(), silver));
+        if (silverCount > 0) {
+            giveItemToPlayer(player, new ItemStack(ModItems.SILVER_COIN.get(), silverCount));
         }
         
-        // Give copper coins
+        // Give copper coins (1 each)
         if (remaining > 0) {
-            giveItemToPlayer(player, new ItemStack(ModItems.COPPER_COIN.get(), remaining));
+            giveItemToPlayer(player, new ItemStack(ModItems.COPPER_COIN.get(), (int) remaining));
         }
     }
     

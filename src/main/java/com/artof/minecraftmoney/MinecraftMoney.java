@@ -66,7 +66,7 @@ public class MinecraftMoney {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            int currency = PlayerCurrencyData.getCurrency(serverPlayer);
+            long currency = PlayerCurrencyData.getCurrency(serverPlayer);
             
             // Check for pending earnings from Personal Seller blocks
             OfflineEarningsManager manager = OfflineEarningsManager.get(serverPlayer.getServer());
@@ -85,7 +85,7 @@ public class MinecraftMoney {
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            int currency = PlayerCurrencyData.getCurrency(serverPlayer);
+            long currency = PlayerCurrencyData.getCurrency(serverPlayer);
             PacketDistributor.sendToPlayer(serverPlayer, new SyncCurrencyPacket(currency));
         }
     }
@@ -93,7 +93,7 @@ public class MinecraftMoney {
     @SubscribeEvent
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            int currency = PlayerCurrencyData.getCurrency(serverPlayer);
+            long currency = PlayerCurrencyData.getCurrency(serverPlayer);
             PacketDistributor.sendToPlayer(serverPlayer, new SyncCurrencyPacket(currency));
         }
     }
@@ -101,7 +101,7 @@ public class MinecraftMoney {
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            int currency = PlayerCurrencyData.getCurrency(serverPlayer);
+            long currency = PlayerCurrencyData.getCurrency(serverPlayer);
             if (currency > 0) {
                 // Drop coins at player location
                 dropCoinsAtLocation(serverPlayer, currency);
@@ -111,34 +111,54 @@ public class MinecraftMoney {
         }
     }
     
-    private void dropCoinsAtLocation(net.minecraft.server.level.ServerPlayer player, int amount) {
+    private void dropCoinsAtLocation(net.minecraft.server.level.ServerPlayer player, long amount) {
         // Convert to highest denomination first for fewest coins
-        int remaining = amount;
+        long remaining = amount;
+        
+        // Trillion coins (1,000,000,000,000 each)
+        int trillionCount = (int) (remaining / ModItems.TRILLION_VALUE);
+        remaining %= ModItems.TRILLION_VALUE;
+        
+        // 10 Billion coins (10,000,000,000 each)
+        int tenBillionCount = (int) (remaining / ModItems.TEN_BILLION_VALUE);
+        remaining %= ModItems.TEN_BILLION_VALUE;
+        
+        // Billion coins (1,000,000,000 each)
+        int billionCount = (int) (remaining / ModItems.BILLION_VALUE);
+        remaining %= ModItems.BILLION_VALUE;
+        
+        // 10 Million coins (10,000,000 each)
+        int tenMillionCount = (int) (remaining / ModItems.TEN_MILLION_VALUE);
+        remaining %= ModItems.TEN_MILLION_VALUE;
         
         // Million coins (1,000,000 each)
-        int millionCount = remaining / ModItems.MILLION_VALUE;
+        int millionCount = (int) (remaining / ModItems.MILLION_VALUE);
         remaining %= ModItems.MILLION_VALUE;
         
         // 10K coins (10,000 each)
-        int tenThousandCount = remaining / ModItems.TEN_THOUSAND_VALUE;
+        int tenThousandCount = (int) (remaining / ModItems.TEN_THOUSAND_VALUE);
         remaining %= ModItems.TEN_THOUSAND_VALUE;
         
         // Platinum coins (1,000 each)
-        int platinumCount = remaining / ModItems.PLATINUM_VALUE;
+        int platinumCount = (int) (remaining / ModItems.PLATINUM_VALUE);
         remaining %= ModItems.PLATINUM_VALUE;
         
         // Gold coins (100 each)
-        int goldCount = remaining / ModItems.GOLD_VALUE;
+        int goldCount = (int) (remaining / ModItems.GOLD_VALUE);
         remaining %= ModItems.GOLD_VALUE;
         
         // Silver coins (10 each)
-        int silverCount = remaining / ModItems.SILVER_VALUE;
+        int silverCount = (int) (remaining / ModItems.SILVER_VALUE);
         remaining %= ModItems.SILVER_VALUE;
         
         // Copper coins (1 each)
-        int copperCount = remaining;
+        int copperCount = (int) remaining;
         
         // Drop the coins
+        dropCoinStacks(player, ModItems.TRILLION_COIN.get(), trillionCount);
+        dropCoinStacks(player, ModItems.TEN_BILLION_COIN.get(), tenBillionCount);
+        dropCoinStacks(player, ModItems.BILLION_COIN.get(), billionCount);
+        dropCoinStacks(player, ModItems.TEN_MILLION_COIN.get(), tenMillionCount);
         dropCoinStacks(player, ModItems.MILLION_COIN.get(), millionCount);
         dropCoinStacks(player, ModItems.TEN_THOUSAND_COIN.get(), tenThousandCount);
         dropCoinStacks(player, ModItems.PLATINUM_COIN.get(), platinumCount);

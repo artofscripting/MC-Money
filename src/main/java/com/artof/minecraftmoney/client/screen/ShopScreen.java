@@ -218,7 +218,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         guiGraphics.drawCenteredString(font, title, imageWidth / 2, 4, 0x55FF55);
         
         // Balance
-        int balance = ClientCurrencyData.getClientCurrency();
+        long balance = ClientCurrencyData.getClientCurrency();
         String balanceText = "Balance: " + CurrencyFormatter.format(balance);
         guiGraphics.drawString(font, balanceText, imageWidth - font.width(balanceText) - 10, 18, 0xFFFF55);
         
@@ -292,7 +292,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         }
         
         // Check for balance tooltip
-        int balance = ClientCurrencyData.getClientCurrency();
+        long balance = ClientCurrencyData.getClientCurrency();
         String balanceText = "Balance: " + CurrencyFormatter.format(balance);
         int balanceX = x + imageWidth - font.width(balanceText) - 10;
         int balanceY = y + 18;
@@ -335,7 +335,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         // Pricing info
         int buyPrice = entry.price();
         int sellPrice = entry.getSellPrice();
-        int balance = ClientCurrencyData.getClientCurrency();
+        long balance = ClientCurrencyData.getClientCurrency();
         
         ChatFormatting buyColor = balance >= buyPrice ? ChatFormatting.GREEN : ChatFormatting.RED;
         tooltipLines.add(Component.literal("Buy Price: ").withStyle(ChatFormatting.GRAY)

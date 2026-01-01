@@ -4,7 +4,11 @@
     "item.minecraftmoney.gold_coin": "Gold Coin",
     "item.minecraftmoney.platinum_coin": "Platinum Coin",
     "item.minecraftmoney.ten_thousand_coin": "10K Coin",
-    "item.minecraftmoney.million_coin": "Million Coin",
+    "item.minecraftmoney.million_coin": "1M Coin",
+    "item.minecraftmoney.ten_million_coin": "10M Coin",
+    "item.minecraftmoney.billion_coin": "1B Coin",
+    "item.minecraftmoney.ten_billion_coin": "10B Coin",
+    "item.minecraftmoney.trillion_coin": "1T Coin",
     
     "block.minecraftmoney.bank_block": "Personal Bank",
     "block.minecraftmoney.shop_block": "Shop",

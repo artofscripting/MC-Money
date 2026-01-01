@@ -17,12 +17,16 @@ public class ModItems {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MinecraftMoney.MOD_ID);
     
     // Currency values
-    public static final int COPPER_VALUE = 1;
-    public static final int SILVER_VALUE = 10;
-    public static final int GOLD_VALUE = 100;
-    public static final int PLATINUM_VALUE = 1000;
-    public static final int TEN_THOUSAND_VALUE = 10000;
-    public static final int MILLION_VALUE = 1000000;
+    public static final long COPPER_VALUE = 1L;
+    public static final long SILVER_VALUE = 10L;
+    public static final long GOLD_VALUE = 100L;
+    public static final long PLATINUM_VALUE = 1000L;
+    public static final long TEN_THOUSAND_VALUE = 10_000L;
+    public static final long MILLION_VALUE = 1_000_000L;
+    public static final long TEN_MILLION_VALUE = 10_000_000L;
+    public static final long BILLION_VALUE = 1_000_000_000L;
+    public static final long TEN_BILLION_VALUE = 10_000_000_000L;
+    public static final long TRILLION_VALUE = 1_000_000_000_000L;
     
     // Coin items
     public static final Supplier<CoinItem> COPPER_COIN = ITEMS.register("copper_coin", 
@@ -43,6 +47,18 @@ public class ModItems {
     public static final Supplier<CoinItem> MILLION_COIN = ITEMS.register("million_coin", 
             () -> new CoinItem(new Item.Properties().stacksTo(64), MILLION_VALUE));
     
+    public static final Supplier<CoinItem> TEN_MILLION_COIN = ITEMS.register("ten_million_coin", 
+            () -> new CoinItem(new Item.Properties().stacksTo(64), TEN_MILLION_VALUE));
+    
+    public static final Supplier<CoinItem> BILLION_COIN = ITEMS.register("billion_coin", 
+            () -> new CoinItem(new Item.Properties().stacksTo(64), BILLION_VALUE));
+    
+    public static final Supplier<CoinItem> TEN_BILLION_COIN = ITEMS.register("ten_billion_coin", 
+            () -> new CoinItem(new Item.Properties().stacksTo(64), TEN_BILLION_VALUE));
+    
+    public static final Supplier<CoinItem> TRILLION_COIN = ITEMS.register("trillion_coin", 
+            () -> new CoinItem(new Item.Properties().stacksTo(64), TRILLION_VALUE));
+    
     // Creative Tab
     public static final Supplier<CreativeModeTab> CURRENCY_TAB = CREATIVE_MODE_TABS.register("currency_tab",
             () -> CreativeModeTab.builder()
@@ -55,6 +71,10 @@ public class ModItems {
                         output.accept(PLATINUM_COIN.get());
                         output.accept(TEN_THOUSAND_COIN.get());
                         output.accept(MILLION_COIN.get());
+                        output.accept(TEN_MILLION_COIN.get());
+                        output.accept(BILLION_COIN.get());
+                        output.accept(TEN_BILLION_COIN.get());
+                        output.accept(TRILLION_COIN.get());
                         output.accept(ModBlocks.BANK_BLOCK_ITEM.get());
                         output.accept(ModBlocks.SHOP_BLOCK_ITEM.get());
                         output.accept(ModBlocks.PERSONAL_SELLER_BLOCK_ITEM.get());

@@ -15,14 +15,14 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class CoinItem extends Item {
-    private final int value;
+    private final long value;
     
-    public CoinItem(Properties properties, int value) {
+    public CoinItem(Properties properties, long value) {
         super(properties);
         this.value = value;
     }
     
-    public int getValue() {
+    public long getValue() {
         return value;
     }
     
@@ -33,7 +33,7 @@ public class CoinItem extends Item {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             // Shift+right-click deposits whole stack, regular right-click deposits 1
             int coinsToDeposit = player.isShiftKeyDown() ? stack.getCount() : 1;
-            int totalValue = value * coinsToDeposit;
+            long totalValue = value * coinsToDeposit;
             PlayerCurrencyData.addCurrency(serverPlayer, totalValue);
             
             player.displayClientMessage(
@@ -51,7 +51,7 @@ public class CoinItem extends Item {
     
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.minecraftmoney.coin_value", value)
+        tooltipComponents.add(Component.translatable("tooltip.minecraftmoney.coin_value", String.format("%,d", value))
                 .withStyle(ChatFormatting.GOLD));
         tooltipComponents.add(Component.translatable("tooltip.minecraftmoney.right_click_deposit")
                 .withStyle(ChatFormatting.GRAY));

@@ -42,7 +42,7 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
         // Check for balance tooltip
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-        int balance = ClientCurrencyData.getClientCurrency();
+        long balance = ClientCurrencyData.getClientCurrency();
         String balanceText = CurrencyFormatter.format(balance);
         int balanceX = x + imageWidth - font.width(balanceText) - 8;
         int balanceY = y + 5;
@@ -142,7 +142,7 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
         guiGraphics.drawString(font, title, 8, 5, 0xFFAA55);
         
         // Wallet balance - right aligned, same row as title
-        int balance = ClientCurrencyData.getClientCurrency();
+        long balance = ClientCurrencyData.getClientCurrency();
         String balanceText = CurrencyFormatter.format(balance);
         guiGraphics.drawString(font, balanceText, imageWidth - font.width(balanceText) - 8, 5, 0xFFFF55);
         

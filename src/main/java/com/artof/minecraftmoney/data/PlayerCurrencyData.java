@@ -17,10 +17,10 @@ public class PlayerCurrencyData {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = 
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MinecraftMoney.MOD_ID);
     
-    public static final Supplier<AttachmentType<Integer>> CURRENCY = ATTACHMENT_TYPES.register(
+    public static final Supplier<AttachmentType<Long>> CURRENCY = ATTACHMENT_TYPES.register(
             "currency",
-            () -> AttachmentType.builder(() -> 0)
-                    .serialize(Codec.INT)
+            () -> AttachmentType.builder(() -> 0L)
+                    .serialize(Codec.LONG)
                     .build()
     );
     
@@ -28,21 +28,21 @@ public class PlayerCurrencyData {
         ATTACHMENT_TYPES.register(modEventBus);
     }
     
-    public static int getCurrency(Player player) {
+    public static long getCurrency(Player player) {
         return player.getData(CURRENCY);
     }
     
-    public static void setCurrency(Player player, int amount) {
+    public static void setCurrency(Player player, long amount) {
         player.setData(CURRENCY, Math.max(0, amount));
         syncToClient(player);
     }
     
-    public static void addCurrency(Player player, int amount) {
+    public static void addCurrency(Player player, long amount) {
         setCurrency(player, getCurrency(player) + amount);
     }
     
-    public static boolean removeCurrency(Player player, int amount) {
-        int current = getCurrency(player);
+    public static boolean removeCurrency(Player player, long amount) {
+        long current = getCurrency(player);
         if (current >= amount) {
             setCurrency(player, current - amount);
             return true;
@@ -50,7 +50,7 @@ public class PlayerCurrencyData {
         return false;
     }
     
-    public static boolean hasCurrency(Player player, int amount) {
+    public static boolean hasCurrency(Player player, long amount) {
         return getCurrency(player) >= amount;
     }
     
