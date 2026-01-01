@@ -21,6 +21,7 @@ public class ModItems {
     public static final int SILVER_VALUE = 10;
     public static final int GOLD_VALUE = 100;
     public static final int PLATINUM_VALUE = 1000;
+    public static final int MILLION_VALUE = 1000000;
     
     // Coin items
     public static final Supplier<CoinItem> COPPER_COIN = ITEMS.register("copper_coin", 
@@ -35,6 +36,9 @@ public class ModItems {
     public static final Supplier<CoinItem> PLATINUM_COIN = ITEMS.register("platinum_coin", 
             () -> new CoinItem(new Item.Properties().stacksTo(64), PLATINUM_VALUE));
     
+    public static final Supplier<CoinItem> MILLION_COIN = ITEMS.register("million_coin", 
+            () -> new CoinItem(new Item.Properties().stacksTo(64), MILLION_VALUE));
+    
     // Creative Tab
     public static final Supplier<CreativeModeTab> CURRENCY_TAB = CREATIVE_MODE_TABS.register("currency_tab",
             () -> CreativeModeTab.builder()
@@ -45,6 +49,7 @@ public class ModItems {
                         output.accept(SILVER_COIN.get());
                         output.accept(GOLD_COIN.get());
                         output.accept(PLATINUM_COIN.get());
+                        output.accept(MILLION_COIN.get());
                         output.accept(ModBlocks.BANK_BLOCK_ITEM.get());
                         output.accept(ModBlocks.SHOP_BLOCK_ITEM.get());
                         output.accept(ModBlocks.PERSONAL_SELLER_BLOCK_ITEM.get());
