@@ -84,9 +84,22 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         if (searchQuery.isEmpty()) {
             filteredItems.addAll(allShopItems);
         } else if (searchQuery.startsWith("@")) {
-            // Mod search: filter by mod ID prefix
-            String modQuery = searchQuery.substring(1); // Remove the @ prefix
-            if (!modQuery.isEmpty()) {
+            // Mod search: filter by mod ID prefix, optionally with item name filter
+            // Format: @modid or @modid searchterms
+            String afterAt = searchQuery.substring(1); // Remove the @ prefix
+            if (!afterAt.isEmpty()) {
+                // Split into mod prefix and optional item search
+                String modPrefix;
+                String itemSearch;
+                int spaceIndex = afterAt.indexOf(' ');
+                if (spaceIndex > 0) {
+                    modPrefix = afterAt.substring(0, spaceIndex).toLowerCase();
+                    itemSearch = afterAt.substring(spaceIndex + 1).trim().toLowerCase();
+                } else {
+                    modPrefix = afterAt.toLowerCase();
+                    itemSearch = "";
+                }
+                
                 filteredItems.addAll(allShopItems.stream()
                     .filter(entry -> {
                         // Extract mod ID from item ID (format: "modid:item_name")
@@ -94,7 +107,16 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                         int colonIndex = itemId.indexOf(':');
                         if (colonIndex > 0) {
                             String modId = itemId.substring(0, colonIndex);
-                            return modId.contains(modQuery);
+                            // Check if mod ID contains the prefix
+                            if (!modId.contains(modPrefix)) {
+                                return false;
+                            }
+                            // If there's an item search term, filter by item name too
+                            if (!itemSearch.isEmpty()) {
+                                return entry.displayName().toLowerCase().contains(itemSearch) ||
+                                       itemId.substring(colonIndex + 1).contains(itemSearch);
+                            }
+                            return true;
                         }
                         return false;
                     })
@@ -423,6 +445,21 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             return searchBox.keyPressed(keyCode, scanCode, modifiers);
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+    
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        // scrollY > 0 means scroll up (previous page), scrollY < 0 means scroll down (next page)
+        if (scrollY > 0 && currentPage > 0) {
+            currentPage--;
+            rebuildButtons();
+            return true;
+        } else if (scrollY < 0 && currentPage < maxPages - 1) {
+            currentPage++;
+            rebuildButtons();
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
     
     private boolean playerHasItem(String itemId) {
