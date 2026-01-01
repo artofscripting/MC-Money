@@ -131,11 +131,6 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
         String balanceText = "" + balance;
         guiGraphics.drawString(font, balanceText, imageWidth - font.width(balanceText) - 8, 5, 0xFFFF55);
         
-        // Total earned - left side, below seller slots
-        int earned = menu.getBlockEntity().getTotalEarned();
-        String earnedText = "Earned: " + earned;
-        guiGraphics.drawString(font, earnedText, 8, 62, 0x55FF55);
-        
         // Inventory label - standard position
         guiGraphics.drawString(font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xCCCCCC);
     }
