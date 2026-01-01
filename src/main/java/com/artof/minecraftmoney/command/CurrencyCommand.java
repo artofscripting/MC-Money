@@ -3,7 +3,7 @@ package com.artof.minecraftmoney.command;
 import com.artof.minecraftmoney.data.PlayerCurrencyData;
 import com.artof.minecraftmoney.item.ModItems;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.LongArgumentType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -44,32 +44,32 @@ public class CurrencyCommand {
                 .then(Commands.literal("add")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("player", EntityArgument.player())
-                                .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                                .then(Commands.argument("amount", LongArgumentType.longArg(1))
                                         .executes(context -> {
                                             ServerPlayer target = EntityArgument.getPlayer(context, "player");
-                                            int amount = IntegerArgumentType.getInteger(context, "amount");
+                                            long amount = LongArgumentType.getLong(context, "amount");
                                             PlayerCurrencyData.addCurrency(target, amount);
                                             context.getSource().sendSuccess(() -> 
                                                     Component.translatable("command.minecraftmoney.added", 
                                                             amount, target.getDisplayName())
                                                             .withStyle(ChatFormatting.GREEN), true);
-                                            return amount;
+                                            return (int) Math.min(amount, Integer.MAX_VALUE);
                                         }))))
                 
                 // Remove currency from a player
                 .then(Commands.literal("remove")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("player", EntityArgument.player())
-                                .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                                .then(Commands.argument("amount", LongArgumentType.longArg(1))
                                         .executes(context -> {
                                             ServerPlayer target = EntityArgument.getPlayer(context, "player");
-                                            int amount = IntegerArgumentType.getInteger(context, "amount");
+                                            long amount = LongArgumentType.getLong(context, "amount");
                                             if (PlayerCurrencyData.removeCurrency(target, amount)) {
                                                 context.getSource().sendSuccess(() -> 
                                                         Component.translatable("command.minecraftmoney.removed", 
                                                                 amount, target.getDisplayName())
                                                                 .withStyle(ChatFormatting.YELLOW), true);
-                                                return amount;
+                                                return (int) Math.min(amount, Integer.MAX_VALUE);
                                             } else {
                                                 context.getSource().sendFailure(
                                                         Component.translatable("command.minecraftmoney.insufficient")
@@ -82,26 +82,26 @@ public class CurrencyCommand {
                 .then(Commands.literal("set")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("player", EntityArgument.player())
-                                .then(Commands.argument("amount", IntegerArgumentType.integer(0))
+                                .then(Commands.argument("amount", LongArgumentType.longArg(0))
                                         .executes(context -> {
                                             ServerPlayer target = EntityArgument.getPlayer(context, "player");
-                                            int amount = IntegerArgumentType.getInteger(context, "amount");
+                                            long amount = LongArgumentType.getLong(context, "amount");
                                             PlayerCurrencyData.setCurrency(target, amount);
                                             context.getSource().sendSuccess(() -> 
                                                     Component.translatable("command.minecraftmoney.set", 
                                                             target.getDisplayName(), amount)
                                                             .withStyle(ChatFormatting.GREEN), true);
-                                            return amount;
+                                            return (int) Math.min(amount, Integer.MAX_VALUE);
                                         }))))
                 
                 // Pay another player
                 .then(Commands.literal("pay")
                         .then(Commands.argument("player", EntityArgument.player())
-                                .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                                .then(Commands.argument("amount", LongArgumentType.longArg(1))
                                         .executes(context -> {
                                             ServerPlayer sender = context.getSource().getPlayerOrException();
                                             ServerPlayer target = EntityArgument.getPlayer(context, "player");
-                                            int amount = IntegerArgumentType.getInteger(context, "amount");
+                                            long amount = LongArgumentType.getLong(context, "amount");
                                             
                                             if (sender.equals(target)) {
                                                 context.getSource().sendFailure(
@@ -120,7 +120,7 @@ public class CurrencyCommand {
                                                         Component.translatable("command.minecraftmoney.received", 
                                                                 amount, sender.getDisplayName())
                                                                 .withStyle(ChatFormatting.GREEN));
-                                                return amount;
+                                                return (int) Math.min(amount, Integer.MAX_VALUE);
                                             } else {
                                                 context.getSource().sendFailure(
                                                         Component.translatable("command.minecraftmoney.insufficient")
@@ -131,10 +131,10 @@ public class CurrencyCommand {
                 
                 // Withdraw currency as coins
                 .then(Commands.literal("withdraw")
-                        .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                        .then(Commands.argument("amount", LongArgumentType.longArg(1))
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
-                                    int amount = IntegerArgumentType.getInteger(context, "amount");
+                                    long amount = LongArgumentType.getLong(context, "amount");
                                     
                                     if (!PlayerCurrencyData.removeCurrency(player, amount)) {
                                         context.getSource().sendFailure(
@@ -149,7 +149,7 @@ public class CurrencyCommand {
                                     context.getSource().sendSuccess(() -> 
                                             Component.translatable("command.minecraftmoney.withdrawn", amount)
                                                     .withStyle(ChatFormatting.GREEN), false);
-                                    return amount;
+                                    return (int) Math.min(amount, Integer.MAX_VALUE);
                                 })))
         );
     }
