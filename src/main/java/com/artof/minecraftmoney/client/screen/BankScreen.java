@@ -13,6 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import com.artof.minecraftmoney.util.CurrencyFormatter;
+
 public class BankScreen extends AbstractContainerScreen<BankMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(MinecraftMoney.MOD_ID, "textures/gui/bank.png");
     
@@ -103,11 +105,11 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
         guiGraphics.drawCenteredString(font, title, imageWidth / 2, 8, 0xFFD700);
         
         // Bank balance
-        Component bankBalanceText = Component.translatable("gui.minecraftmoney.bank_balance", displayedBankBalance);
+        Component bankBalanceText = Component.translatable("gui.minecraftmoney.bank_balance", CurrencyFormatter.format(displayedBankBalance));
         guiGraphics.drawString(font, bankBalanceText, 10, 24, 0x55FF55);
         
         // Player balance (wallet)
-        Component playerBalanceText = Component.translatable("gui.minecraftmoney.wallet_balance", displayedPlayerBalance);
+        Component playerBalanceText = Component.translatable("gui.minecraftmoney.wallet_balance", CurrencyFormatter.format(displayedPlayerBalance));
         guiGraphics.drawString(font, playerBalanceText, 10, 36, 0xFFFF55);
     }
     

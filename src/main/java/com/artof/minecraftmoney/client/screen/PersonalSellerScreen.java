@@ -4,6 +4,7 @@ import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.client.ClientCurrencyData;
 import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.menu.PersonalSellerMenu;
+import com.artof.minecraftmoney.util.CurrencyFormatter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -128,7 +129,7 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
         
         // Wallet balance - right aligned, same row as title
         int balance = ClientCurrencyData.getClientCurrency();
-        String balanceText = "" + balance;
+        String balanceText = CurrencyFormatter.format(balance);
         guiGraphics.drawString(font, balanceText, imageWidth - font.width(balanceText) - 8, 5, 0xFFFF55);
         
         // Inventory label - standard position

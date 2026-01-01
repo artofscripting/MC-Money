@@ -18,6 +18,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import com.artof.minecraftmoney.util.CurrencyFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -217,7 +219,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         
         // Balance
         int balance = ClientCurrencyData.getClientCurrency();
-        String balanceText = "Balance: " + balance;
+        String balanceText = "Balance: " + CurrencyFormatter.format(balance);
         guiGraphics.drawString(font, balanceText, imageWidth - font.width(balanceText) - 10, 18, 0xFFFF55);
         
         // Column headers
@@ -243,13 +245,13 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 // Buy price
                 int buyPrice = entry.price();
                 int buyColor = balance >= buyPrice ? 0x55FF55 : 0xFF5555;
-                guiGraphics.drawString(font, String.valueOf(buyPrice), 140, rowY + 2, buyColor);
+                guiGraphics.drawString(font, CurrencyFormatter.format(buyPrice), 140, rowY + 2, buyColor);
                 
                 // Sell price - check if player has item in inventory
                 int sellPrice = entry.getSellPrice();
                 boolean hasItem = playerHasItem(entry.itemId());
                 int sellColor = hasItem ? 0xFFAA00 : 0xFF5555;
-                guiGraphics.drawString(font, String.valueOf(sellPrice), 180, rowY + 2, sellColor);
+                guiGraphics.drawString(font, CurrencyFormatter.format(sellPrice), 180, rowY + 2, sellColor);
             }
         }
         
