@@ -22,6 +22,7 @@ public class ShopConfig {
     private static final ModConfigSpec.ConfigValue<List<? extends String>> SHOP_ITEMS;
     private static final ModConfigSpec.DoubleValue SELL_PRICE_MULTIPLIER;
     private static final ModConfigSpec.BooleanValue BIG_SCREEN;
+    private static final ModConfigSpec.IntValue PERSONAL_SELLER_MAX_ITEMS;
     
     public static final ModConfigSpec SPEC;
     
@@ -29,6 +30,7 @@ public class ShopConfig {
     private static final List<ShopEntry> parsedShopItems = new ArrayList<>();
     private static double sellMultiplier = 0.5;
     private static boolean bigScreen = false;
+    private static int personalSellerMaxItems = 1;
     
     static {
         BUILDER.comment("Shop Configuration")
@@ -411,6 +413,12 @@ public class ShopConfig {
                         "When true, the shop displays 20 rows instead of 10.")
                 .define("bigScreen", false);
         
+        PERSONAL_SELLER_MAX_ITEMS = BUILDER
+                .comment("Maximum number of items sold per tick by the Personal Seller block.",
+                        "Higher values mean faster selling but more server load.",
+                        "Default is 1 item per tick (20 items per second).")
+                .defineInRange("personalSellerMaxItems", 1, 1, 64);
+        
         BUILDER.pop();
         SPEC = BUILDER.build();
     }
@@ -420,12 +428,17 @@ public class ShopConfig {
         if (event.getConfig().getSpec() == SPEC) {
             sellMultiplier = SELL_PRICE_MULTIPLIER.get();
             bigScreen = BIG_SCREEN.get();
+            personalSellerMaxItems = PERSONAL_SELLER_MAX_ITEMS.get();
             parseShopItems();
         }
     }
     
     public static boolean isBigScreen() {
         return BIG_SCREEN.get();
+    }
+    
+    public static int getPersonalSellerMaxItems() {
+        return personalSellerMaxItems;
     }
     
     private static void parseShopItems() {

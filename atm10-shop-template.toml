@@ -5,6 +5,14 @@
 	# Default: 0.5
 	# Range: 0.0 ~ 1.0
 	sellPriceMultiplier = 0.5
+	
+	#Maximum number of items sold per tick by the Personal Seller block.
+	#Higher values mean faster selling but more server load.
+	#Default is 1 item per tick (20 items per second).
+	# Default: 1
+	# Range: 1 ~ 64
+	personalSellerMaxItems = 64
+	
 	#List of items to sell in the shop.
 	#Format: 'minecraft:item_id,price,display_name'
 	#Example: 'minecraft:diamond,500,Diamond'
@@ -929,14 +937,201 @@
 "mysticalagriculture:soulium_ingot,100,Soulium Ingot", 
 "mysticalagriculture:infusion_crystal,300,Infusion Crystal", 
 "mysticalagriculture:master_infusion_crystal,15000,Master Infusion Crystal", 
-"mysticalagriculture:inferium_seeds,50,Inferium Seeds", 
-"mysticalagriculture:iron_seeds,800,Iron Seeds", 
-"mysticalagriculture:gold_seeds,1500,Gold Seeds", 
-"mysticalagriculture:diamond_seeds,8000,Diamond Seeds", 
-"mysticalagriculture:netherite_seeds,100000,Netherite Seeds", 
-"mysticalagriculture:experience_seeds,5000,Experience Seeds", 
-"mysticalagriculture:nether_star_seeds,500000,Nether Star Seeds", 
-"mysticalagriculture:dragon_egg_seeds,2000000,Dragon Egg Seeds", 
+
+"mysticalagriculture:seed_reprocessor,250000,Seed Reprocessor",
+"mysticalagriculture:prosperity_seed_base,20000,Prosperity Seed Base",
+"mysticalagriculture:soulium_seed_base,50000,Soulium Seed Base",
+
+"mysticalagriculture:air_seeds,5000,Air Seeds",
+"mysticalagriculture:earth_seeds,5000,Earth Seeds",
+"mysticalagriculture:water_seeds,5000,Water Seeds",
+"mysticalagriculture:fire_seeds,5000,Fire Seeds",
+"mysticalagriculture:inferium_seeds,5000,Inferium Seeds",
+"mysticalagriculture:stone_seeds,5000,Stone Seeds",
+"mysticalagriculture:dirt_seeds,5000,Dirt Seeds",
+"mysticalagriculture:wood_seeds,5000,Wood Seeds",
+"mysticalagriculture:ice_seeds,5000,Ice Seeds",
+"mysticalagriculture:deepslate_seeds,5000,Deepslate Seeds",
+
+"mysticalagriculture:nature_seeds,15000,Nature Seeds",
+"mysticalagriculture:dye_seeds,15000,Dye Seeds",
+"mysticalagriculture:nether_seeds,15000,Nether Seeds",
+"mysticalagriculture:coal_seeds,15000,Coal Seeds",
+"mysticalagriculture:coral_seeds,15000,Coral Seeds",
+"mysticalagriculture:honey_seeds,15000,Honey Seeds",
+"mysticalagriculture:amethyst_seeds,15000,Amethyst Seeds",
+
+"mysticalagriculture:pig_seeds,15000,Pig Seeds",
+"mysticalagriculture:chicken_seeds,15000,Chicken Seeds",
+"mysticalagriculture:cow_seeds,15000,Cow Seeds",
+"mysticalagriculture:sheep_seeds,15000,Sheep Seeds",
+"mysticalagriculture:squid_seeds,15000,Squid Seeds",
+"mysticalagriculture:fish_seeds,15000,Fish Seeds",
+"mysticalagriculture:slime_seeds,15000,Slime Seeds",
+"mysticalagriculture:turtle_seeds,15000,Turtle Seeds",
+"mysticalagriculture:armadillo_seeds,15000,Armadillo Seeds",
+
+"mysticalagriculture:rubber_seeds,40000,Rubber Seeds",
+"mysticalagriculture:silicon_seeds,40000,Silicon Seeds",
+"mysticalagriculture:sulfur_seeds,40000,Sulfur Seeds",
+"mysticalagriculture:aluminum_seeds,40000,Aluminum Seeds",
+"mysticalagriculture:saltpeter_seeds,40000,Saltpeter Seeds",
+"mysticalagriculture:apatite_seeds,40000,Apatite Seeds",
+"mysticalagriculture:grains_of_infinity_seeds,40000,Grains of Infinity Seeds",
+"mysticalagriculture:mystical_flower_seeds,40000,Mystical Flower Seeds",
+
+"mysticalagriculture:marble_seeds,40000,Marble Seeds",
+"mysticalagriculture:limestone_seeds,40000,Limestone Seeds",
+"mysticalagriculture:basalt_seeds,40000,Basalt Seeds",
+"mysticalagriculture:menril_seeds,40000,Menril Seeds",
+
+"mysticalagriculture:iron_seeds,40000,Iron Seeds",
+"mysticalagriculture:copper_seeds,40000,Copper Seeds",
+"mysticalagriculture:nether_quartz_seeds,40000,Nether Quartz Seeds",
+"mysticalagriculture:glowstone_seeds,40000,Glowstone Seeds",
+"mysticalagriculture:redstone_seeds,40000,Redstone Seeds",
+"mysticalagriculture:obsidian_seeds,40000,Obsidian Seeds",
+"mysticalagriculture:prismarine_seeds,40000,Prismarine Seeds",
+
+"mysticalagriculture:zombie_seeds,40000,Zombie Seeds",
+"mysticalagriculture:skeleton_seeds,40000,Skeleton Seeds",
+"mysticalagriculture:creeper_seeds,40000,Creeper Seeds",
+"mysticalagriculture:spider_seeds,40000,Spider Seeds",
+"mysticalagriculture:phantom_seeds,40000,Phantom Seeds",
+"mysticalagriculture:rabbit_seeds,40000,Rabbit Seeds",
+
+"mysticalagriculture:tin_seeds,40000,Tin Seeds",
+"mysticalagriculture:bronze_seeds,40000,Bronze Seeds",
+"mysticalagriculture:zinc_seeds,40000,Zinc Seeds",
+"mysticalagriculture:brass_seeds,40000,Brass Seeds",
+"mysticalagriculture:silver_seeds,40000,Silver Seeds",
+"mysticalagriculture:lead_seeds,40000,Lead Seeds",
+"mysticalagriculture:graphite_seeds,40000,Graphite Seeds",
+
+"mysticalagriculture:blizz_seeds,75000,Blizz Seeds",
+"mysticalagriculture:blitz_seeds,75000,Blitz Seeds",
+"mysticalagriculture:basalz_seeds,75000,Basalz Seeds",
+
+"mysticalagriculture:amethyst_bronze_seeds,75000,Amethyst Bronze Seeds",
+"mysticalagriculture:slimesteel_seeds,75000,Slimesteel Seeds",
+"mysticalagriculture:pig_iron_seeds,75000,Pig Iron Seeds",
+"mysticalagriculture:copper_alloy_seeds,75000,Copper Alloy Seeds",
+"mysticalagriculture:redstone_alloy_seeds,75000,Redstone Alloy Seeds",
+"mysticalagriculture:conductive_alloy_seeds,75000,Conductive Alloy Seeds",
+
+"mysticalagriculture:manasteel_seeds,75000,Manasteel Seeds",
+"mysticalagriculture:steeleaf_seeds,75000,Steeleaf Seeds",
+"mysticalagriculture:ironwood_seeds,75000,Ironwood Seeds",
+"mysticalagriculture:aquamarine_seeds,75000,Aquamarine Seeds",
+
+"mysticalagriculture:sky_stone_seeds,75000,Sky Stone Seeds",
+"mysticalagriculture:certus_quartz_seeds,75000,Certus Quartz Seeds",
+"mysticalagriculture:quartz_enriched_iron_seeds,75000,Quartz Enriched Iron Seeds",
+
+"mysticalagriculture:gold_seeds,75000,Gold Seeds",
+"mysticalagriculture:lapis_lazuli_seeds,75000,Lapis Lazuli Seeds",
+
+"mysticalagriculture:end_seeds,75000,End Seeds",
+"mysticalagriculture:experience_seeds,75000,Experience Seeds",
+"mysticalagriculture:breeze_seeds,75000,Breeze Seeds",
+
+"mysticalagriculture:blaze_seeds,75000,Blaze Seeds",
+"mysticalagriculture:ghast_seeds,75000,Ghast Seeds",
+"mysticalagriculture:enderman_seeds,75000,Enderman Seeds",
+
+"mysticalagriculture:steel_seeds,75000,Steel Seeds",
+"mysticalagriculture:nickel_seeds,75000,Nickel Seeds",
+"mysticalagriculture:constantan_seeds,75000,Constantan Seeds",
+"mysticalagriculture:electrum_seeds,75000,Electrum Seeds",
+"mysticalagriculture:invar_seeds,75000,Invar Seeds",
+"mysticalagriculture:uranium_seeds,75000,Uranium Seeds",
+
+"mysticalagriculture:ruby_seeds,150000,Ruby Seeds",
+"mysticalagriculture:sapphire_seeds,150000,Sapphire Seeds",
+"mysticalagriculture:peridot_seeds,150000,Peridot Seeds",
+
+"mysticalagriculture:soulium_seeds,150000,Soulium Seeds",
+
+"mysticalagriculture:signalum_seeds,150000,Signalum Seeds",
+"mysticalagriculture:lumium_seeds,150000,Lumium Seeds",
+"mysticalagriculture:flux_infused_ingot_seeds,150000,Flux-Infused Ingot Seeds",
+"mysticalagriculture:hop_graphite_seeds,150000,Hop Graphite Seeds",
+
+"mysticalagriculture:cobalt_seeds,150000,Cobalt Seeds",
+"mysticalagriculture:rose_gold_seeds,150000,Rose Gold Seeds",
+"mysticalagriculture:soularium_seeds,150000,Soularium Seeds",
+"mysticalagriculture:dark_steel_seeds,150000,Dark Steel Seeds",
+
+"mysticalagriculture:pulsating_alloy_seeds,150000,Pulsating Alloy Seeds",
+"mysticalagriculture:energetic_alloy_seeds,150000,Energetic Alloy Seeds",
+"mysticalagriculture:elementium_seeds,150000,Elementium Seeds",
+
+"mysticalagriculture:osmium_seeds,150000,Osmium Seeds",
+"mysticalagriculture:fluorite_seeds,150000,Fluorite Seeds",
+"mysticalagriculture:refined_glowstone_seeds,150000,Refined Glowstone Seeds",
+"mysticalagriculture:refined_obsidian_seeds,150000,Refined Obsidian Seeds",
+
+"mysticalagriculture:knightmetal_seeds,150000,Knightmetal Seeds",
+"mysticalagriculture:fiery_ingot_seeds,150000,Fiery Ingot Seeds",
+"mysticalagriculture:starmetal_seeds,150000,Starmetal Seeds",
+
+"mysticalagriculture:compressed_iron_seeds,150000,Compressed Iron Seeds",
+"mysticalagriculture:fluix_seeds,150000,Fluix Seeds",
+
+"mysticalagriculture:energized_steel_seeds,300000,Energized Steel Seeds",
+"mysticalagriculture:blazing_crystal_seeds,300000,Blazing Crystal Seeds",
+
+"mysticalagriculture:diamond_seeds,300000,Diamond Seeds",
+"mysticalagriculture:emerald_seeds,300000,Emerald Seeds",
+
+"mysticalagriculture:netherite_seeds,750000,Netherite Seeds",
+"mysticalagriculture:wither_skeleton_seeds,750000,Wither Skeleton Seeds",
+
+"mysticalagriculture:platinum_seeds,750000,Platinum Seeds",
+"mysticalagriculture:iridium_seeds,750000,Iridium Seeds",
+"mysticalagriculture:enderium_seeds,750000,Enderium Seeds",
+
+"mysticalagriculture:flux_infused_gem_seeds,750000,Flux-Infused Gem Seeds",
+
+"mysticalagriculture:manyullyn_seeds,750000,Manyullyn Seeds",
+"mysticalagriculture:queens_slime_seeds,750000,Queen's Slime Seeds",
+"mysticalagriculture:hepatizon_seeds,750000,Hepatizon Seeds",
+
+"mysticalagriculture:vibrant_alloy_seeds,750000,Vibrant Alloy Seeds",
+"mysticalagriculture:end_steel_seeds,750000,End Steel Seeds",
+"mysticalagriculture:terrasteel_seeds,750000,TerraSteel Seeds",
+"mysticalagriculture:rock_crystal_seeds,750000,Rock Crystal Seeds",
+
+"mysticalagriculture:draconium_seeds,2000000,Draconium Seeds",
+"mysticalagriculture:yellorium_seeds,2000000,Yellorium Seeds",
+"mysticalagriculture:cyanite_seeds,2000000,Cyanite Seeds",
+
+"mysticalagriculture:niotic_crystal_seeds,2000000,Niotic Crystal Seeds",
+"mysticalagriculture:spirited_crystal_seeds,2000000,Spirited Crystal Seeds",
+"mysticalagriculture:uraninite_seeds,2000000,Uraninite Seeds",
+
+"mysticalagriculture:nether_star_seeds,5000000,Nether Star Seeds",
+"mysticalagriculture:dragon_egg_seeds,10000000,Dragon Egg Seeds",
+"mysticalagriculture:gaia_spirit_seeds,10000000,Gaia Spirit Seeds",
+
+"mysticalagriculture:awakened_draconium_seeds,15000000,Awakened Draconium Seeds",
+"mysticalagriculture:neutronium_seeds,20000000,Neutronium Seeds",
+"mysticalagriculture:nitro_crystal_seeds,20000000,Nitro Crystal Seeds",
+
+"mysticalagriculture:allthemodium_seeds,2000000,Allthemodium Seeds",
+"mysticalagriculture:vibranium_seeds,3000000,Vibranium Seeds",
+"mysticalagriculture:unobtainium_seeds,5000000,Unobtainium Seeds",
+
+"mysticalagriculture:azure_silver_seeds,150000,Azure Silver Seeds",
+"mysticalagriculture:black_quartz_seeds,150000,Black Quartz Seeds",
+"mysticalagriculture:crimson_iron_seeds,150000,Crimson Iron Seeds",
+"mysticalagriculture:darkstone_seeds,150000,Darkstone Seeds",
+"mysticalagriculture:entro_seeds,150000,Entro Seeds",
+"mysticalagriculture:kivi_seeds,150000,Kivi Seeds",
+"mysticalagriculture:sky_steel_seeds,150000,Sky Steel Seeds",
+"mysticalagriculture:unexplored_wood_seeds,150000,Unexplored Wood Seeds",
+"mysticalagriculture:xychorium_gem_seeds,150000,Xychorium Gem Seeds",
+
 "mysticalagriculture:infusion_altar,8000,Infusion Altar", 
 "mysticalagriculture:infusion_pedestal,1500,Infusion Pedestal", 
 "mysticalagriculture:awakening_altar,150000,Awakening Altar", 
@@ -1153,9 +1348,6 @@
 "sophisticatedstorage:hopper_upgrade,2500,Hopper Upgrade",
 "sophisticatedstorage:advanced_hopper_upgrade,6000,Advanced Hopper Upgrade",
 
-"sophisticatedstorage:infinity_upgrade,500000,Infinity Upgrade",
-"sophisticatedstorage:survival_infinity_upgrade,750000,Survival Infinity Upgrade",
-
 "sophisticatedstorage:alchemy_upgrade,2500,Alchemy Upgrade",
 "sophisticatedstorage:advanced_alchemy_upgrade,6000,Advanced Alchemy Upgrade",
 
@@ -1241,23 +1433,178 @@
 "supplementaries:altimeter,100,Altimeter", 
 "supplementaries:slice_map,50,Slice Map", 
 "supplementaries:antique_ink,80,Antique Ink", 
-"powah:uraninite,50,Uraninite", 
-"powah:dry_ice,25,Dry Ice", 
-"powah:capacitor_basic_tiny,100,Tiny Basic Capacitor", 
-"powah:capacitor_basic,250,Basic Capacitor", 
-"powah:capacitor_hardened,1000,Hardened Capacitor", 
-"powah:capacitor_blazing,5000,Blazing Capacitor", 
-"powah:capacitor_niotic,25000,Niotic Capacitor", 
-"powah:capacitor_spirited,100000,Spirited Capacitor", 
-"powah:capacitor_nitro,500000,Nitro Capacitor", 
-"powah:steel_energized,75,Energized Steel", 
-"powah:crystal_blazing,500,Blazing Crystal", 
-"powah:crystal_niotic,3000,Niotic Crystal", 
-"powah:crystal_spirited,15000,Spirited Crystal", 
-"powah:crystal_nitro,75000,Nitro Crystal", 
-"powah:thermoelectric_plate,300,Thermoelectric Plate", 
-"powah:binding_card_dim,50,Dimension Binding Card", 
-"powah:wrench,50,Wrench", 
+
+"powah:thermo_generator_starter,50000,Thermo Generator (Starter)",
+"powah:thermo_generator_basic,150000,Thermo Generator (Basic)",
+"powah:thermo_generator_hardened,300000,Thermo Generator (Hardened)",
+"powah:thermo_generator_blazing,750000,Thermo Generator (Blazing)",
+"powah:thermo_generator_niotic,1500000,Thermo Generator (Niotic)",
+"powah:thermo_generator_spirited,3000000,Thermo Generator (Spirited)",
+"powah:thermo_generator_nitro,7500000,Thermo Generator (Nitro)",
+
+"powah:furnator_starter,50000,Furnator (Starter)",
+"powah:furnator_basic,150000,Furnator (Basic)",
+"powah:furnator_hardened,300000,Furnator (Hardened)",
+"powah:furnator_blazing,750000,Furnator (Blazing)",
+"powah:furnator_niotic,1500000,Furnator (Niotic)",
+"powah:furnator_spirited,3000000,Furnator (Spirited)",
+"powah:furnator_nitro,7500000,Furnator (Nitro)",
+
+"powah:magmator_starter,50000,Magmator (Starter)",
+"powah:magmator_basic,150000,Magmator (Basic)",
+"powah:magmator_hardened,300000,Magmator (Hardened)",
+"powah:magmator_blazing,750000,Magmator (Blazing)",
+"powah:magmator_niotic,1500000,Magmator (Niotic)",
+"powah:magmator_spirited,3000000,Magmator (Spirited)",
+"powah:magmator_nitro,7500000,Magmator (Nitro)",
+
+"powah:solar_panel_starter,50000,Solar Panel (Starter)",
+"powah:solar_panel_basic,150000,Solar Panel (Basic)",
+"powah:solar_panel_hardened,300000,Solar Panel (Hardened)",
+"powah:solar_panel_blazing,750000,Solar Panel (Blazing)",
+"powah:solar_panel_niotic,1500000,Solar Panel (Niotic)",
+"powah:solar_panel_spirited,3000000,Solar Panel (Spirited)",
+"powah:solar_panel_nitro,7500000,Solar Panel (Nitro)",
+
+"powah:reactor_starter,50000,Reactor (Starter)",
+"powah:reactor_basic,150000,Reactor (Basic)",
+"powah:reactor_hardened,300000,Reactor (Hardened)",
+"powah:reactor_blazing,750000,Reactor (Blazing)",
+"powah:reactor_niotic,1500000,Reactor (Niotic)",
+"powah:reactor_spirited,3000000,Reactor (Spirited)",
+"powah:reactor_nitro,7500000,Reactor (Nitro)",
+
+"powah:energy_cell_starter,50000,Energy Cell (Starter)",
+"powah:energy_cell_basic,150000,Energy Cell (Basic)",
+"powah:energy_cell_hardened,300000,Energy Cell (Hardened)",
+"powah:energy_cell_blazing,750000,Energy Cell (Blazing)",
+"powah:energy_cell_niotic,1500000,Energy Cell (Niotic)",
+"powah:energy_cell_spirited,3000000,Energy Cell (Spirited)",
+"powah:energy_cell_nitro,7500000,Energy Cell (Nitro)",
+"powah:energy_cell_creative,25000000,Energy Cell (Creative)",
+
+"powah:ender_cell_starter,50000,Ender Cell (Starter)",
+"powah:ender_cell_basic,150000,Ender Cell (Basic)",
+"powah:ender_cell_hardened,300000,Ender Cell (Hardened)",
+"powah:ender_cell_blazing,750000,Ender Cell (Blazing)",
+"powah:ender_cell_niotic,1500000,Ender Cell (Niotic)",
+"powah:ender_cell_spirited,3000000,Ender Cell (Spirited)",
+"powah:ender_cell_nitro,7500000,Ender Cell (Nitro)",
+
+"powah:energy_discharger_starter,50000,Energy Discharger (Starter)",
+"powah:energy_discharger_basic,150000,Energy Discharger (Basic)",
+"powah:energy_discharger_hardened,300000,Energy Discharger (Hardened)",
+"powah:energy_discharger_blazing,750000,Energy Discharger (Blazing)",
+"powah:energy_discharger_niotic,1500000,Energy Discharger (Niotic)",
+"powah:energy_discharger_spirited,3000000,Energy Discharger (Spirited)",
+"powah:energy_discharger_nitro,7500000,Energy Discharger (Nitro)",
+
+"powah:energy_hopper_starter,50000,Energy Hopper (Starter)",
+"powah:energy_hopper_basic,150000,Energy Hopper (Basic)",
+"powah:energy_hopper_hardened,300000,Energy Hopper (Hardened)",
+"powah:energy_hopper_blazing,750000,Energy Hopper (Blazing)",
+"powah:energy_hopper_niotic,1500000,Energy Hopper (Niotic)",
+"powah:energy_hopper_spirited,3000000,Energy Hopper (Spirited)",
+"powah:energy_hopper_nitro,7500000,Energy Hopper (Nitro)",
+
+"powah:energy_cable_starter,50000,Energy Cable (Starter)",
+"powah:energy_cable_basic,150000,Energy Cable (Basic)",
+"powah:energy_cable_hardened,300000,Energy Cable (Hardened)",
+"powah:energy_cable_blazing,750000,Energy Cable (Blazing)",
+"powah:energy_cable_niotic,1500000,Energy Cable (Niotic)",
+"powah:energy_cable_spirited,3000000,Energy Cable (Spirited)",
+"powah:energy_cable_nitro,7500000,Energy Cable (Nitro)",
+
+"powah:ender_gate_starter,50000,Ender Gate (Starter)",
+"powah:ender_gate_basic,150000,Ender Gate (Basic)",
+"powah:ender_gate_hardened,300000,Ender Gate (Hardened)",
+"powah:ender_gate_blazing,750000,Ender Gate (Blazing)",
+"powah:ender_gate_niotic,1500000,Ender Gate (Niotic)",
+"powah:ender_gate_spirited,3000000,Ender Gate (Spirited)",
+"powah:ender_gate_nitro,7500000,Ender Gate (Nitro)",
+
+"powah:player_transmitter_starter,50000,Player Transmitter (Starter)",
+"powah:player_transmitter_basic,150000,Player Transmitter (Basic)",
+"powah:player_transmitter_hardened,300000,Player Transmitter (Hardened)",
+"powah:player_transmitter_blazing,750000,Player Transmitter (Blazing)",
+"powah:player_transmitter_niotic,1500000,Player Transmitter (Niotic)",
+"powah:player_transmitter_spirited,3000000,Player Transmitter (Spirited)",
+"powah:player_transmitter_nitro,7500000,Player Transmitter (Nitro)",
+
+"powah:energizing_rod_starter,50000,Energizing Rod (Starter)",
+"powah:energizing_rod_basic,150000,Energizing Rod (Basic)",
+"powah:energizing_rod_hardened,300000,Energizing Rod (Hardened)",
+"powah:energizing_rod_blazing,750000,Energizing Rod (Blazing)",
+"powah:energizing_rod_niotic,1500000,Energizing Rod (Niotic)",
+"powah:energizing_rod_spirited,3000000,Energizing Rod (Spirited)",
+"powah:energizing_rod_nitro,7500000,Energizing Rod (Nitro)",
+
+"powah:energizing_orb,300000,Energizing Orb",
+
+"powah:uraninite_ore_poor,150000,Uraninite Ore (Poor)",
+"powah:uraninite_ore,300000,Uraninite Ore",
+"powah:uraninite_ore_dense,750000,Uraninite Ore (Dense)",
+"powah:deepslate_uraninite_ore_poor,150000,Deepslate Uraninite Ore (Poor)",
+"powah:deepslate_uraninite_ore,300000,Deepslate Uraninite Ore",
+"powah:deepslate_uraninite_ore_dense,750000,Deepslate Uraninite Ore (Dense)",
+"powah:uraninite_raw,150000,Raw Uraninite",
+"powah:uraninite,300000,Uraninite",
+"powah:uraninite_block,750000,Uraninite Block",
+
+"powah:dry_ice,150000,Dry Ice",
+
+"powah:blazing_crystal_block,750000,Blazing Crystal Block",
+"powah:niotic_crystal_block,1500000,Niotic Crystal Block",
+"powah:spirited_crystal_block,3000000,Spirited Crystal Block",
+"powah:nitro_crystal_block,7500000,Nitro Crystal Block",
+
+"powah:steel_energized,300000,Energized Steel",
+"powah:energized_steel_block,750000,Energized Steel Block",
+
+"powah:crystal_blazing,750000,Blazing Crystal",
+"powah:crystal_niotic,1500000,Niotic Crystal",
+"powah:crystal_spirited,3000000,Spirited Crystal",
+"powah:crystal_nitro,7500000,Nitro Crystal",
+
+"powah:capacitor_basic_tiny,50000,Tiny Basic Capacitor",
+"powah:capacitor_basic,150000,Basic Capacitor",
+"powah:capacitor_basic_large,300000,Large Basic Capacitor",
+"powah:capacitor_hardened,300000,Hardened Capacitor",
+"powah:capacitor_blazing,750000,Blazing Capacitor",
+"powah:capacitor_niotic,1500000,Niotic Capacitor",
+"powah:capacitor_spirited,3000000,Spirited Capacitor",
+"powah:capacitor_nitro,7500000,Nitro Capacitor",
+
+"powah:battery_starter,50000,Battery (Starter)",
+"powah:battery_basic,150000,Battery (Basic)",
+"powah:battery_hardened,300000,Battery (Hardened)",
+"powah:battery_blazing,750000,Battery (Blazing)",
+"powah:battery_niotic,1500000,Battery (Niotic)",
+"powah:battery_spirited,3000000,Battery (Spirited)",
+"powah:battery_nitro,7500000,Battery (Nitro)",
+
+"powah:aerial_pearl,150000,Aerial Pearl",
+"powah:player_aerial_pearl,300000,Player Aerial Pearl",
+
+"powah:blank_card,50000,Blank Card",
+"powah:binding_card,150000,Binding Card",
+"powah:binding_card_dim,300000,Dimensional Binding Card",
+
+"powah:lens_of_ender,150000,Lens of Ender",
+"powah:photoelectric_pane,150000,Photoelectric Pane",
+"powah:thermoelectric_plate,150000,Thermoelectric Plate",
+
+"powah:dielectric_paste,50000,Dielectric Paste",
+"powah:dielectric_rod,50000,Dielectric Rod",
+"powah:dielectric_rod_horizontal,50000,Dielectric Rod Horizontal",
+"powah:dielectric_casing,150000,Dielectric Casing",
+
+"powah:ender_core,300000,Ender Core",
+"powah:charged_snowball,50000,Charged Snowball",
+
+"powah:book,50000,Powah Book",
+"powah:wrench,50000,Powah Wrench",
+
 "fluxnetworks:flux_dust,50,Flux Dust", 
 "fluxnetworks:flux_core,250,Flux Core", 
 "fluxnetworks:flux_plug,1500,Flux Plug", 
@@ -1267,21 +1614,247 @@
 "fluxnetworks:herculean_flux_storage,25000,Herculean Flux Storage", 
 "fluxnetworks:gargantuan_flux_storage,150000,Gargantuan Flux Storage", 
 "fluxnetworks:flux_configurator,500,Flux Configurator", 
-"allthemodium:allthemodium_ingot,100000,Allthemodium Ingot", 
-"allthemodium:vibranium_ingot,250000,Vibranium Ingot", 
-"allthemodium:unobtainium_ingot,750000,Unobtainium Ingot", 
-"allthemodium:allthemodium_nugget,12000,Allthemodium Nugget", 
-"allthemodium:vibranium_nugget,28000,Vibranium Nugget", 
-"allthemodium:unobtainium_nugget,85000,Unobtainium Nugget", 
-"allthemodium:allthemodium_block,900000,Allthemodium Block", 
-"allthemodium:vibranium_block,2250000,Vibranium Block", 
-"allthemodium:unobtainium_block,6750000,Unobtainium Block", 
-"allthemodium:allthemodium_ore,80000,Allthemodium Ore", 
-"allthemodium:vibranium_ore,200000,Vibranium Ore", 
-"allthemodium:unobtainium_ore,600000,Unobtainium Ore", 
-"allthemodium:raw_allthemodium,90000,Raw Allthemodium", 
-"allthemodium:raw_vibranium,220000,Raw Vibranium", 
-"allthemodium:raw_unobtainium,650000,Raw Unobtainium", 
+
+"ironfurnaces:allthemodium_furnace,5000000,Allthemodium Furnace",
+"ironfurnaces:upgrade_allthemodium,2500000,Allthemodium Furnace Upgrade",
+
+"allthemodium:allthemodium_apple,3000000,Allthemodium Apple",
+"allthemodium:allthemodium_carrot,3000000,Allthemodium Carrot",
+
+"allthemodium:allthemodium_helmet,5000000,Allthemodium Helmet",
+"allthemodium:allthemodium_chestplate,6000000,Allthemodium Chestplate",
+"allthemodium:allthemodium_leggings,5500000,Allthemodium Leggings",
+"allthemodium:allthemodium_boots,5000000,Allthemodium Boots",
+
+"allthemodium:vibranium_helmet,15000000,Vibranium Helmet",
+"allthemodium:vibranium_chestplate,17500000,Vibranium Chestplate",
+"allthemodium:vibranium_leggings,16000000,Vibranium Leggings",
+"allthemodium:vibranium_boots,15000000,Vibranium Boots",
+
+"allthemodium:unobtainium_helmet,30000000,Unobtainium Helmet",
+"allthemodium:unobtainium_chestplate,35000000,Unobtainium Chestplate",
+"allthemodium:unobtainium_leggings,32500000,Unobtainium Leggings",
+"allthemodium:unobtainium_boots,30000000,Unobtainium Boots",
+
+"allthemodium:allthemodium_sword,6000000,Allthemodium Sword",
+"allthemodium:vibranium_sword,20000000,Vibranium Sword",
+"allthemodium:unobtainium_sword,40000000,Unobtainium Sword",
+
+"allthemodium:allthemodium_pickaxe,6000000,Allthemodium Pickaxe",
+"allthemodium:vibranium_pickaxe,20000000,Vibranium Pickaxe",
+"allthemodium:unobtainium_pickaxe,40000000,Unobtainium Pickaxe",
+
+"allthemodium:allthemodium_axe,6000000,Allthemodium Axe",
+"allthemodium:vibranium_axe,20000000,Vibranium Axe",
+"allthemodium:unobtainium_axe,40000000,Unobtainium Axe",
+
+"allthemodium:allthemodium_shovel,6000000,Allthemodium Shovel",
+"allthemodium:vibranium_shovel,20000000,Vibranium Shovel",
+"allthemodium:unobtainium_shovel,40000000,Unobtainium Shovel",
+
+"allthemodium:allthemodium_hoe,6000000,Allthemodium Hoe",
+"allthemodium:vibranium_hoe,20000000,Vibranium Hoe",
+"allthemodium:unobtainium_hoe,40000000,Unobtainium Hoe",
+
+"allthemodium:allthemodium_mace,8000000,Allthemodium Mace",
+"allthemodium:vibranium_mace,25000000,Vibranium Mace",
+"allthemodium:unobtainium_mace,50000000,Unobtainium Mace",
+
+"allthemodium:allthemodium_bow,8000000,Allthemodium Bow",
+"allthemodium:unobtainium_crossbow,50000000,Unobtainium Crossbow",
+"allthemodium:vibranium_shield,20000000,Vibranium Shield",
+
+"allthemodium:alloy_trident,30000000,Alloy Trident",
+"allthemodium:alloy_sword,25000000,Alloy Sword",
+"allthemodium:alloy_axe,25000000,Alloy Axe",
+"allthemodium:alloy_pick,25000000,Alloy Pickaxe",
+"allthemodium:alloy_shovel,25000000,Alloy Shovel",
+"allthemodium:alloy_paxel,35000000,Alloy Paxel",
+
+"allthemodium:allthemodium_ingot,1500000,Allthemodium Ingot",
+"allthemodium:vibranium_ingot,5000000,Vibranium Ingot",
+"allthemodium:unobtainium_ingot,10000000,Unobtainium Ingot",
+
+"allthemodium:allthemodium_plate,2000000,Allthemodium Plate",
+"allthemodium:vibranium_plate,6000000,Vibranium Plate",
+"allthemodium:unobtainium_plate,12000000,Unobtainium Plate",
+
+"allthemodium:allthemodium_gear,2000000,Allthemodium Gear",
+"allthemodium:vibranium_gear,6000000,Vibranium Gear",
+"allthemodium:unobtainium_gear,12000000,Unobtainium Gear",
+
+"allthemodium:allthemodium_rod,1500000,Allthemodium Rod",
+"allthemodium:vibranium_rod,5000000,Vibranium Rod",
+"allthemodium:unobtainium_rod,10000000,Unobtainium Rod",
+
+"allthemodium:allthemodium_nugget,250000,Allthemodium Nugget",
+"allthemodium:vibranium_nugget,750000,Vibranium Nugget",
+"allthemodium:unobtainium_nugget,1500000,Unobtainium Nugget",
+
+"allthemodium:allthemodium_dust,1500000,Allthemodium Dust",
+"allthemodium:vibranium_dust,5000000,Vibranium Dust",
+"allthemodium:unobtainium_dust,10000000,Unobtainium Dust",
+
+"allthemodium:unobtainium_allthemodium_alloy_ingot,25000000,Unobtainium-Allthemodium Alloy Ingot",
+"allthemodium:unobtainium_vibranium_alloy_ingot,30000000,Unobtainium-Vibranium Alloy Ingot",
+"allthemodium:vibranium_allthemodium_alloy_ingot,20000000,Vibranium-Allthemodium Alloy Ingot",
+
+"allthemodium:unobtainium_allthemodium_alloy_block,50000000,Unobtainium-Allthemodium Alloy Block",
+"allthemodium:unobtainium_vibranium_alloy_block,60000000,Unobtainium-Vibranium Alloy Block",
+"allthemodium:vibranium_allthemodium_alloy_block,40000000,Vibranium-Allthemodium Alloy Block",
+
+"allthemodium:allthemodium_block,5000000,Allthemodium Block",
+"allthemodium:vibranium_block,15000000,Vibranium Block",
+"allthemodium:unobtainium_block,30000000,Unobtainium Block",
+
+"allthemodium:raw_allthemodium_block,3000000,Raw Allthemodium Block",
+"allthemodium:raw_vibranium_block,10000000,Raw Vibranium Block",
+"allthemodium:raw_unobtainium_block,20000000,Raw Unobtainium Block",
+
+"allthemodium:allthemodium_ore,2000000,Allthemodium Ore",
+"allthemodium:allthemodium_slate_ore,2500000,Allthemodium Slate Ore",
+"allthemodium:vibranium_ore,7500000,Vibranium Ore",
+"allthemodium:other_vibranium_ore,7500000,Other Vibranium Ore",
+"allthemodium:unobtainium_ore,15000000,Unobtainium Ore",
+
+"allthemodium:teleport_pad,100000000,Teleport Pad",
+"allthemodium:piglich_heart,50000000,Piglich Heart",
+"allthemodium:piglich_heart_block,150000000,Piglich Heart Block",
+
+"allthemodium:allthemodium_upgrade_smithing_template,5000000,Allthemodium Smithing Template",
+"allthemodium:vibranium_upgrade_smithing_template,15000000,Vibranium Smithing Template",
+"allthemodium:unobtainium_upgrade_smithing_template,30000000,Unobtainium Smithing Template",
+
+"allthemodium:soul_sapling,500000,Soul Sapling",
+"allthemodium:ancient_sapling,500000,Ancient Sapling",
+"allthemodium:demonic_sapling,500000,Demonic Sapling",
+
+"allthemodium:ancient_cavevines_plant,250000,Ancient Cavevines Plant",
+"allthemodium:ancient_soulberries,250000,Ancient Soulberries",
+
+"allthemodium:ancient_herb,200000,Ancient Herb",
+"allthemodium:demonic_herb,200000,Demonic Herb",
+"allthemodium:soul_herb,200000,Soul Herb",
+
+"allthemodium:ancient_log_0,150000,Ancient Log 0",
+"allthemodium:ancient_log_1,150000,Ancient Log 1",
+"allthemodium:ancient_log_2,150000,Ancient Log 2",
+"allthemodium:stripped_ancient_log,200000,Stripped Ancient Log",
+"allthemodium:ancient_leaves,150000,Ancient Leaves",
+"allthemodium:ancient_planks,150000,Ancient Planks",
+"allthemodium:ancient_bookshelf,200000,Ancient Bookshelf",
+
+"allthemodium:soul_log,150000,Soul Log",
+"allthemodium:soul_log_0,150000,Soul Log 0",
+"allthemodium:soul_log_1,150000,Soul Log 1",
+"allthemodium:soul_log_2,150000,Soul Log 2",
+"allthemodium:stripped_soul_log,200000,Stripped Soul Log",
+"allthemodium:soul_leaves,150000,Soul Leaves",
+"allthemodium:soul_planks,150000,Soul Planks",
+"allthemodium:soul_bookshelf,200000,Soul Bookshelf",
+
+"allthemodium:demonic_log,150000,Demonic Log",
+"allthemodium:stripped_demonic_log,200000,Stripped Demonic Log",
+"allthemodium:demonic_leaves,150000,Demonic Leaves",
+"allthemodium:demonic_planks,150000,Demonic Planks",
+"allthemodium:demonic_bookshelf,200000,Demonic Bookshelf",
+
+"allthemodium:ancient_wooden_slabs,100000,Ancient Wooden Slabs",
+"allthemodium:demonic_wooden_slabs,100000,Demonic Wooden Slabs",
+"allthemodium:soul_wooden_slabs,100000,Soul Wooden Slabs",
+
+"allthemodium:ancient_wooden_stairs,150000,Ancient Wooden Stairs",
+"allthemodium:demonic_wooden_stairs,150000,Demonic Wooden Stairs",
+"allthemodium:soul_wooden_stairs,150000,Soul Wooden Stairs",
+
+"allthemodium:ancient_wooden_fence,100000,Ancient Wooden Fence",
+"allthemodium:ancient_wooden_fence_gate,150000,Ancient Wooden Fence Gate",
+"allthemodium:demonic_wooden_fence,100000,Demonic Wooden Fence",
+"allthemodium:demonic_wooden_fence_gate,150000,Demonic Wooden Fence Gate",
+"allthemodium:soul_wooden_fence,100000,Soul Wooden Fence",
+"allthemodium:soul_wooden_fence_gate,150000,Soul Wooden Fence Gate",
+
+"allthemodium:ancient_stone,150000,Ancient Stone",
+"allthemodium:ancient_smooth_stone,150000,Ancient Smooth Stone",
+"allthemodium:ancient_dirt,100000,Ancient Dirt",
+"allthemodium:ancient_grass,100000,Ancient Grass",
+"allthemodium:ancient_mossy_stone,150000,Ancient Mossy Stone",
+
+"allthemodium:ancient_stone_bricks,200000,Ancient Stone Bricks",
+"allthemodium:ancient_chiseled_stone_bricks,250000,Ancient Chiseled Stone Bricks",
+"allthemodium:ancient_cracked_stone_bricks,250000,Ancient Cracked Stone Bricks",
+"allthemodium:ancient_polished_stone,200000,Ancient Polished Stone",
+
+"allthemodium:ancient_stone_wall,200000,Ancient Stone Wall",
+"allthemodium:ancient_smooth_stone_wall,200000,Ancient Smooth Stone Wall",
+"allthemodium:ancient_polished_stone_wall,250000,Ancient Polished Stone Wall",
+"allthemodium:ancient_stone_brick_wall,250000,Ancient Stone Brick Wall",
+"allthemodium:ancient_chiseled_stone_brick_wall,300000,Ancient Chiseled Stone Brick Wall",
+"allthemodium:ancient_cracked_stone_brick_wall,300000,Ancient Cracked Stone Brick Wall",
+"allthemodium:ancient_mossy_stone_wall,250000,Ancient Mossy Stone Wall",
+
+"allthemodium:ancient_stone_slabs,150000,Ancient Stone Slabs",
+"allthemodium:ancient_smooth_stone_slabs,150000,Ancient Smooth Stone Slabs",
+"allthemodium:ancient_stone_brick_slabs,200000,Ancient Stone Brick Slabs",
+"allthemodium:ancient_mossy_stone_slabs,200000,Ancient Mossy Stone Slabs",
+"allthemodium:ancient_chiseled_stone_brick_slabs,250000,Ancient Chiseled Stone Brick Slabs",
+"allthemodium:ancient_cracked_stone_brick_slabs,250000,Ancient Cracked Stone Brick Slabs",
+"allthemodium:ancient_polished_stone_slabs,200000,Ancient Polished Stone Slabs",
+
+"allthemodium:ancient_stone_stairs,200000,Ancient Stone Stairs",
+"allthemodium:ancient_smooth_stone_stairs,200000,Ancient Smooth Stone Stairs",
+"allthemodium:ancient_stone_brick_stairs,250000,Ancient Stone Brick Stairs",
+"allthemodium:ancient_mossy_stone_stairs,250000,Ancient Mossy Stone Stairs",
+"allthemodium:ancient_chiseled_stone_brick_stairs,300000,Ancient Chiseled Stone Brick Stairs",
+"allthemodium:ancient_cracked_stone_brick_stairs,300000,Ancient Cracked Stone Brick Stairs",
+"allthemodium:ancient_polished_stone_stairs,250000,Ancient Polished Stone Stairs",
+
+"allthemodium:ancient_door,200000,Ancient Door",
+"allthemodium:demonic_door,200000,Demonic Door",
+"allthemodium:soul_door,200000,Soul Door",
+
+"allthemodium:ancient_trap_door,150000,Ancient Trapdoor",
+"allthemodium:demonic_trap_door,150000,Demonic Trapdoor",
+"allthemodium:soul_trap_door,150000,Soul Trapdoor",
+
+"allthemodium:suspicious_clay,250000,Suspicious Clay",
+"allthemodium:suspicious_soul_sand,250000,Suspicious Soul Sand",
+
+"allthemodium:allthemodium_clump,1500000,Allthemodium Clump",
+"allthemodium:vibranium_clump,5000000,Vibranium Clump",
+"allthemodium:unobtainium_clump,10000000,Unobtainium Clump",
+
+"allthemodium:allthemodium_shard,1000000,Allthemodium Shard",
+"allthemodium:vibranium_shard,3000000,Vibranium Shard",
+"allthemodium:unobtainium_shard,6000000,Unobtainium Shard",
+
+"allthemodium:dirty_allthemodium_dust,1000000,Dirty Allthemodium Dust",
+"allthemodium:dirty_vibranium_dust,3000000,Dirty Vibranium Dust",
+"allthemodium:dirty_unobtainium_dust,6000000,Dirty Unobtainium Dust",
+
+"allthemodium:allthemodium_crystal,2000000,Allthemodium Crystal",
+"allthemodium:vibranium_crystal,6000000,Vibranium Crystal",
+"allthemodium:unobtainium_crystal,12000000,Unobtainium Crystal",
+
+"allthemodium:soul_lava_bucket,5000000,Soul Lava Bucket",
+"allthemodium:molten_allthemodium_bucket,8000000,Molten Allthemodium Bucket",
+"allthemodium:molten_vibranium_bucket,15000000,Molten Vibranium Bucket",
+"allthemodium:molten_unobtainium_bucket,30000000,Molten Unobtainium Bucket",
+
+"allthemodium:allthemodium_source_jar,5000000,Allthemodium Source Jar",
+
+"allthearcanistgear:allthemodium_hat,10000000,Allthemodium Arcanist Hat",
+"allthearcanistgear:allthemodium_robes,15000000,Allthemodium Arcanist Robes",
+"allthearcanistgear:allthemodium_leggings,12500000,Allthemodium Arcanist Leggings",
+"allthearcanistgear:allthemodium_boots,10000000,Allthemodium Arcanist Boots",
+"allthearcanistgear:allthemodium_spell_book,20000000,Allthemodium Arcanist Spell Book",
+
+"allthewizardgear:allthemodium_mage_helmet,15000000,Allthemodium Mage Helmet",
+"allthewizardgear:allthemodium_mage_chestplate,20000000,Allthemodium Mage Chestplate",
+"allthewizardgear:allthemodium_mage_leggings,17500000,Allthemodium Mage Leggings",
+"allthewizardgear:allthemodium_mage_boots,15000000,Allthemodium Mage Boots",
+"allthewizardgear:allthemodium_spell_book,25000000,Allthemodium Mage Spell Book",
+
 "comforts:sleeping_bag_white,200,Sleeping Bag", 
 "comforts:hammock_white,300,Hammock", 
 "elevatorid:elevator_white,500,Elevator", 
@@ -1362,76 +1935,343 @@
 "modern_industrialization:runic_item_output_hatch,90000,Runic Item Output Hatch", 
 "modern_industrialization:runic_storage_unit,125000,Runic Storage Unit", 
 
-"oritech:creative_storage_block,25000000,Oritech Creative Storage Block", 
-"oritech:creative_tank_block,25000000,Oritech Creative Tank Block", 
-"evilcraft:creative_blood_drop,15000000,Creative Blood Drop", 
-"universalgrid:creative_wireless_universal_grid,35000000,Creative Wireless Universal Grid", 
-"refinedstorage:creative_controller,50000000,Creative Controller", 
-"refinedstorage:creative_storage_disk,40000000,Creative Storage Disk", 
-"refinedstorage:creative_storage_block,40000000,Creative Storage Block", 
-"refinedstorage:creative_fluid_storage_disk,40000000,Creative Fluid Storage Disk", 
-"refinedstorage:creative_fluid_storage_block,40000000,Creative Fluid Storage Block", 
-"refinedstorage:creative_range_upgrade,25000000,Creative Range Upgrade", 
-"refinedstorage:creative_wireless_grid,30000000,Creative Wireless Grid", 
-"refinedstorage:creative_portable_grid,30000000,Creative Portable Grid", 
-"refinedstorage:creative_wireless_autocrafting_monitor,35000000,Creative Wireless Autocrafting Monitor", 
-"enderio:creative_power,50000000,Creative Power", 
-"tempad:creative_chronometer,20000000,Creative Chronometer", 
-"mininggadgets:upgrade_battery_creative,15000000,Creative Battery Upgrade", 
-"mysticalagriculture:creative_soulium_dagger,25000000,Creative Soulium Dagger", 
-"functionalstorage:creative_vending_upgrade,20000000,Creative Vending Upgrade", 
-"modularrouters:creative_module,15000000,Creative Module", 
-"createaddition:creative_energy,35000000,Creative Energy", 
-"quarryplus:creative_generator,50000000,Creative Generator", 
-"powah:energy_cell_creative,50000000,Creative Energy Cell", 
-"cabletiers:creative_importer,15000000,Creative Importer", 
-"cabletiers:creative_exporter,15000000,Creative Exporter", 
-"cabletiers:creative_destructor,15000000,Creative Destructor", 
-"cabletiers:creative_constructor,15000000,Creative Constructor", 
-"cabletiers:creative_disk_interface,20000000,Creative Disk Interface", 
-"cabletiers:creative_autocrafter,25000000,Creative Autocrafter", 
-"cabletiers:creative_interface,20000000,Creative Interface", 
-"mysticalagradditions:creative_essence,25000000,Creative Essence", 
-"mekanism:creative_bin,30000000,Creative Bin", 
-"mekanism:creative_fluid_tank,40000000,Creative Fluid Tank", 
-"mekanism:creative_energy_cube,50000000,Creative Energy Cube", 
-"mekanism:creative_chemical_tank,50000000,Creative Chemical Tank", 
-"mekanism_extras:upgrade_creative,15000000,Creative Upgrade", 
-"pneumaticcraft:creative_upgrade,20000000,Creative Upgrade", 
-"pneumaticcraft:creative_compressor,35000000,Creative Compressor", 
-"pneumaticcraft:creative_compressed_iron_block,25000000,Creative Compressed Iron Block", 
-"iceandfire:creative_dragon_meal,10000000,Creative Dragon Meal", 
-"immersiveengineering:capacitor_creative,40000000,Creative Capacitor", 
-"integrateddynamics:energy_battery_creative,35000000,Creative Energy Battery", 
-"railcraft:creative_locomotive,50000000,Creative Locomotive", 
-"refinedstorage_quartz_arsenal:creative_wireless_crafting_grid,30000000,Creative Wireless Crafting Grid", 
-"ars_nouveau:creative_spell_book,50000000,Creative Spell Book", 
-"ars_nouveau:creative_source_jar,20000000,Creative Source Jar", 
-"refinedstorage_mekanism_integration:creative_chemical_storage_disk,40000000,Creative Chemical Storage Disk", 
-"refinedstorage_mekanism_integration:creative_chemical_storage_block,40000000,Creative Chemical Storage Block", 
-"xycraft_machines:creative_cell,25000000,Creative Cell", 
-"allthearcanistgear:creative_spell_book,50000000,Creative Spell Book", 
-"draconicevolution:creative_capacitor,75000000,Creative Capacitor", 
-"draconicevolution:creative_op_capacitor,100000000,Creative OP Capacitor", 
-"bigreactors:reinforced_reactorcreativewatergenerator,50000000,Reinforced Creative Water Generator", 
-"bigreactors:basic_turbinecreativesteamgenerator,40000000,Basic Creative Steam Generator", 
-"bigreactors:reinforced_turbinecreativesteamgenerator,60000000,Reinforced Creative Steam Generator", 
-"rftoolspower:dimensionalcell_creative,45000000,Creative Dimensional Cell", 
-"rftoolsutility:creative_screen,15000000,Creative Screen", 
-"ae2:creative_storage_cell,40000000,Creative Storage Cell", 
-"ae2:creative_energy_cell,50000000,Creative Energy Cell", 
-"enderdrives:ender_disk_creative,25000000,Creative Ender Disk", 
-"modern_industrialization:creative_tank,40000000,Creative Tank", 
-"modern_industrialization:creative_barrel,40000000,Creative Barrel", 
-"modern_industrialization:creative_storage_unit,50000000,Creative Storage Unit", 
-"stevescarts:upgrade_creative_mode,15000000,Creative Mode Upgrade", 
-"stevescarts:module_creative_hull,25000000,Creative Hull Module", 
-"stevescarts:module_creative_engine,25000000,Creative Engine Module", 
-"create:creative_motor,35000000,Creative Motor", 
-"create:creative_fluid_tank,30000000,Creative Fluid Tank", 
-"create:creative_crate,25000000,Creative Crate", 
-"create:creative_blaze_cake,10000000,Creative Blaze Cake",
-	
+"enderio:copper_alloy_ingot,150000,Copper Alloy Ingot",
+"enderio:energetic_alloy_ingot,300000,Energetic Alloy Ingot",
+"enderio:vibrant_alloy_ingot,500000,Vibrant Alloy Ingot",
+"enderio:redstone_alloy_ingot,200000,Redstone Alloy Ingot",
+"enderio:conductive_alloy_ingot,250000,Conductive Alloy Ingot",
+"enderio:pulsating_alloy_ingot,300000,Pulsating Alloy Ingot",
+"enderio:dark_steel_ingot,400000,Dark Steel Ingot",
+"enderio:soularium_ingot,350000,Soularium Ingot",
+"enderio:end_steel_ingot,600000,End Steel Ingot",
+
+"enderio:copper_alloy_nugget,25000,Copper Alloy Nugget",
+"enderio:energetic_alloy_nugget,50000,Energetic Alloy Nugget",
+"enderio:vibrant_alloy_nugget,75000,Vibrant Alloy Nugget",
+"enderio:redstone_alloy_nugget,30000,Redstone Alloy Nugget",
+"enderio:conductive_alloy_nugget,35000,Conductive Alloy Nugget",
+"enderio:pulsating_alloy_nugget,50000,Pulsating Alloy Nugget",
+"enderio:dark_steel_nugget,60000,Dark Steel Nugget",
+"enderio:soularium_nugget,50000,Soularium Nugget",
+"enderio:end_steel_nugget,75000,End Steel Nugget",
+
+"enderio:copper_alloy_block,500000,Copper Alloy Block",
+"enderio:energetic_alloy_block,750000,Energetic Alloy Block",
+"enderio:vibrant_alloy_block,1000000,Vibrant Alloy Block",
+"enderio:redstone_alloy_block,600000,Redstone Alloy Block",
+"enderio:conductive_alloy_block,650000,Conductive Alloy Block",
+"enderio:pulsating_alloy_block,750000,Pulsating Alloy Block",
+"enderio:dark_steel_block,1000000,Dark Steel Block",
+"enderio:soularium_block,900000,Soularium Block",
+"enderio:end_steel_block,1500000,End Steel Block",
+
+"enderio:pulsating_crystal,500000,Pulsating Crystal",
+"enderio:vibrant_crystal,750000,Vibrant Crystal",
+"enderio:ender_crystal,1000000,Ender Crystal",
+"enderio:enticing_crystal,750000,Enticing Crystal",
+"enderio:weather_crystal,1000000,Weather Crystal",
+"enderio:prescient_crystal,1500000,Prescient Crystal",
+
+"enderio:basic_capacitor,150000,Basic Capacitor",
+"enderio:double_layer_capacitor,300000,Double Layer Capacitor",
+"enderio:octadic_capacitor,600000,Octadic Capacitor",
+"enderio:loot_capacitor,750000,Loot Capacitor",
+
+"enderio:zombie_electrode,300000,Zombie Electrode",
+"enderio:z_logic_controller,500000,Z-Logic Controller",
+"enderio:frank_n_zombie,750000,Frank N. Zombie",
+"enderio:ender_resonator,750000,Ender Resonator",
+"enderio:sentient_ender,1000000,Sentient Ender",
+"enderio:skeletal_contractor,750000,Skeletal Contractor",
+"enderio:guardian_diode,750000,Guardian Diode",
+"enderio:suspicious_seed,250000,Suspicious Seed",
+
+"enderio:silicon,50000,Silicon",
+"enderio:grains_of_infinity,150000,Grains of Infinity",
+"enderio:infinity_rod,300000,Infinity Rod",
+"enderio:conduit_binder_composite,50000,Conduit Binder Composite",
+"enderio:conduit_binder,75000,Conduit Binder",
+
+"enderio:powdered_coal,50000,Powdered Coal",
+"enderio:powdered_iron,75000,Powdered Iron",
+"enderio:powdered_gold,100000,Powdered Gold",
+"enderio:powdered_copper,75000,Powdered Copper",
+"enderio:powdered_tin,75000,Powdered Tin",
+"enderio:powdered_ender_pearl,150000,Powdered Ender Pearl",
+"enderio:powdered_obsidian,150000,Powdered Obsidian",
+"enderio:powdered_cobalt,200000,Powdered Cobalt",
+"enderio:powdered_lapis_lazuli,75000,Powdered Lapis",
+"enderio:powdered_quartz,75000,Powdered Quartz",
+
+"enderio:prescient_powder,250000,Prescient Powder",
+"enderio:vibrant_powder,200000,Vibrant Powder",
+"enderio:pulsating_powder,150000,Pulsating Powder",
+"enderio:ender_crystal_powder,250000,Ender Crystal Powder",
+"enderio:soul_powder,150000,Soul Powder",
+"enderio:confusing_powder,150000,Confusing Powder",
+"enderio:withering_powder,200000,Withering Powder",
+
+"enderio:iron_gear,150000,Iron Gear",
+"enderio:energized_gear,300000,Energized Gear",
+"enderio:vibrant_gear,500000,Vibrant Gear",
+"enderio:dark_bimetal_gear,400000,Dark Bimetal Gear",
+
+"enderio:photovoltaic_composite,200000,Photovoltaic Composite",
+"enderio:photovoltaic_plate,300000,Photovoltaic Plate",
+
+"enderio:fluid_tank,250000,Fluid Tank",
+"enderio:pressurized_fluid_tank,500000,Pressurized Fluid Tank",
+
+"enderio:nutrient_distillation_bucket,250000,Nutrient Distillation Bucket",
+"enderio:dew_of_the_void_bucket,300000,Dew of the Void Bucket",
+"enderio:vapor_of_levity_bucket,300000,Vapor of Levity Bucket",
+"enderio:hootch_bucket,150000,Hootch Bucket",
+"enderio:rocket_fuel_bucket,300000,Rocket Fuel Bucket",
+"enderio:fire_water_bucket,300000,Fire Water Bucket",
+"enderio:xp_juice_bucket,200000,XP Juice Bucket",
+"enderio:liquid_sunshine_bucket,250000,Liquid Sunshine Bucket",
+"enderio:liquid_darkness_bucket,250000,Liquid Darkness Bucket",
+"enderio:cloud_seed_bucket,200000,Cloud Seed Bucket",
+"enderio:cloud_seed_concentrated_bucket,300000,Concentrated Cloud Seed Bucket",
+
+"enderio:stirling_generator,1000000,Stirling Generator",
+"enderio:sag_mill,1500000,Sag Mill",
+"enderio:alloy_smelter,1500000,Alloy Smelter",
+"enderio:painting_machine,1000000,Painting Machine",
+"enderio:wired_charger,1000000,Wired Charger",
+"enderio:wireless_charger,1500000,Wireless Charger",
+"enderio:wireless_charger_antenna,2000000,Wireless Charger Antenna",
+"enderio:wireless_charger_antenna_advanced,3000000,Advanced Charger Antenna",
+
+"enderio:impulse_hopper,1500000,Impulse Hopper",
+"enderio:slice_and_splice,2000000,Slice and Splice",
+"enderio:soul_binder,3000000,Soul Binder",
+"enderio:powered_spawner,5000000,Powered Spawner",
+"enderio:mind_killer,5000000,Mind Killer",
+
+"enderio:vacuum_chest,1500000,Vacuum Chest",
+"enderio:xp_vacuum,1500000,XP Vacuum",
+
+"enderio:travel_anchor,1000000,Travel Anchor",
+"enderio:painted_travel_anchor,1500000,Painted Travel Anchor",
+
+"enderio:energetic_photovoltaic_module,2000000,Energetic Photovoltaic Module",
+"enderio:pulsating_photovoltaic_module,2500000,Pulsating Photovoltaic Module",
+"enderio:vibrant_photovoltaic_module,3000000,Vibrant Photovoltaic Module",
+
+"enderio:basic_capacitor_bank,1500000,Basic Capacitor Bank",
+"enderio:advanced_capacitor_bank,3000000,Advanced Capacitor Bank",
+"enderio:vibrant_capacitor_bank,5000000,Vibrant Capacitor Bank",
+
+"enderio:crafter,1500000,Crafter",
+"enderio:soul_engine,3000000,Soul Engine",
+"enderio:drain,1000000,Drain",
+"enderio:vat,1500000,Vat",
+"enderio:block_detector,1000000,Block Detector",
+
+"enderio:dark_steel_sword,2000000,Dark Steel Sword",
+"enderio:dark_steel_pickaxe,2000000,Dark Steel Pickaxe",
+"enderio:dark_steel_axe,2000000,Dark Steel Axe",
+
+"enderio:dark_steel_helmet,3000000,Dark Steel Helmet",
+"enderio:dark_steel_chestplate,4000000,Dark Steel Chestplate",
+"enderio:dark_steel_leggings,3500000,Dark Steel Leggings",
+"enderio:dark_steel_boots,3000000,Dark Steel Boots",
+
+"enderio:dark_steel_upgrade_blank,500000,Blank Dark Steel Upgrade",
+"enderio:dark_steel_upgrade_empowered_1,750000,Empowered I",
+"enderio:dark_steel_upgrade_empowered_2,1000000,Empowered II",
+"enderio:dark_steel_upgrade_empowered_3,1500000,Empowered III",
+"enderio:dark_steel_upgrade_empowered_4,2000000,Empowered IV",
+
+"enderio:dark_steel_upgrade_step_assist,750000,Step Assist",
+"enderio:dark_steel_upgrade_speedboost1,750000,Speed Boost I",
+"enderio:dark_steel_upgrade_speedboost2,1000000,Speed Boost II",
+"enderio:dark_steel_upgrade_speedboost3,1500000,Speed Boost III",
+
+"enderio:dark_steel_upgrade_jump_1,750000,Jump Boost I",
+"enderio:dark_steel_upgrade_jump_2,1000000,Jump Boost II",
+
+"enderio:dark_steel_upgrade_glider,1500000,Glider Upgrade",
+"enderio:dark_steel_upgrade_elytra,2500000,Elytra Upgrade",
+
+"enderio:dark_steel_upgrade_spoon,500000,Spoon Upgrade",
+"enderio:dark_steel_upgrade_fork,500000,Fork Upgrade",
+"enderio:dark_steel_upgrade_direct,1000000,Direct Upgrade",
+"enderio:dark_steel_upgrade_travel,1500000,Travel Upgrade",
+"enderio:dark_steel_upgrade_tnt,1000000,TNT Upgrade",
+"enderio:dark_steel_upgrade_tnt2,1500000,TNT II Upgrade",
+"enderio:dark_steel_upgrade_penetration_1,750000,Penetration I",
+"enderio:dark_steel_upgrade_penetration_2,1000000,Penetration II",
+"enderio:dark_steel_upgrade_nightvision,1000000,Night Vision",
+"enderio:dark_steel_upgrade_solar_1,750000,Solar I",
+"enderio:dark_steel_upgrade_solar_2,1000000,Solar II",
+"enderio:dark_steel_upgrade_solar_3,1500000,Solar III",
+
+"enderio:staff_of_levity,2000000,Staff of Levity",
+"enderio:staff_of_travelling,3000000,Staff of Travelling",
+"enderio:electromagnet,1500000,Electromagnet",
+"enderio:cold_fire_igniter,750000,Cold Fire Igniter",
+
+"enderio:conduit,500000,Conduit",
+"enderio:conduit_facade,150000,Conduit Facade",
+"enderio:transparent_conduit_facade,200000,Transparent Conduit Facade",
+"enderio:hardened_conduit_facade,250000,Hardened Conduit Facade",
+"enderio:transparent_hardened_conduit_facade,300000,Transparent Hardened Conduit Facade",
+
+"enderio:basic_item_filter,150000,Basic Item Filter",
+"enderio:advanced_item_filter,300000,Advanced Item Filter",
+"enderio:big_item_filter,250000,Big Item Filter",
+"enderio:big_advanced_item_filter,500000,Big Advanced Item Filter",
+
+"enderio:basic_fluid_filter,150000,Basic Fluid Filter",
+"enderio:basic_chemical_filter,200000,Basic Chemical Filter",
+"enderio:basic_soul_filter,200000,Basic Soul Filter",
+
+"enderio:redstone_not_filter,100000,Redstone NOT Filter",
+"enderio:redstone_or_filter,100000,Redstone OR Filter",
+"enderio:redstone_and_filter,100000,Redstone AND Filter",
+"enderio:redstone_nor_filter,100000,Redstone NOR Filter",
+"enderio:redstone_nand_filter,100000,Redstone NAND Filter",
+"enderio:redstone_xor_filter,100000,Redstone XOR Filter",
+"enderio:redstone_xnor_filter,100000,Redstone XNOR Filter",
+"enderio:redstone_toggle_filter,150000,Redstone Toggle Filter",
+"enderio:redstone_counting_filter,200000,Redstone Counting Filter",
+"enderio:redstone_sensor_filter,200000,Redstone Sensor Filter",
+"enderio:redstone_timer_filter,200000,Redstone Timer Filter",
+
+"enderio:conduit_probe,150000,Conduit Probe",
+
+"enderio:soul_vial,150000,Soul Vial",
+"enderio:void_vial,200000,Void Vial",
+
+"enderio:enderios,150000,Enderios",
+"enderio:yeta_wrench,150000,Yeta Wrench",
+
+"enderio:reinforced_obsidian_block,2000000,Reinforced Obsidian",
+"enderio:clear_glass,150000,Clear Glass",
+"enderio:soul_chain,200000,Soul Chain",
+
+"enderio:dark_steel_ladder,150000,Dark Steel Ladder",
+"enderio:dark_steel_bars,200000,Dark Steel Bars",
+"enderio:dark_steel_door,300000,Dark Steel Door",
+"enderio:dark_steel_trapdoor,250000,Dark Steel Trapdoor",
+
+"enderio:end_steel_bars,300000,End Steel Bars",
+
+"enderio:xp_obelisk,5000000,XP Obelisk",
+"enderio:farming_station,7500000,Farming Station",
+"enderio:inhibitor_obelisk,5000000,Inhibitor Obelisk",
+"enderio:aversion_obelisk,5000000,Aversion Obelisk",
+"enderio:relocator_obelisk,5000000,Relocator Obelisk",
+"enderio:attractor_obelisk,5000000,Attractor Obelisk",
+"enderio:weather_obelisk,7500000,Weather Obelisk",
+
+"oritech:creative_storage_block,100000000,Oritech Creative Storage Block",
+"oritech:creative_tank_block,100000000,Oritech Creative Tank Block",
+
+"evilcraft:creative_blood_drop,150000000,Creative Blood Drop",
+
+"universalgrid:creative_wireless_universal_grid,1000000000,Creative Wireless Universal Grid",
+
+"refinedstorage:creative_controller,2500000000,Creative Controller",
+"refinedstorage:creative_storage_disk,1500000000,Creative Storage Disk",
+"refinedstorage:creative_storage_block,1500000000,Creative Storage Block",
+"refinedstorage:creative_fluid_storage_disk,1500000000,Creative Fluid Storage Disk",
+"refinedstorage:creative_fluid_storage_block,1500000000,Creative Fluid Storage Block",
+"refinedstorage:creative_range_upgrade,500000000,Creative Range Upgrade",
+"refinedstorage:creative_wireless_grid,750000000,Creative Wireless Grid",
+"refinedstorage:creative_portable_grid,750000000,Creative Portable Grid",
+"refinedstorage:creative_wireless_autocrafting_monitor,1000000000,Creative Wireless Autocrafting Monitor",
+
+"enderio:creative_power,5000000000,Creative Power",
+
+"tempad:creative_chronometer,500000000,Creative Chronometer",
+
+"mininggadgets:upgrade_battery_creative,250000000,Creative Battery Upgrade",
+
+"mysticalagriculture:creative_soulium_dagger,500000000,Creative Soulium Dagger",
+
+"functionalstorage:creative_vending_upgrade,500000000,Creative Vending Upgrade",
+
+"modularrouters:creative_module,250000000,Creative Module",
+
+"createaddition:creative_energy,1500000000,Creative Energy",
+
+"quarryplus:creative_generator,5000000000,Creative Generator",
+
+"powah:energy_cell_creative,5000000000,Creative Energy Cell",
+
+"cabletiers:creative_importer,250000000,Creative Importer",
+"cabletiers:creative_exporter,250000000,Creative Exporter",
+"cabletiers:creative_destructor,250000000,Creative Destructor",
+"cabletiers:creative_constructor,250000000,Creative Constructor",
+"cabletiers:creative_disk_interface,500000000,Creative Disk Interface",
+"cabletiers:creative_autocrafter,750000000,Creative Autocrafter",
+"cabletiers:creative_interface,500000000,Creative Interface",
+
+"mysticalagradditions:creative_essence,750000000,Creative Essence",
+
+"mekanism:creative_bin,1000000000,Creative Bin",
+"mekanism:creative_fluid_tank,2000000000,Creative Fluid Tank",
+"mekanism:creative_energy_cube,5000000000,Creative Energy Cube",
+"mekanism:creative_chemical_tank,5000000000,Creative Chemical Tank",
+
+"mekanism_extras:upgrade_creative,250000000,Creative Upgrade",
+
+"pneumaticcraft:creative_upgrade,500000000,Creative Upgrade",
+"pneumaticcraft:creative_compressor,1500000000,Creative Compressor",
+"pneumaticcraft:creative_compressed_iron_block,750000000,Creative Compressed Iron Block",
+
+"iceandfire:creative_dragon_meal,100000000,Creative Dragon Meal",
+
+"immersiveengineering:capacitor_creative,2000000000,Creative Capacitor",
+
+"integrateddynamics:energy_battery_creative,1500000000,Creative Energy Battery",
+
+"railcraft:creative_locomotive,5000000000,Creative Locomotive",
+
+"refinedstorage_quartz_arsenal:creative_wireless_crafting_grid,750000000,Creative Wireless Crafting Grid",
+
+"ars_nouveau:creative_spell_book,5000000000,Creative Spell Book",
+"ars_nouveau:creative_source_jar,500000000,Creative Source Jar",
+
+"refinedstorage_mekanism_integration:creative_chemical_storage_disk,1500000000,Creative Chemical Storage Disk",
+"refinedstorage_mekanism_integration:creative_chemical_storage_block,1500000000,Creative Chemical Storage Block",
+
+"xycraft_machines:creative_cell,750000000,Creative Cell",
+
+"allthearcanistgear:creative_spell_book,5000000000,Creative Spell Book",
+
+"draconicevolution:creative_capacitor,7500000000,Creative Capacitor",
+"draconicevolution:creative_op_capacitor,10000000000,Creative OP Capacitor",
+
+"bigreactors:reinforced_reactorcreativewatergenerator,5000000000,Reinforced Creative Water Generator",
+"bigreactors:basic_turbinecreativesteamgenerator,3000000000,Basic Creative Steam Generator",
+"bigreactors:reinforced_turbinecreativesteamgenerator,6000000000,Reinforced Creative Steam Generator",
+
+"rftoolspower:dimensionalcell_creative,4500000000,Creative Dimensional Cell",
+
+"rftoolsutility:creative_screen,250000000,Creative Screen",
+
+"ae2:creative_storage_cell,1500000000,Creative Storage Cell",
+"ae2:creative_energy_cell,5000000000,Creative Energy Cell",
+
+"enderdrives:ender_disk_creative,750000000,Creative Ender Disk",
+
+"modern_industrialization:creative_tank,2000000000,Creative Tank",
+"modern_industrialization:creative_barrel,2000000000,Creative Barrel",
+"modern_industrialization:creative_storage_unit,5000000000,Creative Storage Unit",
+
+"stevescarts:upgrade_creative_mode,250000000,Creative Mode Upgrade",
+"stevescarts:module_creative_hull,750000000,Creative Hull Module",
+"stevescarts:module_creative_engine,750000000,Creative Engine Module",
+
+"create:creative_motor,1500000000,Creative Motor",
+"create:creative_fluid_tank,1000000000,Creative Fluid Tank",
+"create:creative_crate,750000000,Creative Crate",
+"create:creative_blaze_cake,100000000,Creative Blaze Cake",
+
 "advanced_ae:adv_pattern_provider_part,8000,Advanced Pattern Provider Part",
 "advanced_ae:small_adv_pattern_provider_part,5000,Small Advanced Pattern Provider Part",
 "advanced_ae:stock_export_bus_part,4500,Stock Export Bus Part",
@@ -2278,6 +3118,9 @@
 "aether:shield_of_repulsion,75000,Shield of Repulsion",
 "aether:regeneration_stone,40000,Regeneration Stone",
 "aether:life_shard,100000,Life Shard",
+
+
+
 	]
 	#Enable big screen mode for the shop GUI.
 	#When true, the shop displays 20 rows instead of 10.

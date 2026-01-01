@@ -109,8 +109,9 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
             if (!stack.isEmpty()) {
                 long sellPrice = getSellPriceForItem(stack);
                 if (sellPrice > 0) {
-                    // Sell one item at a time
-                    int soldCount = Math.min(stack.getCount(), 1);
+                    // Sell items based on config setting
+                    int maxItems = ShopConfig.getPersonalSellerMaxItems();
+                    int soldCount = Math.min(stack.getCount(), maxItems);
                     long earnings = sellPrice * soldCount;
                     
                     // Add currency to owner
