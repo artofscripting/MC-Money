@@ -63,8 +63,6 @@ An automation-friendly block for passive income.
 
 - Place items in the 9 inventory slots
 - Items are automatically sold at shop prices when the block ticks
-- Earnings are stored and credited to your wallet when you log in
-- **Works offline** - Earnings accumulate even when you're not online
 - **Automation compatible** - Supports hoppers, pipes, and mod item handlers (AE2 Export Bus, etc.)
 - Owner-locked - Only you can access your Personal Seller
 
