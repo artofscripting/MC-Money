@@ -291,6 +291,16 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             }
         }
         
+        // Check for balance tooltip
+        int balance = ClientCurrencyData.getClientCurrency();
+        String balanceText = "Balance: " + CurrencyFormatter.format(balance);
+        int balanceX = x + imageWidth - font.width(balanceText) - 10;
+        int balanceY = y + 18;
+        if (mouseX >= balanceX && mouseX <= balanceX + font.width(balanceText) && mouseY >= balanceY && mouseY <= balanceY + font.lineHeight) {
+            guiGraphics.renderTooltip(font, Component.literal(String.format("%,d", balance)), mouseX, mouseY);
+            return;
+        }
+        
         // Render item tooltip if hovering over a row
         if (hoveredRowIndex >= 0 && hoveredRowIndex < filteredItems.size()) {
             ShopConfig.ShopEntry entry = filteredItems.get(hoveredRowIndex);

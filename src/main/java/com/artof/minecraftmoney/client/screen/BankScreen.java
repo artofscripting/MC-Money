@@ -116,6 +116,27 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        
+        // Check for balance tooltips
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        
+        // Bank balance tooltip
+        Component bankBalanceLabel = Component.translatable("gui.minecraftmoney.bank_balance", CurrencyFormatter.format(displayedBankBalance));
+        int bankBalanceWidth = font.width(bankBalanceLabel);
+        if (mouseX >= x + 10 && mouseX <= x + 10 + bankBalanceWidth && mouseY >= y + 24 && mouseY <= y + 24 + font.lineHeight) {
+            guiGraphics.renderTooltip(font, Component.literal(String.format("%,d", displayedBankBalance)), mouseX, mouseY);
+            return;
+        }
+        
+        // Player balance tooltip
+        Component playerBalanceLabel = Component.translatable("gui.minecraftmoney.wallet_balance", CurrencyFormatter.format(displayedPlayerBalance));
+        int playerBalanceWidth = font.width(playerBalanceLabel);
+        if (mouseX >= x + 10 && mouseX <= x + 10 + playerBalanceWidth && mouseY >= y + 36 && mouseY <= y + 36 + font.lineHeight) {
+            guiGraphics.renderTooltip(font, Component.literal(String.format("%,d", displayedPlayerBalance)), mouseX, mouseY);
+            return;
+        }
+        
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
     

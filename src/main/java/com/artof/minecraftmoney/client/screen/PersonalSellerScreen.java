@@ -38,6 +38,20 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        
+        // Check for balance tooltip
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        int balance = ClientCurrencyData.getClientCurrency();
+        String balanceText = CurrencyFormatter.format(balance);
+        int balanceX = x + imageWidth - font.width(balanceText) - 8;
+        int balanceY = y + 5;
+        
+        if (mouseX >= balanceX && mouseX <= balanceX + font.width(balanceText) && mouseY >= balanceY && mouseY <= balanceY + font.lineHeight) {
+            guiGraphics.renderTooltip(font, Component.literal(String.format("%,d", balance)), mouseX, mouseY);
+            return;
+        }
+        
         renderTooltip(guiGraphics, mouseX, mouseY);
         
         // Add sell price info to item tooltips when hovering seller slots
