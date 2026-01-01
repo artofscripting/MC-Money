@@ -17,24 +17,21 @@ public class ModBlocks {
     
     public static final Supplier<BankBlock> BANK_BLOCK = BLOCKS.register("bank_block",
             () -> new BankBlock(BlockBehaviour.Properties.of()
-                    .strength(3.5f)
-                    .requiresCorrectToolForDrops()));
+                    .strength(2.0f, 3.0f)));
     
     public static final Supplier<BlockItem> BANK_BLOCK_ITEM = BLOCK_ITEMS.register("bank_block",
             () -> new BlockItem(BANK_BLOCK.get(), new Item.Properties()));
     
     public static final Supplier<ShopBlock> SHOP_BLOCK = BLOCKS.register("shop_block",
             () -> new ShopBlock(BlockBehaviour.Properties.of()
-                    .strength(3.5f)
-                    .requiresCorrectToolForDrops()));
+                    .strength(2.0f, 3.0f)));
     
     public static final Supplier<BlockItem> SHOP_BLOCK_ITEM = BLOCK_ITEMS.register("shop_block",
             () -> new BlockItem(SHOP_BLOCK.get(), new Item.Properties()));
     
     public static final Supplier<PersonalSellerBlock> PERSONAL_SELLER_BLOCK = BLOCKS.register("personal_seller_block",
             () -> new PersonalSellerBlock(BlockBehaviour.Properties.of()
-                    .strength(3.5f)
-                    .requiresCorrectToolForDrops()));
+                    .strength(2.0f, 3.0f)));
     
     public static final Supplier<BlockItem> PERSONAL_SELLER_BLOCK_ITEM = BLOCK_ITEMS.register("personal_seller_block",
             () -> new BlockItem(PERSONAL_SELLER_BLOCK.get(), new Item.Properties()));
