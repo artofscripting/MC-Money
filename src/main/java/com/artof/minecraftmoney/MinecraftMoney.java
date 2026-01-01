@@ -2,6 +2,7 @@ package com.artof.minecraftmoney;
 
 import com.artof.minecraftmoney.block.ModBlocks;
 import com.artof.minecraftmoney.block.entity.ModBlockEntities;
+import com.artof.minecraftmoney.block.entity.PersonalSellerBlockEntity;
 import com.artof.minecraftmoney.command.CurrencyCommand;
 import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.data.OfflineEarningsManager;
@@ -17,10 +18,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +58,21 @@ public class MinecraftMoney {
         // Register network handler
         NetworkHandler.register(modEventBus);
         
+        // Register capabilities
+        modEventBus.addListener(this::registerCapabilities);
+        
         // Register common events
         NeoForge.EVENT_BUS.register(this);
+    }
+    
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        // Register IItemHandler capability for PersonalSellerBlockEntity
+        // This allows AE2 Export Buses, pipes, and other automation to insert items
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.PERSONAL_SELLER_BLOCK_ENTITY.get(),
+                (blockEntity, side) -> new SidedInvWrapper(blockEntity, side)
+        );
     }
     
     @SubscribeEvent
