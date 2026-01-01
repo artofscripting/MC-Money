@@ -325,9 +325,9 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         // Item name from the stack (localized)
         tooltipLines.add(Component.literal("       ").append(stack.getHoverName().copy().withStyle(ChatFormatting.WHITE)));
         
-        // Mod ID
+        // Mod ID - add spacing to not overlap with icon
         String modId = itemLoc.getNamespace();
-        tooltipLines.add(Component.literal(modId).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC));
+        tooltipLines.add(Component.literal("       ").append(Component.literal(modId).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC)));
         
         // Empty line
         tooltipLines.add(Component.empty());
