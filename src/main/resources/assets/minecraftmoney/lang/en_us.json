@@ -3,6 +3,7 @@
     "item.minecraftmoney.silver_coin": "Silver Coin",
     "item.minecraftmoney.gold_coin": "Gold Coin",
     "item.minecraftmoney.platinum_coin": "Platinum Coin",
+    "item.minecraftmoney.ten_thousand_coin": "10K Coin",
     "item.minecraftmoney.million_coin": "Million Coin",
     
     "block.minecraftmoney.bank_block": "Personal Bank",
@@ -12,7 +13,7 @@
     "itemGroup.minecraftmoney.currency_tab": "Currency",
     
     "tooltip.minecraftmoney.coin_value": "Value: %s",
-    "tooltip.minecraftmoney.right_click_deposit": "Right-click to deposit into your balance",
+    "tooltip.minecraftmoney.right_click_deposit": "Right-click to deposit, Shift+Right-click for stack",
     
     "message.minecraftmoney.deposited": "Deposited %s currency!",
     "message.minecraftmoney.shop_purchased": "Purchased %s!",

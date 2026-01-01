@@ -31,17 +31,18 @@ public class CoinItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            // Deposit coins into player's currency balance
-            int totalValue = value * stack.getCount();
+            // Shift+right-click deposits whole stack, regular right-click deposits 1
+            int coinsToDeposit = player.isShiftKeyDown() ? stack.getCount() : 1;
+            int totalValue = value * coinsToDeposit;
             PlayerCurrencyData.addCurrency(serverPlayer, totalValue);
             
             player.displayClientMessage(
-                    Component.translatable("message.minecraftmoney.deposited", totalValue)
+                    Component.translatable("message.minecraftmoney.deposited", String.format("%,d", totalValue))
                             .withStyle(ChatFormatting.GREEN), 
                     true
             );
             
-            stack.shrink(stack.getCount());
+            stack.shrink(coinsToDeposit);
             return InteractionResultHolder.success(stack);
         }
         
