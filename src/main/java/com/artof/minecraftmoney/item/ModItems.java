@@ -47,6 +47,7 @@ public class ModItems {
                         output.accept(PLATINUM_COIN.get());
                         output.accept(ModBlocks.BANK_BLOCK_ITEM.get());
                         output.accept(ModBlocks.SHOP_BLOCK_ITEM.get());
+                        output.accept(ModBlocks.PERSONAL_SELLER_BLOCK_ITEM.get());
                     })
                     .build());
     
