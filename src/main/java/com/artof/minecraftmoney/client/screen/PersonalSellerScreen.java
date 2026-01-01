@@ -123,27 +123,20 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
     
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        // Title
-        guiGraphics.drawCenteredString(font, title, imageWidth / 2, 5, 0xFFAA55);
+        // Title - left aligned
+        guiGraphics.drawString(font, title, 8, 5, 0xFFAA55);
         
-        // Wallet balance
+        // Wallet balance - right aligned, same row as title
         int balance = ClientCurrencyData.getClientCurrency();
-        String balanceText = "Wallet: " + balance;
+        String balanceText = "" + balance;
         guiGraphics.drawString(font, balanceText, imageWidth - font.width(balanceText) - 8, 5, 0xFFFF55);
         
-        // Total earned
+        // Total earned - left side, below seller slots
         int earned = menu.getBlockEntity().getTotalEarned();
-        String earnedText = "Total Earned: " + earned;
-        guiGraphics.drawString(font, earnedText, 8, 73, 0x55FF55);
+        String earnedText = "Earned: " + earned;
+        guiGraphics.drawString(font, earnedText, 8, 62, 0x55FF55);
         
-        // Pending earnings (if any)
-        int pending = menu.getBlockEntity().getPendingEarnings();
-        if (pending > 0) {
-            String pendingText = "Pending: " + pending;
-            guiGraphics.drawString(font, pendingText, imageWidth - font.width(pendingText) - 8, 73, 0xFFAA00);
-        }
-        
-        // Inventory label
+        // Inventory label - standard position
         guiGraphics.drawString(font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xCCCCCC);
     }
 }
