@@ -48,7 +48,15 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
             if (amount > 0) {
                 PacketDistributor.sendToServer(new BankActionPacket(menu.getBlockEntity().getBlockPos(), true, amount));
             }
-        }).bounds(centerX + 10, centerY + 75, 75, 20).build());
+        }).bounds(centerX + 10, centerY + 75, 50, 20).build());
+        
+        // Deposit All button
+        addRenderableWidget(Button.builder(Component.literal("All"), button -> {
+            long walletBalance = ClientCurrencyData.getClientCurrency();
+            if (walletBalance > 0) {
+                PacketDistributor.sendToServer(new BankActionPacket(menu.getBlockEntity().getBlockPos(), true, walletBalance));
+            }
+        }).bounds(centerX + 62, centerY + 75, 28, 20).build());
         
         // Withdraw button
         addRenderableWidget(Button.builder(Component.translatable("gui.minecraftmoney.withdraw"), button -> {
@@ -56,7 +64,15 @@ public class BankScreen extends AbstractContainerScreen<BankMenu> {
             if (amount > 0) {
                 PacketDistributor.sendToServer(new BankActionPacket(menu.getBlockEntity().getBlockPos(), false, amount));
             }
-        }).bounds(centerX + 91, centerY + 75, 75, 20).build());
+        }).bounds(centerX + 91, centerY + 75, 50, 20).build());
+        
+        // Withdraw All button
+        addRenderableWidget(Button.builder(Component.literal("All"), button -> {
+            long bankBalance = displayedBankBalance;
+            if (bankBalance > 0) {
+                PacketDistributor.sendToServer(new BankActionPacket(menu.getBlockEntity().getBlockPos(), false, bankBalance));
+            }
+        }).bounds(centerX + 143, centerY + 75, 28, 20).build());
         
         // Update balances
         updateBalances();
