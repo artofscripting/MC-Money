@@ -158,6 +158,14 @@ shopItems = [
 ]
 ```
 
+Manual Config Format
+If you want to manually add enchanted books or potions to the config, use these formats:
+
+Enchanted book: 'enchanted_book:minecraft:sharpness:5,10000,Sharpness V'
+Potion: 'potion:minecraft:strong_healing,5000,Strong Healing Potion'
+Splash potion: 'splash_potion:minecraft:strong_healing,5000,Splash Strong Healing'
+Lingering potion: 'lingering_potion:minecraft:poison,5000,Lingering Poison'
+
 ### ATM10 Modpack Template
 An [`atm10-shop-template.toml`](https://raw.githubusercontent.com/artofscripting/MC-Money/refs/heads/main/atm10-shop-template.toml) file is included with 350+ items from popular mods including:
 - Mekanism, Applied Energistics 2, Thermal Series
@@ -195,6 +203,27 @@ The built JAR will be in `build/libs/`.
 
 - Minecraft 1.21.1
 - NeoForge 21.1.77+
+
+## Release Notes
+
+### v1.0.3 (January 15, 2026)
+- **Fixed:** Inventory display not updating after buying/selling items (hotbar worked but main inventory showed stale items)
+- **Added:** Inventory full check - purchases are now blocked when inventory is full instead of dropping items on the ground
+- **Improved:** Better inventory synchronization using `sendAllDataToRemote()` for reliable client updates
+
+### v1.0.2
+- Added search functionality with @mod filtering
+- Added big screen mode option
+- Improved item tooltips
+
+### v1.0.1
+- Added Personal Seller block for passive income
+- Added automation support (hoppers, pipes, AE2)
+
+### v1.0.0
+- Initial release
+- Coins, Bank, and Shop systems
+- 350+ configurable shop items
 
 ## License
 

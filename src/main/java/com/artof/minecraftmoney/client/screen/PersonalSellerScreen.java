@@ -79,11 +79,8 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
     }
     
     private long getSellPriceForItem(ItemStack stack) {
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        String itemIdStr = itemId.toString();
-        
         for (ShopConfig.ShopEntry entry : ShopConfig.getShopItems()) {
-            if (entry.itemId().equals(itemIdStr)) {
+            if (entry.matches(stack)) {
                 return entry.getSellPrice();
             }
         }

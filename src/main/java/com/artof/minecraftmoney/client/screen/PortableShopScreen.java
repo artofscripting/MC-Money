@@ -1,9 +1,8 @@
 package com.artof.minecraftmoney.client.screen;
 
-import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.client.ClientCurrencyData;
 import com.artof.minecraftmoney.config.ShopConfig;
-import com.artof.minecraftmoney.menu.ShopMenu;
+import com.artof.minecraftmoney.menu.PortableShopMenu;
 import com.artof.minecraftmoney.network.ShopBuyPacket;
 import com.artof.minecraftmoney.network.ShopSellPacket;
 import net.minecraft.ChatFormatting;
@@ -11,7 +10,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,7 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
+/**
+ * A portable shop screen that works without a shop block.
+ * Identical functionality to ShopScreen but for the ShopBookItem.
+ */
+public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu> {
     private static final int ROW_HEIGHT = 12;
     private final int itemsPerPage;
     private int currentPage = 0;
@@ -37,7 +39,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     private final Inventory playerInventory;
     private int hoveredRowIndex = -1;
     
-    public ShopScreen(ShopMenu menu, Inventory playerInventory, Component title) {
+    public PortableShopScreen(PortableShopMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.playerInventory = playerInventory;
         this.imageWidth = 256;
@@ -85,10 +87,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             filteredItems.addAll(allShopItems);
         } else if (searchQuery.startsWith("@")) {
             // Mod search: filter by mod ID prefix, optionally with item name filter
-            // Format: @modid or @modid searchterms
-            String afterAt = searchQuery.substring(1); // Remove the @ prefix
+            String afterAt = searchQuery.substring(1);
             if (!afterAt.isEmpty()) {
-                // Split into mod prefix and optional item search
                 String modPrefix;
                 String itemSearch;
                 int spaceIndex = afterAt.indexOf(' ');
@@ -102,16 +102,13 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 
                 filteredItems.addAll(allShopItems.stream()
                     .filter(entry -> {
-                        // Extract mod ID from item ID (format: "modid:item_name")
                         String itemId = entry.itemId().toLowerCase();
                         int colonIndex = itemId.indexOf(':');
                         if (colonIndex > 0) {
                             String modId = itemId.substring(0, colonIndex);
-                            // Check if mod ID contains the prefix
                             if (!modId.contains(modPrefix)) {
                                 return false;
                             }
-                            // If there's an item search term, filter by item name too
                             if (!itemSearch.isEmpty()) {
                                 return entry.displayName().toLowerCase().contains(itemSearch) ||
                                        itemId.substring(colonIndex + 1).contains(itemSearch);
@@ -122,11 +119,9 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                     })
                     .collect(Collectors.toList()));
             } else {
-                // Just "@" with nothing after - show all items
                 filteredItems.addAll(allShopItems);
             }
         } else {
-            // Regular search: filter by item name or full item ID
             filteredItems.addAll(allShopItems.stream()
                 .filter(entry -> entry.displayName().toLowerCase().contains(searchQuery) ||
                                  entry.itemId().toLowerCase().contains(searchQuery))
@@ -143,7 +138,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     }
     
     private void rebuildButtons() {
-        // Remove old buttons
         for (Button button : actionButtons) {
             removeWidget(button);
         }
@@ -152,7 +146,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         int centerX = (width - imageWidth) / 2;
         int centerY = (height - imageHeight) / 2;
         
-        // Add buy and sell buttons for current page
         int startIndex = currentPage * itemsPerPage;
         for (int i = 0; i < itemsPerPage; i++) {
             int itemIndex = startIndex + i;
@@ -161,7 +154,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 final int originalIndex = getOriginalIndex(entry);
                 int rowY = centerY + 38 + i * ROW_HEIGHT;
                 
-                // Buy button - shift click buys a stack
                 Button buyButton = Button.builder(Component.literal("B"), button -> {
                     int quantity = hasShiftDown() ? 64 : 1;
                     PacketDistributor.sendToServer(new ShopBuyPacket(originalIndex, quantity));
@@ -169,7 +161,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 addRenderableWidget(buyButton);
                 actionButtons.add(buyButton);
                 
-                // Sell button - shift click sells a stack
                 Button sellButton = Button.builder(Component.literal("S"), button -> {
                     int quantity = hasShiftDown() ? 64 : 1;
                     PacketDistributor.sendToServer(new ShopSellPacket(originalIndex, quantity));
@@ -179,10 +170,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             }
         }
         
-        // Navigation buttons
         if (maxPages > 1) {
             int navY = centerY + imageHeight - 18;
-            // Previous page
             Button prevButton = Button.builder(Component.literal("<"), button -> {
                 if (currentPage > 0) {
                     currentPage--;
@@ -192,7 +181,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             addRenderableWidget(prevButton);
             actionButtons.add(prevButton);
             
-            // Next page
             Button nextButton = Button.builder(Component.literal(">"), button -> {
                 if (currentPage < maxPages - 1) {
                     currentPage++;
@@ -209,20 +197,19 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         
-        // Draw green background
-        guiGraphics.fill(x, y, x + imageWidth, y + imageHeight, 0xFF1a3d1a);
-        guiGraphics.fill(x + 2, y + 2, x + imageWidth - 2, y + imageHeight - 2, 0xFF2d5a2d);
+        // Draw dark purple/black background for the shop book theme
+        guiGraphics.fill(x, y, x + imageWidth, y + imageHeight, 0xFF1a1a2e);
+        guiGraphics.fill(x + 2, y + 2, x + imageWidth - 2, y + imageHeight - 2, 0xFF2d2d44);
         
         // Border
-        guiGraphics.fill(x, y, x + imageWidth, y + 2, 0xFF3d7a3d);
-        guiGraphics.fill(x, y + imageHeight - 2, x + imageWidth, y + imageHeight, 0xFF3d7a3d);
-        guiGraphics.fill(x, y, x + 2, y + imageHeight, 0xFF3d7a3d);
-        guiGraphics.fill(x + imageWidth - 2, y, x + imageWidth, y + imageHeight, 0xFF3d7a3d);
+        guiGraphics.fill(x, y, x + imageWidth, y + 2, 0xFF4a4a6a);
+        guiGraphics.fill(x, y + imageHeight - 2, x + imageWidth, y + imageHeight, 0xFF4a4a6a);
+        guiGraphics.fill(x, y, x + 2, y + imageHeight, 0xFF4a4a6a);
+        guiGraphics.fill(x + imageWidth - 2, y, x + imageWidth, y + imageHeight, 0xFF4a4a6a);
         
         // Header row background
         guiGraphics.fill(x + 8, y + 28, x + imageWidth - 8, y + 38, 0x60000000);
         
-        // Draw item rows
         int startIndex = currentPage * itemsPerPage;
         for (int i = 0; i < itemsPerPage; i++) {
             int itemIndex = startIndex + i;
@@ -237,7 +224,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         // Title
-        guiGraphics.drawCenteredString(font, title, imageWidth / 2, 4, 0x55FF55);
+        guiGraphics.drawCenteredString(font, title, imageWidth / 2, 4, 0xAA55FF);
         
         // Balance
         long balance = ClientCurrencyData.getClientCurrency();
@@ -257,19 +244,16 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 ShopConfig.ShopEntry entry = filteredItems.get(itemIndex);
                 int rowY = 39 + i * ROW_HEIGHT;
                 
-                // Item name (truncate if too long)
                 String name = entry.displayName();
                 if (font.width(name) > 120) {
                     name = font.plainSubstrByWidth(name, 117) + "...";
                 }
                 guiGraphics.drawString(font, name, 12, rowY + 2, 0xFFFFFF);
                 
-                // Buy price
                 long buyPrice = entry.price();
                 int buyColor = balance >= buyPrice ? 0x55FF55 : 0xFF5555;
                 guiGraphics.drawString(font, CurrencyFormatter.format(buyPrice), 140, rowY + 2, buyColor);
                 
-                // Sell price - check if player has item in inventory
                 long sellPrice = entry.getSellPrice();
                 boolean hasItem = playerHasItem(entry);
                 int sellColor = hasItem ? 0xFFAA00 : 0xFF5555;
@@ -277,13 +261,11 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             }
         }
         
-        // Page indicator
         if (maxPages > 1) {
             String pageText = (currentPage + 1) + "/" + maxPages;
             guiGraphics.drawCenteredString(font, pageText, imageWidth / 2, imageHeight - 16, 0xAAAAAA);
         }
         
-        // No results message
         if (filteredItems.isEmpty() && !searchQuery.isEmpty()) {
             guiGraphics.drawCenteredString(font, "No items found", imageWidth / 2, 90, 0xFF5555);
         }
@@ -293,12 +275,10 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         
-        // Calculate hovered row
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         hoveredRowIndex = -1;
         
-        // Check if mouse is within the item row area (excluding button columns at the right)
         if (mouseX >= x + 8 && mouseX < x + 180) {
             int startIndex = currentPage * itemsPerPage;
             for (int i = 0; i < itemsPerPage; i++) {
@@ -323,7 +303,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             return;
         }
         
-        // Render item tooltip if hovering over a row
         if (hoveredRowIndex >= 0 && hoveredRowIndex < filteredItems.size()) {
             ShopConfig.ShopEntry entry = filteredItems.get(hoveredRowIndex);
             renderItemTooltip(guiGraphics, entry, mouseX, mouseY);
@@ -333,9 +312,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     }
     
     private void renderItemTooltip(GuiGraphics guiGraphics, ShopConfig.ShopEntry entry, int mouseX, int mouseY) {
-        // Create the item stack using the entry's createItemStackWithRegistry method
-        // which handles component data for enchanted books, potions, etc.
-        // On the client, we can access the registry from the level
         ItemStack stack;
         if (minecraft != null && minecraft.level != null) {
             stack = entry.createItemStackWithRegistry(1, minecraft.level.registryAccess());
@@ -347,25 +323,19 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         ResourceLocation itemLoc = ResourceLocation.tryParse(entry.itemId());
         if (itemLoc == null) return;
         
-        // Build tooltip lines - add spacing at start for item icon
         List<Component> tooltipLines = new ArrayList<>();
         
-        // Item name - for enchanted books and potions, use the display name from config
-        // as it may be more descriptive than the generic item name
         if (entry.hasComponentData()) {
             tooltipLines.add(Component.literal("       ").append(Component.literal(entry.displayName()).withStyle(ChatFormatting.WHITE)));
         } else {
             tooltipLines.add(Component.literal("       ").append(stack.getHoverName().copy().withStyle(ChatFormatting.WHITE)));
         }
         
-        // Mod ID - add spacing to not overlap with icon
         String modId = itemLoc.getNamespace();
         tooltipLines.add(Component.literal("       ").append(Component.literal(modId).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC)));
         
-        // Empty line
         tooltipLines.add(Component.empty());
         
-        // Pricing info
         long buyPrice = entry.price();
         long sellPrice = entry.getSellPrice();
         long balance = ClientCurrencyData.getClientCurrency();
@@ -379,17 +349,14 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         tooltipLines.add(Component.literal("Sell Price: ").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(String.valueOf(sellPrice)).withStyle(sellColor)));
         
-        // Inventory count
         int inventoryCount = getPlayerItemCount(entry);
         tooltipLines.add(Component.empty());
         tooltipLines.add(Component.literal("In Inventory: ").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(String.valueOf(inventoryCount)).withStyle(ChatFormatting.AQUA)));
         
-        // Shift-click hint
         tooltipLines.add(Component.empty());
         tooltipLines.add(Component.literal("Shift+Click to buy/sell 64").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
         
-        // Calculate tooltip width for positioning (add padding that Minecraft uses)
         int tooltipWidth = 0;
         for (Component line : tooltipLines) {
             int lineWidth = font.width(line);
@@ -397,31 +364,24 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 tooltipWidth = lineWidth;
             }
         }
-        // Minecraft adds 3 pixels padding on each side
         int fullTooltipWidth = tooltipWidth + 8;
         
-        // Calculate tooltip position (matches Minecraft's internal logic more closely)
         int tooltipX = mouseX + 12;
         int tooltipY = mouseY - 12;
         int tooltipHeight = tooltipLines.size() * 10 + 8;
         
-        // Adjust if tooltip would go off right edge - use same threshold as Minecraft
         if (tooltipX + fullTooltipWidth > width) {
             tooltipX = mouseX - fullTooltipWidth - 4;
         }
-        // Adjust if tooltip would go off bottom
         if (tooltipY + tooltipHeight + 6 > height) {
             tooltipY = height - tooltipHeight - 6;
         }
-        // Adjust if tooltip would go off top
         if (tooltipY < 4) {
             tooltipY = 4;
         }
         
-        // Render the tooltip first
         guiGraphics.renderTooltip(font, tooltipLines, java.util.Optional.empty(), mouseX, mouseY);
         
-        // Render item icon on top of the tooltip at high Z level
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(0, 0, 400);
         guiGraphics.renderFakeItem(stack, tooltipX + 5, tooltipY + 5);
@@ -445,7 +405,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (searchBox.isFocused()) {
-            if (keyCode == 256) { // Escape
+            if (keyCode == 256) {
                 searchBox.setFocused(false);
                 return true;
             }
@@ -456,7 +416,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        // scrollY > 0 means scroll up (previous page), scrollY < 0 means scroll down (next page)
         if (scrollY > 0 && currentPage > 0) {
             currentPage--;
             rebuildButtons();
@@ -472,7 +431,6 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     private boolean playerHasItem(ShopConfig.ShopEntry entry) {
         if (minecraft == null || minecraft.player == null) return false;
         
-        // Check both main inventory and hotbar from the live player
         var inv = minecraft.player.getInventory();
         for (int i = 0; i < inv.getContainerSize(); i++) {
             if (entry.matches(inv.getItem(i))) {

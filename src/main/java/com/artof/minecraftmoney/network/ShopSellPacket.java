@@ -3,7 +3,6 @@ package com.artof.minecraftmoney.network;
 import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.data.PlayerCurrencyData;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -42,55 +41,51 @@ public record ShopSellPacket(int itemIndex, int quantity) implements CustomPacke
                     ShopConfig.ShopEntry entry = shopItems.get(packet.itemIndex());
                     int requestedQuantity = Math.max(1, Math.min(64, packet.quantity()));
                     
-                    // Find the item in the player's inventory
-                    ResourceLocation itemLoc = ResourceLocation.tryParse(entry.itemId());
-                    if (itemLoc != null) {
-                        var item = BuiltInRegistries.ITEM.get(itemLoc);
-                        if (item != null) {
-                            // Count total items in inventory
-                            int totalCount = 0;
-                            for (int i = 0; i < serverPlayer.getInventory().getContainerSize(); i++) {
-                                ItemStack stack = serverPlayer.getInventory().getItem(i);
-                                if (stack.is(item)) {
-                                    totalCount += stack.getCount();
-                                }
-                            }
-                            
-                            if (totalCount <= 0) {
-                                serverPlayer.sendSystemMessage(
-                                        Component.translatable("message.minecraftmoney.shop_no_item")
-                                                .withStyle(net.minecraft.ChatFormatting.RED)
-                                );
-                                return;
-                            }
-                            
-                            // Sell up to the requested quantity
-                            int toSell = Math.min(requestedQuantity, totalCount);
-                            int remaining = toSell;
-                            
-                            for (int i = 0; i < serverPlayer.getInventory().getContainerSize() && remaining > 0; i++) {
-                                ItemStack stack = serverPlayer.getInventory().getItem(i);
-                                if (stack.is(item) && !stack.isEmpty()) {
-                                    int removeCount = Math.min(remaining, stack.getCount());
-                                    stack.shrink(removeCount);
-                                    remaining -= removeCount;
-                                }
-                            }
-                            
-                            int soldCount = toSell - remaining;
-                            long sellPrice = entry.getSellPrice() * soldCount;
-                            PlayerCurrencyData.addCurrency(serverPlayer, sellPrice);
-                            
-                            // Force sync inventory to client
-                            serverPlayer.inventoryMenu.broadcastChanges();
-                            
-                            String itemName = soldCount > 1 ? soldCount + "x " + entry.displayName() : entry.displayName();
-                            serverPlayer.sendSystemMessage(
-                                    Component.translatable("message.minecraftmoney.shop_sold", itemName, sellPrice)
-                                            .withStyle(net.minecraft.ChatFormatting.GREEN)
-                            );
+                    // Count total matching items in inventory (using the entry's matches method)
+                    int totalCount = 0;
+                    for (int i = 0; i < serverPlayer.getInventory().getContainerSize(); i++) {
+                        ItemStack stack = serverPlayer.getInventory().getItem(i);
+                        if (entry.matches(stack)) {
+                            totalCount += stack.getCount();
                         }
                     }
+                    
+                    if (totalCount <= 0) {
+                        serverPlayer.sendSystemMessage(
+                                Component.translatable("message.minecraftmoney.shop_no_item")
+                                        .withStyle(net.minecraft.ChatFormatting.RED)
+                        );
+                        return;
+                    }
+                    
+                    // Sell up to the requested quantity
+                    int toSell = Math.min(requestedQuantity, totalCount);
+                    int remaining = toSell;
+                    
+                    for (int i = 0; i < serverPlayer.getInventory().getContainerSize() && remaining > 0; i++) {
+                        ItemStack stack = serverPlayer.getInventory().getItem(i);
+                        if (entry.matches(stack) && !stack.isEmpty()) {
+                            int removeCount = Math.min(remaining, stack.getCount());
+                            stack.shrink(removeCount);
+                            remaining -= removeCount;
+                        }
+                    }
+                    
+                    int soldCount = toSell - remaining;
+                    long sellPrice = entry.getSellPrice() * soldCount;
+                    PlayerCurrencyData.addCurrency(serverPlayer, sellPrice);
+                    
+                    // Force sync inventory to client
+                    serverPlayer.getInventory().setChanged();
+                    serverPlayer.containerMenu.broadcastChanges();
+                    serverPlayer.inventoryMenu.broadcastChanges();
+                    serverPlayer.containerMenu.sendAllDataToRemote();
+                    
+                    String itemName = soldCount > 1 ? soldCount + "x " + entry.displayName() : entry.displayName();
+                    serverPlayer.sendSystemMessage(
+                            Component.translatable("message.minecraftmoney.shop_sold", itemName, sellPrice)
+                                    .withStyle(net.minecraft.ChatFormatting.GREEN)
+                    );
                 }
             }
         });

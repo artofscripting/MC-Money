@@ -73,11 +73,26 @@ public class MinecraftMoney {
                 ModBlockEntities.PERSONAL_SELLER_BLOCK_ENTITY.get(),
                 (blockEntity, side) -> new SidedInvWrapper(blockEntity, side)
         );
+        
+        // Register IEnergyStorage capability for PersonalSellerBlockEntity
+        // This allows energy pipes/cables to send FE which is instantly converted to currency
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.PERSONAL_SELLER_BLOCK_ENTITY.get(),
+                (blockEntity, side) -> blockEntity.getEnergyStorage()
+        );
     }
     
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
         CurrencyCommand.register(event.getDispatcher());
+    }
+    
+    @SubscribeEvent
+    public void onServerStarted(net.neoforged.neoforge.event.server.ServerStartedEvent event) {
+        // Load enchanted books from the data-driven registry
+        // This includes modded enchantments
+        ShopConfig.loadEnchantedBooksFromRegistry(event.getServer().registryAccess());
     }
     
     @SubscribeEvent

@@ -5,19 +5,21 @@
 	# Default: 0.5
 	# Range: 0.0 ~ 1.0
 	sellPriceMultiplier = 0.5
-	
 	#Maximum number of items sold per tick by the Personal Seller block.
 	#Higher values mean faster selling but more server load.
 	#Default is 1 item per tick (20 items per second).
 	# Default: 1
 	# Range: 1 ~ 64
 	personalSellerMaxItems = 64
-	
 	#List of items to sell in the shop.
 	#Format: 'minecraft:item_id,price,display_name'
+	#For enchanted books: 'enchanted_book:enchantment_id:level,price,display_name'
+	#For potions: 'potion:potion_id,price,display_name' (also splash_potion: and lingering_potion:)
 	#Example: 'minecraft:diamond,500,Diamond'
+	#Example enchanted book: 'enchanted_book:sharpness:5,10000,Sharpness V'
+	#Example potion: 'potion:strong_healing,5000,Strong Healing Potion'
 	shopItems = [
-	
+
 "minecraft:diamond,250,Diamond", 
 "minecraft:emerald,100,Emerald", 
 "minecraft:netherite_ingot,15000,Netherite Ingot", 
@@ -3647,7 +3649,467 @@
 "botanypots:terracotta_botany_pot,25000,Botany Pot",
 "botanypots:terracotta_hopper_botany_pot,50000,Hopper Botany Pot",
 
+"occultism:dictionary_of_spirits,250000,Dictionary of Spirits",
+"occultism:divination_rod,150000,Divination Rod",
+"occultism:true_sight_staff,300000,True Sight Staff",
+"occultism:butcher_knife,150000,Butcher Knife",
+"occultism:infused_pickaxe,200000,Infused Pickaxe",
+"occultism:iesnium_pickaxe,300000,Iesnium Pickaxe",
+"occultism:otherworld_goggles,250000,Otherworld Goggles",
+
+"occultism:satchel,150000,Satchel",
+"occultism:ritual_satchel_t1,200000,Ritual Satchel T1",
+"occultism:ritual_satchel_t2,300000,Ritual Satchel T2",
+
+"occultism:knowledge_tablet,150000,Knowledge Tablet",
+"occultism:storage_remote,300000,Storage Remote",
+"occultism:storage_remote_inert,150000,Inert Storage Remote",
+
+"occultism:fragile_soul_gem,100000,Fragile Soul Gem",
+"occultism:soul_gem,200000,Soul Gem",
+"occultism:trinity_gem,300000,Trinity Gem",
+"occultism:familiar_ring,150000,Familiar Ring",
+"occultism:vitality_compass,150000,Vitality Compass",
+
+"occultism:book_of_binding_empty,50000,Book of Binding (Empty)",
+"occultism:book_of_binding_foliot,75000,Book of Binding Foliot",
+"occultism:book_of_binding_bound_foliot,100000,Book of Binding Bound Foliot",
+"occultism:book_of_binding_djinni,100000,Book of Binding Djinni",
+"occultism:book_of_binding_bound_djinni,150000,Book of Binding Bound Djinni",
+"occultism:book_of_binding_afrit,150000,Book of Binding Afrit",
+"occultism:book_of_binding_bound_afrit,200000,Book of Binding Bound Afrit",
+"occultism:book_of_binding_marid,200000,Book of Binding Marid",
+"occultism:book_of_binding_bound_marid,250000,Book of Binding Bound Marid",
+
+"occultism:book_of_calling_foliot_lumberjack,150000,Foliot Lumberjack",
+"occultism:book_of_calling_foliot_farmer,150000,Foliot Farmer",
+"occultism:book_of_calling_foliot_transport_items,150000,Foliot Transport Items",
+"occultism:book_of_calling_foliot_cleaner,150000,Foliot Cleaner",
+"occultism:book_of_calling_djinni_manage_machine,200000,Djinni Manage Machine",
+
+"occultism:brush,50000,Ritual Brush",
+
+"occultism:chalk_white,50000,White Chalk",
+"occultism:chalk_light_gray,50000,Light Gray Chalk",
+"occultism:chalk_gray,50000,Gray Chalk",
+"occultism:chalk_black,50000,Black Chalk",
+"occultism:chalk_brown,50000,Brown Chalk",
+"occultism:chalk_red,50000,Red Chalk",
+"occultism:chalk_orange,50000,Orange Chalk",
+"occultism:chalk_gold,50000,Gold Chalk",
+"occultism:chalk_lime,50000,Lime Chalk",
+"occultism:chalk_green,50000,Green Chalk",
+"occultism:chalk_cyan,50000,Cyan Chalk",
+"occultism:chalk_light_blue,50000,Light Blue Chalk",
+"occultism:chalk_blue,50000,Blue Chalk",
+"occultism:chalk_purple,50000,Purple Chalk",
+"occultism:chalk_magenta,50000,Magenta Chalk",
+"occultism:chalk_pink,50000,Pink Chalk",
+"occultism:chalk_rainbow,75000,Rainbow Chalk",
+"occultism:chalk_void,75000,Void Chalk",
+
+"occultism:chalk_white_impure,25000,Impure White Chalk",
+"occultism:chalk_light_gray_impure,25000,Impure Light Gray Chalk",
+"occultism:chalk_gray_impure,25000,Impure Gray Chalk",
+"occultism:chalk_black_impure,25000,Impure Black Chalk",
+"occultism:chalk_brown_impure,25000,Impure Brown Chalk",
+"occultism:chalk_red_impure,25000,Impure Red Chalk",
+"occultism:chalk_orange_impure,25000,Impure Orange Chalk",
+"occultism:chalk_yellow_impure,25000,Impure Yellow Chalk",
+"occultism:chalk_lime_impure,25000,Impure Lime Chalk",
+"occultism:chalk_green_impure,25000,Impure Green Chalk",
+"occultism:chalk_cyan_impure,25000,Impure Cyan Chalk",
+"occultism:chalk_light_blue_impure,25000,Impure Light Blue Chalk",
+"occultism:chalk_blue_impure,25000,Impure Blue Chalk",
+"occultism:chalk_purple_impure,25000,Impure Purple Chalk",
+"occultism:chalk_magenta_impure,25000,Impure Magenta Chalk",
+"occultism:chalk_pink_impure,25000,Impure Pink Chalk",
+
+"occultism:magic_lamp_empty,150000,Magic Lamp (Empty)",
+
+"occultism:miner_foliot_unspecialized,150000,Foliot Miner",
+"occultism:miner_djinni_ores,250000,Djinni Miner (Ores)",
+"occultism:miner_afrit_deeps,350000,Afrit Miner (Deeps)",
+"occultism:miner_marid_master,500000,Marid Miner (Master)",
+"occultism:miner_ancient_eldritch,750000,Eldritch Miner",
+
+"occultism:datura_seeds,25000,Datura Seeds",
+"occultism:datura,25000,Datura",
+"occultism:demons_dream_essence,50000,Demon's Dream Essence",
+"occultism:otherworld_essence,50000,Otherworld Essence",
+
+"occultism:beaver_nugget,25000,Beaver Nugget",
+"occultism:cursed_honey,50000,Cursed Honey",
+"occultism:sweet_honey_heart,50000,Sweet Honey Heart",
+"occultism:demonic_meat,50000,Demonic Meat",
+"occultism:tallow,25000,Tallow",
+
+"occultism:afrit_essence,75000,Afrit Essence",
+"occultism:marid_essence,100000,Marid Essence",
+"occultism:cruelty_essence,75000,Cruelty Essence",
+
+"occultism:spirit_attuned_gem,100000,Spirit Attuned Gem",
+
+"occultism:raw_silver,25000,Raw Silver",
+"occultism:raw_iesnium,50000,Raw Iesnium",
+"occultism:silver_ingot,50000,Silver Ingot",
+"occultism:iesnium_ingot,100000,Iesnium Ingot",
+"occultism:silver_nugget,10000,Silver Nugget",
+"occultism:iesnium_nugget,20000,Iesnium Nugget",
+
+"occultism:silver_dust,25000,Silver Dust",
+"occultism:iesnium_dust,50000,Iesnium Dust",
+"occultism:copper_dust,25000,Copper Dust",
+"occultism:iron_dust,25000,Iron Dust",
+"occultism:gold_dust,25000,Gold Dust",
+"occultism:netherite_scrap_dust,50000,Netherite Scrap Dust",
+"occultism:netherite_dust,75000,Netherite Dust",
+"occultism:obsidian_dust,25000,Obsidian Dust",
+"occultism:lapis_dust,25000,Lapis Dust",
+"occultism:amethyst_dust,25000,Amethyst Dust",
+"occultism:emerald_dust,25000,Emerald Dust",
+"occultism:echo_dust,25000,Echo Dust",
+"occultism:research_fragment_dust,25000,Research Fragment Dust",
+"occultism:witherite_dust,50000,Witherite Dust",
+"occultism:dragonyst_dust,50000,Dragonyst Dust",
+
+"occultism:burnt_otherstone,25000,Burnt Otherstone",
+"occultism:otherworld_ashes,25000,Otherworld Ashes",
+"occultism:gray_paste,25000,Gray Paste",
+"occultism:nature_paste,25000,Nature Paste",
+"occultism:purified_ink,50000,Purified Ink",
+"occultism:awakened_feather,50000,Awakened Feather",
+"occultism:taboo_book,100000,Taboo Book",
+
+"occultism:spirit_attuned_pickaxe_head,50000,Spirit Attuned Pickaxe Head",
+"occultism:lenses,50000,Lenses",
+"occultism:infused_lenses,75000,Infused Lenses",
+"occultism:lens_frame,25000,Lens Frame",
+
+"occultism:otherstone_frame,50000,Otherstone Frame",
+"occultism:otherstone_tablet,50000,Otherstone Tablet",
+
+"occultism:dimensional_matrix,150000,Dimensional Matrix",
+"occultism:mining_dim_core,200000,Mining Dimension Core",
+
+"occultism:soul_shard,100000,Soul Shard",
+"occultism:spirit_fire,50000,Spirit Fire",
+"occultism:stable_wormhole,300000,Stable Wormhole",
+"occultism:spirit_torch,25000,Spirit Torch",
+
+"occultism:storage_controller_base,150000,Storage Controller Base",
+"occultism:storage_controller,250000,Storage Controller",
+"occultism:storage_controller_stabilized,350000,Stabilized Storage Controller",
+
+"occultism:storage_stabilizer_tier0,50000,Storage Stabilizer Tier 0",
+"occultism:storage_stabilizer_tier1,100000,Storage Stabilizer Tier 1",
+"occultism:storage_stabilizer_tier2,150000,Storage Stabilizer Tier 2",
+"occultism:storage_stabilizer_tier3,200000,Storage Stabilizer Tier 3",
+"occultism:storage_stabilizer_tier4,300000,Storage Stabilizer Tier 4",
+
+"occultism:entity_wormhole,150000,Entity Wormhole",
+"occultism:dimensional_mineshaft,300000,Dimensional Mineshaft",
+
+"occultism:iesnium_anvil,150000,Iesnium Anvil",
+"occultism:spirit_lantern,100000,Spirit Lantern",
+"occultism:spirit_campfire,100000,Spirit Campfire",
+
+"forbidden_arcanus:arcane_crystal,100000,Arcane Crystal",
+"forbidden_arcanus:corrupted_arcane_crystal,150000,Corrupted Arcane Crystal",
+"forbidden_arcanus:arcane_crystal_dust,50000,Arcane Crystal Dust",
+"forbidden_arcanus:arcane_crystal_dust_speck,25000,Arcane Crystal Dust Speck",
+
+"forbidden_arcanus:deorum_ingot,75000,Deorum Ingot",
+"forbidden_arcanus:deorum_nugget,15000,Deorum Nugget",
+"forbidden_arcanus:obsidiansteel_ingot,100000,Obsidiansteel Ingot",
+
+"forbidden_arcanus:xpetrified_orb,150000,XPetrified Orb",
+"forbidden_arcanus:eternal_stella,500000,Eternal Stella",
+
+"forbidden_arcanus:mundabitur_dust,50000,Mundabitur Dust",
+"forbidden_arcanus:corrupti_dust,50000,Corrupti Dust",
+"forbidden_arcanus:dark_matter,150000,Dark Matter",
+
+"forbidden_arcanus:soul,50000,Soul",
+"forbidden_arcanus:corrupt_soul,75000,Corrupt Soul",
+"forbidden_arcanus:enchanted_soul,100000,Enchanted Soul",
+
+"forbidden_arcanus:rune,50000,Rune",
+"forbidden_arcanus:rune_block,150000,Rune Block",
+
+"forbidden_arcanus:ender_pearl_fragment,25000,Ender Pearl Fragment",
+
+"forbidden_arcanus:dragon_scale,100000,Dragon Scale",
+"forbidden_arcanus:silver_dragon_scale,150000,Silver Dragon Scale",
+"forbidden_arcanus:golden_dragon_scale,150000,Golden Dragon Scale",
+"forbidden_arcanus:aquatic_dragon_scale,150000,Aquatic Dragon Scale",
+
+"forbidden_arcanus:spectral_eye_amulet,150000,Spectral Eye Amulet",
+
+"forbidden_arcanus:bat_wing,25000,Bat Wing",
+"forbidden_arcanus:bat_soup,50000,Bat Soup",
+
+"forbidden_arcanus:tentacle,25000,Tentacle",
+"forbidden_arcanus:cooked_tentacle,50000,Cooked Tentacle",
+
+"forbidden_arcanus:edelwood_stick,25000,Edelwood Stick",
+"forbidden_arcanus:wax,25000,Wax",
+
+"forbidden_arcanus:ferrognetic_mixture,75000,Ferrognetic Mixture",
+
+"forbidden_arcanus:soul_binding_crystal,150000,Soul Binding Crystal",
+"forbidden_arcanus:aureal_wardstone,150000,Aureal Wardstone",
+"forbidden_arcanus:spawner_scrap,50000,Spawner Scrap",
+
+"forbidden_arcanus:quantum_catcher,150000,Quantum Catcher",
+"forbidden_arcanus:white_quantum_catcher,150000,White Quantum Catcher",
+"forbidden_arcanus:orange_quantum_catcher,150000,Orange Quantum Catcher",
+"forbidden_arcanus:magenta_quantum_catcher,150000,Magenta Quantum Catcher",
+"forbidden_arcanus:light_blue_quantum_catcher,150000,Light Blue Quantum Catcher",
+"forbidden_arcanus:yellow_quantum_catcher,150000,Yellow Quantum Catcher",
+"forbidden_arcanus:lime_quantum_catcher,150000,Lime Quantum Catcher",
+"forbidden_arcanus:pink_quantum_catcher,150000,Pink Quantum Catcher",
+"forbidden_arcanus:gray_quantum_catcher,150000,Gray Quantum Catcher",
+"forbidden_arcanus:light_gray_quantum_catcher,150000,Light Gray Quantum Catcher",
+"forbidden_arcanus:cyan_quantum_catcher,150000,Cyan Quantum Catcher",
+"forbidden_arcanus:purple_quantum_catcher,150000,Purple Quantum Catcher",
+"forbidden_arcanus:blue_quantum_catcher,150000,Blue Quantum Catcher",
+"forbidden_arcanus:brown_quantum_catcher,150000,Brown Quantum Catcher",
+"forbidden_arcanus:green_quantum_catcher,150000,Green Quantum Catcher",
+"forbidden_arcanus:red_quantum_catcher,150000,Red Quantum Catcher",
+"forbidden_arcanus:black_quantum_catcher,150000,Black Quantum Catcher",
+"forbidden_arcanus:boss_catcher,300000,Boss Catcher",
+
+"forbidden_arcanus:artisan_relic,150000,Artisan Relic",
+"forbidden_arcanus:crescent_moon,150000,Crescent Moon",
+
+"forbidden_arcanus:crimson_stone,50000,Crimson Stone",
+"forbidden_arcanus:soul_crimson_stone,75000,Soul Crimson Stone",
+
+"forbidden_arcanus:elementarium,150000,Elementarium",
+"forbidden_arcanus:divine_pact,200000,Divine Pact",
+"forbidden_arcanus:maledictus_pact,200000,Maledictus Pact",
+
+"forbidden_arcanus:aureal_tank,150000,Aureal Tank",
+"forbidden_arcanus:utrem_jar,50000,Utrem Jar",
+"forbidden_arcanus:essence_utrem_jar,75000,Essence Utrem Jar",
+
+"forbidden_arcanus:aureal_bottle,50000,Aureal Bottle",
+"forbidden_arcanus:splash_aureal_bottle,75000,Splash Aureal Bottle",
+
+"forbidden_arcanus:arcane_bone_meal,25000,Arcane Bone Meal",
+"forbidden_arcanus:test_tube,25000,Test Tube",
+"forbidden_arcanus:blood_test_tube,50000,Blood Test Tube",
+
+"forbidden_arcanus:blacksmith_gavel_head,50000,Gavel Head",
+"forbidden_arcanus:wooden_blacksmith_gavel,50000,Wooden Gavel",
+"forbidden_arcanus:stone_blacksmith_gavel,50000,Stone Gavel",
+"forbidden_arcanus:golden_blacksmith_gavel,75000,Golden Gavel",
+"forbidden_arcanus:iron_blacksmith_gavel,75000,Iron Gavel",
+"forbidden_arcanus:diamond_blacksmith_gavel,150000,Diamond Gavel",
+"forbidden_arcanus:netherite_blacksmith_gavel,250000,Netherite Gavel",
+"forbidden_arcanus:reinforced_deorum_blacksmith_gavel,200000,Reinforced Deorum Gavel",
+
+"forbidden_arcanus:stellarite_piece,150000,Stellarite Piece",
+"forbidden_arcanus:dark_nether_star,300000,Dark Nether Star",
+
+"forbidden_arcanus:terrastomp_prism,150000,Terrastomp Prism",
+"forbidden_arcanus:sea_prism,150000,Sea Prism",
+"forbidden_arcanus:whirlwind_prism,150000,Whirlwind Prism",
+"forbidden_arcanus:smelter_prism,150000,Smelter Prism",
+
+"forbidden_arcanus:edelwood_bucket,50000,Edelwood Bucket",
+"forbidden_arcanus:edelwood_water_bucket,75000,Edelwood Water Bucket",
+"forbidden_arcanus:edelwood_lava_bucket,100000,Edelwood Lava Bucket",
+"forbidden_arcanus:edelwood_milk_bucket,75000,Edelwood Milk Bucket",
+"forbidden_arcanus:edelwood_powder_snow_bucket,75000,Edelwood Powder Snow Bucket",
+
+"forbidden_arcanus:boom_arrow,50000,Boom Arrow",
+"forbidden_arcanus:draco_arcanus_arrow,75000,Draco Arcanus Arrow",
+
+"forbidden_arcanus:edelwood_oil,50000,Edelwood Oil",
+
+"forbidden_arcanus:apply_modifier_smithing_template,150000,Apply Modifier Template",
+
+"forbidden_arcanus:omega_arcoin,200000,Omega Arcoin",
+
+"forbidden_arcanus:aurum_boat,50000,Aurum Boat",
+"forbidden_arcanus:aurum_chest_boat,75000,Aurum Chest Boat",
+"forbidden_arcanus:edelwood_boat,50000,Edelwood Boat",
+"forbidden_arcanus:edelwood_chest_boat,75000,Edelwood Chest Boat",
+
+"forbidden_arcanus:soul_extractor,200000,Soul Extractor",
+"forbidden_arcanus:magic_wand,150000,Magic Wand",
+
+"forbidden_arcanus:draco_arcanus_staff,500000,Draco Arcanus Staff",
+"forbidden_arcanus:draco_arcanus_sword,300000,Draco Arcanus Sword",
+"forbidden_arcanus:draco_arcanus_shovel,250000,Draco Arcanus Shovel",
+"forbidden_arcanus:draco_arcanus_pickaxe,300000,Draco Arcanus Pickaxe",
+"forbidden_arcanus:draco_arcanus_axe,300000,Draco Arcanus Axe",
+"forbidden_arcanus:draco_arcanus_hoe,250000,Draco Arcanus Hoe",
+"forbidden_arcanus:draco_arcanus_scepter,400000,Draco Arcanus Scepter",
+
+"forbidden_arcanus:reinforced_deorum_sword,200000,Reinforced Deorum Sword",
+"forbidden_arcanus:reinforced_deorum_shovel,150000,Reinforced Deorum Shovel",
+"forbidden_arcanus:reinforced_deorum_pickaxe,200000,Reinforced Deorum Pickaxe",
+"forbidden_arcanus:reinforced_deorum_axe,200000,Reinforced Deorum Axe",
+"forbidden_arcanus:reinforced_deorum_hoe,150000,Reinforced Deorum Hoe",
+
+"forbidden_arcanus:draco_arcanus_helmet,300000,Draco Arcanus Helmet",
+"forbidden_arcanus:draco_arcanus_chestplate,400000,Draco Arcanus Chestplate",
+"forbidden_arcanus:draco_arcanus_leggings,350000,Draco Arcanus Leggings",
+"forbidden_arcanus:draco_arcanus_boots,300000,Draco Arcanus Boots",
+
+"forbidden_arcanus:tyr_helmet,250000,Tyr Helmet",
+"forbidden_arcanus:tyr_chestplate,300000,Tyr Chestplate",
+"forbidden_arcanus:tyr_leggings,275000,Tyr Leggings",
+"forbidden_arcanus:tyr_boots,250000,Tyr Boots",
+
+"forbidden_arcanus:mortem_helmet,250000,Mortem Helmet",
+"forbidden_arcanus:mortem_chestplate,300000,Mortem Chestplate",
+"forbidden_arcanus:mortem_leggings,275000,Mortem Leggings",
+"forbidden_arcanus:mortem_boots,250000,Mortem Boots",
+
+"forbidden_arcanus:forbiddenomicon,300000,Forbiddenomicon",
+
+"forbidden_arcanus:hephaestus_forge_tier_1,150000,Hephaestus Forge Tier 1",
+"forbidden_arcanus:hephaestus_forge_tier_2,200000,Hephaestus Forge Tier 2",
+"forbidden_arcanus:hephaestus_forge_tier_3,250000,Hephaestus Forge Tier 3",
+"forbidden_arcanus:hephaestus_forge_tier_4,300000,Hephaestus Forge Tier 4",
+"forbidden_arcanus:hephaestus_forge_tier_5,400000,Hephaestus Forge Tier 5",
+
+"forbidden_arcanus:arcane_dragon_egg,500000,Arcane Dragon Egg",
+
+"forbidden_arcanus:arcane_crystal_obelisk,300000,Arcane Crystal Obelisk",
+"forbidden_arcanus:corrupted_arcane_crystal_obelisk,400000,Corrupted Arcane Crystal Obelisk",
+
+"forbidden_arcanus:obsidian_skull,150000,Obsidian Skull",
+"forbidden_arcanus:cracked_obsidian_skull,150000,Cracked Obsidian Skull",
+"forbidden_arcanus:fragmented_obsidian_skull,150000,Fragmented Obsidian Skull",
+"forbidden_arcanus:fading_obsidian_skull,150000,Fading Obsidian Skull",
+"forbidden_arcanus:aurealic_obsidian_skull,200000,Aurealic Obsidian Skull",
+"forbidden_arcanus:eternal_obsidian_skull,300000,Eternal Obsidian Skull",
+
+"forbidden_arcanus:deorum_chain,50000,Deorum Chain",
+
+"forbidden_arcanus:magical_farmland,50000,Magical Farmland",
+
+"forbidden_arcanus:desk,50000,Desk",
+"forbidden_arcanus:research_desk,75000,Research Desk",
+
+"forbidden_arcanus:quantum_core,300000,Quantum Core",
+"forbidden_arcanus:quantum_injector,300000,Quantum Injector",
+
+"apothic_enchanting:beeshelf,150000,Bee Shelf",
+"apothic_enchanting:blazing_hellshelf,200000,Blazing Hellshelf",
+"apothic_enchanting:boots_tome,150000,Boots Tome",
+"apothic_enchanting:bow_tome,150000,Bow Tome",
+"apothic_enchanting:chestplate_tome,150000,Chestplate Tome",
+"apothic_enchanting:crystal_seashelf,200000,Crystal Seashelf",
+"apothic_enchanting:deepshelf,150000,Deepshelf",
+"apothic_enchanting:dormant_deepshelf,100000,Dormant Deepshelf",
+"apothic_enchanting:draconic_endshelf,300000,Draconic Endshelf",
+"apothic_enchanting:echoing_deepshelf,200000,Echoing Deepshelf",
+"apothic_enchanting:echoing_sculkshelf,200000,Echoing Sculkshelf",
+"apothic_enchanting:ender_library,300000,Ender Library",
+"apothic_enchanting:endshelf,150000,Endshelf",
+"apothic_enchanting:extraction_tome,200000,Extraction Tome",
+"apothic_enchanting:filtering_shelf,150000,Filtering Shelf",
+"apothic_enchanting:fishing_tome,150000,Fishing Tome",
+"apothic_enchanting:geode_shelf,200000,Geode Shelf",
+"apothic_enchanting:glowing_hellshelf,200000,Glowing Hellshelf",
+"apothic_enchanting:heart_seashelf,200000,Heart Seashelf",
+"apothic_enchanting:hellshelf,150000,Hellshelf",
+"apothic_enchanting:helmet_tome,150000,Helmet Tome",
+"apothic_enchanting:improved_scrap_tome,200000,Improved Scrap Tome",
+"apothic_enchanting:inert_trident,150000,Inert Trident",
+"apothic_enchanting:infused_breath,150000,Infused Breath",
+"apothic_enchanting:infused_hellshelf,250000,Infused Hellshelf",
+"apothic_enchanting:infused_seashelf,250000,Infused Seashelf",
+"apothic_enchanting:leggings_tome,150000,Leggings Tome",
+"apothic_enchanting:library,200000,Library Shelf",
+"apothic_enchanting:melonshelf,150000,Melon Shelf",
+"apothic_enchanting:other_tome,150000,Other Tome",
+"apothic_enchanting:pearl_endshelf,200000,Pearl Endshelf",
+"apothic_enchanting:pickaxe_tome,150000,Pickaxe Tome",
+"apothic_enchanting:prismatic_web,150000,Prismatic Web",
+"apothic_enchanting:scrap_tome,150000,Scrap Tome",
+"apothic_enchanting:seashelf,150000,Seashelf",
+"apothic_enchanting:sightshelf,150000,Sightshelf",
+"apothic_enchanting:sightshelf_t2,200000,Sightshelf Tier 2",
+"apothic_enchanting:soul_touched_deepshelf,250000,Soul‑Touched Deepshelf",
+"apothic_enchanting:soul_touched_sculkshelf,250000,Soul‑Touched Sculkshelf",
+"apothic_enchanting:stoneshelf,100000,Stoneshelf",
+"apothic_enchanting:treasure_shelf,200000,Treasure Shelf",
+"apothic_enchanting:warden_tendril,150000,Warden Tendril",
+"apothic_enchanting:weapon_tome,150000,Weapon Tome",
+
+"apothic_enchanting:flimsy_ender_lead,50000,Flimsy Ender Lead",
+"apothic_enchanting:ender_lead,100000,Ender Lead",
+"apothic_enchanting:occult_ender_lead,150000,Occult Ender Lead",
+
+"apothic_enchanting:music_disc_eterna,150000,Music Disc: Eterna",
+"apothic_enchanting:music_disc_quanta,150000,Music Disc: Quanta",
+"apothic_enchanting:music_disc_arcana,150000,Music Disc: Arcana",
+
+"apotheosis:common_material,50000,Common Material",
+"apotheosis:uncommon_material,75000,Uncommon Material",
+"apotheosis:rare_material,100000,Rare Material",
+"apotheosis:epic_material,150000,Epic Material",
+"apotheosis:mythic_material,200000,Mythic Material",
+
+"apotheosis:gem_dust,50000,Gem Dust",
+"apotheosis:gem_fused_slate,150000,Gem‑Fused Slate",
+
+"apotheosis:sigil_of_socketing,150000,Sigil of Socketing",
+"apotheosis:sigil_of_withdrawal,150000,Sigil of Withdrawal",
+"apotheosis:sigil_of_rebirth,200000,Sigil of Rebirth",
+"apotheosis:sigil_of_enhancement,150000,Sigil of Enhancement",
+"apotheosis:sigil_of_unnaming,150000,Sigil of Unnaming",
+"apotheosis:sigil_of_malice,200000,Sigil of Malice",
+"apotheosis:sigil_of_supremacy,300000,Sigil of Supremacy",
+
+"apotheosis:boss_summoner,300000,Boss Summoner",
+
+"apotheosis:simple_reforging_table,150000,Simple Reforging Table",
+"apotheosis:reforging_table,250000,Reforging Table",
+"apotheosis:salvaging_table,200000,Salvaging Table",
+"apotheosis:gem_cutting_table,200000,Gem Cutting Table",
+"apotheosis:augmenting_table,250000,Augmenting Table",
+
+"apotheosis:gem,150000,Apotheosis Gem",
+"apotheosis:potion_charm,150000,Potion Charm",
+
+"apotheosis:iron_upgrade_smithing_template,75000,Iron Upgrade Template",
+"apotheosis:gold_upgrade_smithing_template,100000,Gold Upgrade Template",
+"apotheosis:diamond_upgrade_smithing_template,150000,Diamond Upgrade Template",
+
+"apotheosis:music_disc_flash,150000,Music Disc: Flash",
+"apotheosis:music_disc_glimmer,150000,Music Disc: Glimmer",
+"apotheosis:music_disc_shimmer,150000,Music Disc: Shimmer",
+
+"minecraftmoney:magic_ledger,50000,Magic Ledger",
+
 	]
+	
+	
+	
 	#Enable big screen mode for the shop GUI.
 	#When true, the shop displays 20 rows instead of 10.
 	bigScreen = true
+	#Automatically add all enchanted books to the shop.
+	#Books are added at max level for each enchantment.
+	autoAddEnchantedBooks = true
+	#Automatically add all potions (normal, splash, lingering) to the shop.
+	autoAddPotions = true
+	#Price for auto-generated enchanted books.
+	# Default: 10000
+	# Range: > 1
+	enchantedBookPrice = 10000
+	#Price for auto-generated potions.
+	# Default: 10000
+	# Range: > 1
+	potionPrice = 10000
+	#Filter out creative-only and overpowered enchantments from auto-generated books.
+	#This removes enchantments containing 'infinity' or 'creative' in their name.
+	filterCreativeEnchantments = true

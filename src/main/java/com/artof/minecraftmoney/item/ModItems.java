@@ -59,6 +59,14 @@ public class ModItems {
     public static final Supplier<CoinItem> TRILLION_COIN = ITEMS.register("trillion_coin", 
             () -> new CoinItem(new Item.Properties().stacksTo(64), TRILLION_VALUE));
     
+    // Magic Ledger - opens bank on shift+right-click, experience trading on right-click
+    public static final Supplier<MagicLedgerItem> MAGIC_LEDGER = ITEMS.register("magic_ledger",
+            () -> new MagicLedgerItem(new Item.Properties().stacksTo(1)));
+    
+    // Shop Book - opens the shop when right-clicked
+    public static final Supplier<ShopBookItem> SHOP_BOOK = ITEMS.register("shop_book",
+            () -> new ShopBookItem(new Item.Properties().stacksTo(1)));
+    
     // Creative Tab
     public static final Supplier<CreativeModeTab> CURRENCY_TAB = CREATIVE_MODE_TABS.register("currency_tab",
             () -> CreativeModeTab.builder()
@@ -78,6 +86,8 @@ public class ModItems {
                         output.accept(ModBlocks.BANK_BLOCK_ITEM.get());
                         output.accept(ModBlocks.SHOP_BLOCK_ITEM.get());
                         output.accept(ModBlocks.PERSONAL_SELLER_BLOCK_ITEM.get());
+                        output.accept(MAGIC_LEDGER.get());
+                        output.accept(SHOP_BOOK.get());
                     })
                     .build());
     

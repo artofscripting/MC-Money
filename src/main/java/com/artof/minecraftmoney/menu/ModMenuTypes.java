@@ -22,6 +22,15 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<PersonalSellerMenu>> PERSONAL_SELLER_MENU = MENUS.register("personal_seller_menu",
             () -> IMenuTypeExtension.create(PersonalSellerMenu::new));
     
+    public static final Supplier<MenuType<ExperienceMenu>> EXPERIENCE_MENU = MENUS.register("experience_menu",
+            () -> IMenuTypeExtension.create(ExperienceMenu::new));
+    
+    public static final Supplier<MenuType<PortableBankMenu>> PORTABLE_BANK_MENU = MENUS.register("portable_bank_menu",
+            () -> IMenuTypeExtension.create(PortableBankMenu::new));
+    
+    public static final Supplier<MenuType<PortableShopMenu>> PORTABLE_SHOP_MENU = MENUS.register("portable_shop_menu",
+            () -> IMenuTypeExtension.create(PortableShopMenu::new));
+    
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);
     }

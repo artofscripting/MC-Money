@@ -1,9 +1,18 @@
 package com.artof.minecraftmoney.config;
 
 import com.artof.minecraftmoney.MinecraftMoney;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -13,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @EventBusSubscriber(modid = "minecraftmoney", bus = EventBusSubscriber.Bus.MOD)
 public class ShopConfig {
@@ -23,6 +33,14 @@ public class ShopConfig {
     private static final ModConfigSpec.DoubleValue SELL_PRICE_MULTIPLIER;
     private static final ModConfigSpec.BooleanValue BIG_SCREEN;
     private static final ModConfigSpec.IntValue PERSONAL_SELLER_MAX_ITEMS;
+    private static final ModConfigSpec.BooleanValue AUTO_ADD_ENCHANTED_BOOKS;
+    private static final ModConfigSpec.BooleanValue AUTO_ADD_POTIONS;
+    private static final ModConfigSpec.IntValue ENCHANTED_BOOK_PRICE;
+    private static final ModConfigSpec.IntValue POTION_PRICE;
+    private static final ModConfigSpec.BooleanValue FILTER_CREATIVE_ENCHANTMENTS;
+    private static final ModConfigSpec.BooleanValue FILTER_CREATIVE_ITEMS;
+    private static final ModConfigSpec.BooleanValue PERSONAL_SELLER_ACCEPT_FE;
+    private static final ModConfigSpec.IntValue FE_PER_CURRENCY;
     
     public static final ModConfigSpec SPEC;
     
@@ -31,6 +49,16 @@ public class ShopConfig {
     private static double sellMultiplier = 0.5;
     private static boolean bigScreen = false;
     private static int personalSellerMaxItems = 1;
+    private static boolean autoAddEnchantedBooks = true;
+    private static boolean autoAddPotions = true;
+    private static int enchantedBookPrice = 10000;
+    private static int potionPrice = 10000;
+    private static boolean filterCreativeEnchantments = true;
+    private static boolean filterCreativeItems = false;
+    private static boolean personalSellerAcceptFE = true;
+    private static int fePerCurrency = 1000;
+    private static boolean enchantedBooksLoaded = false;
+    private static RegistryAccess lastRegistryAccess = null;
     
     static {
         BUILDER.comment("Shop Configuration")
@@ -39,7 +67,11 @@ public class ShopConfig {
         SHOP_ITEMS = BUILDER
                 .comment("List of items to sell in the shop.",
                         "Format: 'minecraft:item_id,price,display_name'",
-                        "Example: 'minecraft:diamond,500,Diamond'")
+                        "For enchanted books: 'enchanted_book:enchantment_id:level,price,display_name'",
+                        "For potions: 'potion:potion_id,price,display_name' (also splash_potion: and lingering_potion:)",
+                        "Example: 'minecraft:diamond,500,Diamond'",
+                        "Example enchanted book: 'enchanted_book:sharpness:5,10000,Sharpness V'",
+                        "Example potion: 'potion:strong_healing,5000,Strong Healing Potion'")
                 .defineListAllowEmpty(
                         "shopItems",
                         List.of(
@@ -400,7 +432,7 @@ public class ShopConfig {
                                 "minecraft:disc_fragment_5,100,Disc Fragment"
                         ),
                         () -> "minecraft:stone,10,Stone",
-                        obj -> obj instanceof String s && s.split(",").length == 3
+                        obj -> obj instanceof String s && (s.split(",").length >= 3)
                 );
         
         SELL_PRICE_MULTIPLIER = BUILDER
@@ -419,6 +451,43 @@ public class ShopConfig {
                         "Default is 1 item per tick (20 items per second).")
                 .defineInRange("personalSellerMaxItems", 1, 1, 64);
         
+        AUTO_ADD_ENCHANTED_BOOKS = BUILDER
+                .comment("Automatically add all enchanted books to the shop.",
+                        "Books are added at max level for each enchantment.")
+                .define("autoAddEnchantedBooks", true);
+        
+        AUTO_ADD_POTIONS = BUILDER
+                .comment("Automatically add all potions (normal, splash, lingering) to the shop.")
+                .define("autoAddPotions", true);
+        
+        ENCHANTED_BOOK_PRICE = BUILDER
+                .comment("Price for auto-generated enchanted books.")
+                .defineInRange("enchantedBookPrice", 10000, 1, Integer.MAX_VALUE);
+        
+        POTION_PRICE = BUILDER
+                .comment("Price for auto-generated potions.")
+                .defineInRange("potionPrice", 10000, 1, Integer.MAX_VALUE);
+        
+        FILTER_CREATIVE_ENCHANTMENTS = BUILDER
+                .comment("Filter out creative-only and overpowered enchantments from auto-generated books.",
+                        "This removes enchantments containing 'infinity' or 'creative' in their name.")
+                .define("filterCreativeEnchantments", true);
+        
+        FILTER_CREATIVE_ITEMS = BUILDER
+                .comment("Filter out creative-only items from the shop.",
+                        "This removes items containing 'infinity' or 'creative' in their name.")
+                .define("filterCreativeItems", false);
+        
+        PERSONAL_SELLER_ACCEPT_FE = BUILDER
+                .comment("Allow Personal Seller block to accept Forge Energy (FE) from any side.",
+                        "FE will be instantly converted to currency for the owner.")
+                .define("personalSellerAcceptFE", true);
+        
+        FE_PER_CURRENCY = BUILDER
+                .comment("Amount of FE required to earn 1 currency.",
+                        "Default is 1000 FE = 1 currency.")
+                .defineInRange("fePerCurrency", 1000, 1, Integer.MAX_VALUE);
+        
         BUILDER.pop();
         SPEC = BUILDER.build();
     }
@@ -429,6 +498,14 @@ public class ShopConfig {
             sellMultiplier = SELL_PRICE_MULTIPLIER.get();
             bigScreen = BIG_SCREEN.get();
             personalSellerMaxItems = PERSONAL_SELLER_MAX_ITEMS.get();
+            autoAddEnchantedBooks = AUTO_ADD_ENCHANTED_BOOKS.get();
+            autoAddPotions = AUTO_ADD_POTIONS.get();
+            enchantedBookPrice = ENCHANTED_BOOK_PRICE.get();
+            potionPrice = POTION_PRICE.get();
+            filterCreativeEnchantments = FILTER_CREATIVE_ENCHANTMENTS.get();
+            filterCreativeItems = FILTER_CREATIVE_ITEMS.get();
+            personalSellerAcceptFE = PERSONAL_SELLER_ACCEPT_FE.get();
+            fePerCurrency = FE_PER_CURRENCY.get();
             parseShopItems();
         }
     }
@@ -441,34 +518,117 @@ public class ShopConfig {
         return personalSellerMaxItems;
     }
     
+    public static boolean isPersonalSellerAcceptFE() {
+        return personalSellerAcceptFE;
+    }
+    
+    public static int getFePerCurrency() {
+        return fePerCurrency;
+    }
+    
+    public static boolean isFilterCreativeItems() {
+        return filterCreativeItems;
+    }
+    
     private static void parseShopItems() {
         parsedShopItems.clear();
         int validCount = 0;
         int invalidCount = 0;
         
         for (String entry : SHOP_ITEMS.get()) {
-            String[] parts = entry.split(",");
-            if (parts.length == 3) {
-                try {
-                    String itemId = parts[0].trim();
-                    long price = Long.parseLong(parts[1].trim());
-                    String displayName = parts[2].trim();
-                    
-                    // Validate that the item exists in the registry
-                    if (isValidItem(itemId)) {
-                        parsedShopItems.add(new ShopEntry(itemId, price, displayName));
+            // Parse format: itemId,price,displayName
+            // Special formats:
+            // - enchanted_book:enchantment_id:level,price,displayName
+            // - potion:potion_id,price,displayName
+            // - splash_potion:potion_id,price,displayName
+            // - lingering_potion:potion_id,price,displayName
+            
+            int firstComma = entry.indexOf(',');
+            if (firstComma == -1) {
+                LOGGER.warn("Invalid shop entry format (no commas): {}", entry);
+                continue;
+            }
+            
+            int secondComma = entry.indexOf(',', firstComma + 1);
+            if (secondComma == -1) {
+                LOGGER.warn("Invalid shop entry format (only one comma): {}", entry);
+                continue;
+            }
+            
+            String itemId = entry.substring(0, firstComma).trim();
+            String priceStr = entry.substring(firstComma + 1, secondComma).trim();
+            String displayName = entry.substring(secondComma + 1).trim();
+            
+            try {
+                long price = Long.parseLong(priceStr);
+                
+                // Filter creative items if enabled
+                if (filterCreativeItems) {
+                    String lowerItemId = itemId.toLowerCase();
+                    String lowerDisplayName = displayName.toLowerCase();
+                    if (lowerItemId.contains("infinity") || lowerItemId.contains("creative") ||
+                        lowerDisplayName.contains("infinity") || lowerDisplayName.contains("creative")) {
+                        LOGGER.debug("Filtered creative item from shop: {} ({})", displayName, itemId);
+                        continue;
+                    }
+                }
+                
+                // Parse special item types
+                if (itemId.startsWith("enchanted_book:")) {
+                    // Format: enchanted_book:enchantment_id:level
+                    String enchantData = itemId.substring("enchanted_book:".length());
+                    int lastColon = enchantData.lastIndexOf(':');
+                    if (lastColon > 0) {
+                        String enchantmentId = enchantData.substring(0, lastColon);
+                        int level = Integer.parseInt(enchantData.substring(lastColon + 1));
+                        parsedShopItems.add(new ShopEntry("minecraft:enchanted_book", price, displayName, 
+                                "enchanted_book:" + enchantmentId + ":" + level));
                         validCount++;
                     } else {
-                        LOGGER.warn("Shop item '{}' ({}) does not exist in the item registry and will be skipped", 
-                                displayName, itemId);
+                        LOGGER.warn("Invalid enchanted book format: {}", entry);
                         invalidCount++;
                     }
-                } catch (NumberFormatException e) {
-                    LOGGER.warn("Invalid price format for shop entry: {}", entry);
+                } else if (itemId.startsWith("potion:")) {
+                    String potionId = itemId.substring("potion:".length());
+                    parsedShopItems.add(new ShopEntry("minecraft:potion", price, displayName, "potion:" + potionId));
+                    validCount++;
+                } else if (itemId.startsWith("splash_potion:")) {
+                    String potionId = itemId.substring("splash_potion:".length());
+                    parsedShopItems.add(new ShopEntry("minecraft:splash_potion", price, displayName, "potion:" + potionId));
+                    validCount++;
+                } else if (itemId.startsWith("lingering_potion:")) {
+                    String potionId = itemId.substring("lingering_potion:".length());
+                    parsedShopItems.add(new ShopEntry("minecraft:lingering_potion", price, displayName, "potion:" + potionId));
+                    validCount++;
+                } else if (isValidItem(itemId)) {
+                    // Regular item
+                    parsedShopItems.add(new ShopEntry(itemId, price, displayName, null));
+                    validCount++;
+                } else {
+                    LOGGER.warn("Shop item '{}' ({}) does not exist in the item registry and will be skipped", 
+                            displayName, itemId);
+                    invalidCount++;
                 }
-            } else {
-                LOGGER.warn("Invalid shop entry format (expected 3 parts): {}", entry);
+            } catch (NumberFormatException e) {
+                LOGGER.warn("Invalid price or level format for shop entry: {}", entry);
             }
+        }
+        
+        // Auto-add enchanted books if enabled
+        // Note: Enchanted books from modded registries are added when server starts
+        // via loadEnchantedBooksFromRegistry() since enchantments are data-driven
+        if (autoAddEnchantedBooks) {
+            // Add vanilla enchanted books using predefined list
+            int booksAdded = addVanillaEnchantedBooks();
+            LOGGER.info("Auto-added {} vanilla enchanted books to shop (modded books load on server start)", booksAdded);
+            validCount += booksAdded;
+        }
+        
+        // Auto-add potions if enabled
+        if (autoAddPotions) {
+            int potionsAdded = addPotions();
+            LOGGER.info("Auto-added {} potions to shop", potionsAdded);
+            validCount += potionsAdded;
         }
         
         if (invalidCount > 0) {
@@ -476,6 +636,266 @@ public class ShopConfig {
         } else {
             LOGGER.info("Shop loaded with {} items", validCount);
         }
+        
+        // Reset the flag so modded enchantments get loaded on next server start
+        enchantedBooksLoaded = false;
+    }
+    
+    /**
+     * Called when the server starts to load enchanted books from the data-driven registry.
+     * This allows loading modded enchantments that aren't available during config parsing.
+     */
+    public static void loadEnchantedBooksFromRegistry(RegistryAccess registryAccess) {
+        if (!autoAddEnchantedBooks) return;
+        if (enchantedBooksLoaded && lastRegistryAccess == registryAccess) return;
+        
+        lastRegistryAccess = registryAccess;
+        enchantedBooksLoaded = true;
+        
+        Registry<Enchantment> enchantmentRegistry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
+        int count = 0;
+        
+        // Track which enchantments we've already added (from vanilla list)
+        java.util.Set<String> existingEnchantments = new java.util.HashSet<>();
+        for (ShopEntry entry : parsedShopItems) {
+            if (entry.componentString() != null && entry.componentString().startsWith("enchanted_book:")) {
+                String enchantId = entry.getEnchantmentId();
+                if (enchantId != null) {
+                    existingEnchantments.add(enchantId);
+                }
+            }
+        }
+        
+        // Add all enchantments from the registry that we haven't added yet
+        for (Holder<Enchantment> enchantmentHolder : enchantmentRegistry.holders().toList()) {
+            var key = enchantmentHolder.unwrapKey();
+            if (key.isEmpty()) continue;
+            
+            ResourceLocation enchantmentId = key.get().location();
+            String enchantmentIdStr = enchantmentId.toString();
+            
+            // Skip if already added
+            if (existingEnchantments.contains(enchantmentIdStr)) continue;
+            
+            // Filter out creative/infinity enchantments if enabled
+            if (filterCreativeEnchantments) {
+                String lowerCaseId = enchantmentIdStr.toLowerCase();
+                if (lowerCaseId.contains("infinity") || lowerCaseId.contains("creative")) {
+                    continue;
+                }
+            }
+            
+            Enchantment enchantment = enchantmentHolder.value();
+            int maxLevel = enchantment.getMaxLevel();
+            
+            String enchantmentName = formatEnchantmentName(enchantmentId.getPath(), maxLevel);
+            String componentString = "enchanted_book:" + enchantmentIdStr + ":" + maxLevel;
+            
+            parsedShopItems.add(new ShopEntry("minecraft:enchanted_book", enchantedBookPrice, enchantmentName, componentString));
+            count++;
+        }
+        
+        if (count > 0) {
+            LOGGER.info("Loaded {} additional enchanted books from registry (including modded)", count);
+        }
+    }
+    
+    private static int addVanillaEnchantedBooks() {
+        int count = 0;
+        
+        // Predefined list of vanilla enchantments with their max levels
+        // In MC 1.21+, enchantments are data-driven so we use a predefined list
+        String[][] vanillaEnchantments = {
+                // Armor enchantments
+                {"minecraft:protection", "4"},
+                {"minecraft:fire_protection", "4"},
+                {"minecraft:feather_falling", "4"},
+                {"minecraft:blast_protection", "4"},
+                {"minecraft:projectile_protection", "4"},
+                {"minecraft:respiration", "3"},
+                {"minecraft:aqua_affinity", "1"},
+                {"minecraft:thorns", "3"},
+                {"minecraft:depth_strider", "3"},
+                {"minecraft:frost_walker", "2"},
+                {"minecraft:binding_curse", "1"},
+                {"minecraft:soul_speed", "3"},
+                {"minecraft:swift_sneak", "3"},
+                
+                // Weapon enchantments
+                {"minecraft:sharpness", "5"},
+                {"minecraft:smite", "5"},
+                {"minecraft:bane_of_arthropods", "5"},
+                {"minecraft:knockback", "2"},
+                {"minecraft:fire_aspect", "2"},
+                {"minecraft:looting", "3"},
+                {"minecraft:sweeping_edge", "3"},
+                {"minecraft:density", "5"},
+                {"minecraft:breach", "4"},
+                {"minecraft:wind_burst", "3"},
+                
+                // Tool enchantments
+                {"minecraft:efficiency", "5"},
+                {"minecraft:silk_touch", "1"},
+                {"minecraft:unbreaking", "3"},
+                {"minecraft:fortune", "3"},
+                
+                // Bow enchantments
+                {"minecraft:power", "5"},
+                {"minecraft:punch", "2"},
+                {"minecraft:flame", "1"},
+                {"minecraft:infinity", "1"},
+                
+                // Crossbow enchantments
+                {"minecraft:multishot", "1"},
+                {"minecraft:quick_charge", "3"},
+                {"minecraft:piercing", "4"},
+                
+                // Trident enchantments
+                {"minecraft:loyalty", "3"},
+                {"minecraft:impaling", "5"},
+                {"minecraft:riptide", "3"},
+                {"minecraft:channeling", "1"},
+                
+                // Mace enchantments
+                {"minecraft:density", "5"},
+                {"minecraft:breach", "4"},
+                {"minecraft:wind_burst", "3"},
+                
+                // Fishing rod enchantments
+                {"minecraft:luck_of_the_sea", "3"},
+                {"minecraft:lure", "3"},
+                
+                // General enchantments
+                {"minecraft:mending", "1"},
+                {"minecraft:vanishing_curse", "1"}
+        };
+        
+        for (String[] enchantment : vanillaEnchantments) {
+            String enchantmentId = enchantment[0];
+            int maxLevel = Integer.parseInt(enchantment[1]);
+            
+            // Filter out creative/infinity enchantments if enabled
+            if (filterCreativeEnchantments) {
+                String lowerCaseId = enchantmentId.toLowerCase();
+                if (lowerCaseId.contains("infinity") || lowerCaseId.contains("creative")) {
+                    continue;
+                }
+            }
+            
+            String enchantmentName = formatEnchantmentName(enchantmentId.substring(enchantmentId.indexOf(':') + 1), maxLevel);
+            
+            // Store as special component string for enchanted books
+            String componentString = "enchanted_book:" + enchantmentId + ":" + maxLevel;
+            
+            parsedShopItems.add(new ShopEntry("minecraft:enchanted_book", enchantedBookPrice, enchantmentName, componentString));
+            count++;
+        }
+        
+        return count;
+    }
+    
+    private static int addPotions() {
+        int count = 0;
+        
+        for (Holder<Potion> potionHolder : BuiltInRegistries.POTION.holders().toList()) {
+            Potion potion = potionHolder.value();
+            ResourceLocation potionId = BuiltInRegistries.POTION.getKey(potion);
+            
+            if (potionId == null) continue;
+            
+            // Skip "empty" and "water" potions as they're not useful
+            String potionPath = potionId.getPath();
+            if (potionPath.equals("empty") || potionPath.equals("water") || potionPath.equals("mundane") || potionPath.equals("thick") || potionPath.equals("awkward")) {
+                continue;
+            }
+            
+            String baseName = formatPotionName(potionPath);
+            String potionIdStr = potionId.toString();
+            
+            // Add normal potion
+            parsedShopItems.add(new ShopEntry("minecraft:potion", potionPrice, "Potion of " + baseName, "potion:" + potionIdStr));
+            count++;
+            
+            // Add splash potion
+            parsedShopItems.add(new ShopEntry("minecraft:splash_potion", potionPrice, "Splash Potion of " + baseName, "potion:" + potionIdStr));
+            count++;
+            
+            // Add lingering potion
+            parsedShopItems.add(new ShopEntry("minecraft:lingering_potion", potionPrice, "Lingering Potion of " + baseName, "potion:" + potionIdStr));
+            count++;
+        }
+        
+        return count;
+    }
+    
+    private static String formatEnchantmentName(String path, int level) {
+        // Convert snake_case to Title Case
+        StringBuilder name = new StringBuilder();
+        boolean capitalizeNext = true;
+        for (char c : path.toCharArray()) {
+            if (c == '_') {
+                name.append(' ');
+                capitalizeNext = true;
+            } else {
+                name.append(capitalizeNext ? Character.toUpperCase(c) : c);
+                capitalizeNext = false;
+            }
+        }
+        
+        // Add level as roman numeral if > 1
+        if (level > 1) {
+            name.append(' ').append(toRoman(level));
+        } else if (level == 1) {
+            // Only add "I" if the enchantment has multiple levels
+            name.append(" I");
+        }
+        
+        return name.toString();
+    }
+    
+    private static String formatPotionName(String path) {
+        // Handle prefixes like "strong_" and "long_"
+        String prefix = "";
+        String basePath = path;
+        
+        if (path.startsWith("strong_")) {
+            prefix = "Strong ";
+            basePath = path.substring(7);
+        } else if (path.startsWith("long_")) {
+            prefix = "Extended ";
+            basePath = path.substring(5);
+        }
+        
+        // Convert snake_case to Title Case
+        StringBuilder name = new StringBuilder(prefix);
+        boolean capitalizeNext = true;
+        for (char c : basePath.toCharArray()) {
+            if (c == '_') {
+                name.append(' ');
+                capitalizeNext = true;
+            } else {
+                name.append(capitalizeNext ? Character.toUpperCase(c) : c);
+                capitalizeNext = false;
+            }
+        }
+        
+        return name.toString();
+    }
+    
+    private static String toRoman(int num) {
+        return switch (num) {
+            case 1 -> "I";
+            case 2 -> "II";
+            case 3 -> "III";
+            case 4 -> "IV";
+            case 5 -> "V";
+            case 6 -> "VI";
+            case 7 -> "VII";
+            case 8 -> "VIII";
+            case 9 -> "IX";
+            case 10 -> "X";
+            default -> String.valueOf(num);
+        };
     }
     
     /**
@@ -511,9 +931,233 @@ public class ShopConfig {
         return (long) Math.floor(buyPrice * sellMultiplier);
     }
     
-    public record ShopEntry(String itemId, long price, String displayName) {
+    /**
+     * Represents a shop entry with optional component data for items like enchanted books and potions.
+     * The componentString can be:
+     * - null for regular items
+     * - "enchanted_book:minecraft:enchantment_id:level" for enchanted books
+     * - "potion:minecraft:potion_id" for potions
+     */
+    public record ShopEntry(String itemId, long price, String displayName, String componentString) {
+        
+        /**
+         * Constructor for simple items without component data.
+         */
+        public ShopEntry(String itemId, long price, String displayName) {
+            this(itemId, price, displayName, null);
+        }
+        
         public long getSellPrice() {
             return ShopConfig.getSellPrice(price);
+        }
+        
+        /**
+         * Creates an ItemStack for this shop entry with the correct component data.
+         * Note: For enchanted books, this requires server context to access the enchantment registry.
+         * Call this on the server side only when possible.
+         */
+        public ItemStack createItemStack(int count) {
+            ResourceLocation itemLoc = ResourceLocation.tryParse(itemId);
+            if (itemLoc == null) return ItemStack.EMPTY;
+            
+            var item = BuiltInRegistries.ITEM.get(itemLoc);
+            if (item == null || item == Items.AIR) return ItemStack.EMPTY;
+            
+            ItemStack stack = new ItemStack(item, count);
+            
+            // Apply component data if present
+            if (componentString != null && !componentString.isEmpty()) {
+                if (componentString.startsWith("enchanted_book:")) {
+                    // Format: enchanted_book:minecraft:enchantment_id:level
+                    // Enchanted books will be created without the actual enchantment data here
+                    // The enchantment will need to be applied when we have registry access
+                    // For display purposes, we return the base enchanted book
+                    // The actual enchantment is applied in createItemStackWithRegistry
+                } else if (componentString.startsWith("potion:")) {
+                    // Format: potion:minecraft:potion_id
+                    String potionIdStr = componentString.substring("potion:".length());
+                    ResourceLocation potionLoc = ResourceLocation.tryParse(potionIdStr);
+                    if (potionLoc != null) {
+                        var potionHolder = BuiltInRegistries.POTION.getHolder(potionLoc);
+                        if (potionHolder.isPresent()) {
+                            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potionHolder.get()));
+                        }
+                    }
+                }
+            }
+            
+            return stack;
+        }
+        
+        /**
+         * Creates an ItemStack with full enchantment support using the given registry access.
+         * This should be called on the server side where we have access to enchantment registries.
+         */
+        public ItemStack createItemStackWithRegistry(int count, net.minecraft.core.RegistryAccess registryAccess) {
+            ResourceLocation itemLoc = ResourceLocation.tryParse(itemId);
+            if (itemLoc == null) return ItemStack.EMPTY;
+            
+            var item = BuiltInRegistries.ITEM.get(itemLoc);
+            if (item == null || item == Items.AIR) return ItemStack.EMPTY;
+            
+            ItemStack stack = new ItemStack(item, count);
+            
+            // Apply component data if present
+            if (componentString != null && !componentString.isEmpty()) {
+                if (componentString.startsWith("enchanted_book:")) {
+                    // Format: enchanted_book:minecraft:enchantment_id:level
+                    String data = componentString.substring("enchanted_book:".length());
+                    int lastColon = data.lastIndexOf(':');
+                    if (lastColon > 0) {
+                        String enchantmentId = data.substring(0, lastColon);
+                        int level = Integer.parseInt(data.substring(lastColon + 1));
+                        
+                        ResourceLocation enchantLoc = ResourceLocation.tryParse(enchantmentId);
+                        if (enchantLoc != null && registryAccess != null) {
+                            var enchantRegistry = registryAccess.registry(net.minecraft.core.registries.Registries.ENCHANTMENT);
+                            if (enchantRegistry.isPresent()) {
+                                var enchantHolder = enchantRegistry.get().getHolder(enchantLoc);
+                                if (enchantHolder.isPresent()) {
+                                    net.minecraft.world.item.enchantment.ItemEnchantments.Mutable mutableEnchants = 
+                                            new net.minecraft.world.item.enchantment.ItemEnchantments.Mutable(
+                                                    net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
+                                    mutableEnchants.set(enchantHolder.get(), level);
+                                    stack.set(DataComponents.STORED_ENCHANTMENTS, mutableEnchants.toImmutable());
+                                }
+                            }
+                        }
+                    }
+                } else if (componentString.startsWith("potion:")) {
+                    // Format: potion:minecraft:potion_id
+                    String potionIdStr = componentString.substring("potion:".length());
+                    ResourceLocation potionLoc = ResourceLocation.tryParse(potionIdStr);
+                    if (potionLoc != null) {
+                        var potionHolder = BuiltInRegistries.POTION.getHolder(potionLoc);
+                        if (potionHolder.isPresent()) {
+                            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potionHolder.get()));
+                        }
+                    }
+                }
+            }
+            
+            return stack;
+        }
+        
+        /**
+         * Returns the enchantment ID if this is an enchanted book entry.
+         */
+        public String getEnchantmentId() {
+            if (componentString != null && componentString.startsWith("enchanted_book:")) {
+                String data = componentString.substring("enchanted_book:".length());
+                int lastColon = data.lastIndexOf(':');
+                if (lastColon > 0) {
+                    return data.substring(0, lastColon);
+                }
+            }
+            return null;
+        }
+        
+        /**
+         * Returns the enchantment level if this is an enchanted book entry.
+         */
+        public int getEnchantmentLevel() {
+            if (componentString != null && componentString.startsWith("enchanted_book:")) {
+                String data = componentString.substring("enchanted_book:".length());
+                int lastColon = data.lastIndexOf(':');
+                if (lastColon > 0) {
+                    try {
+                        return Integer.parseInt(data.substring(lastColon + 1));
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                }
+            }
+            return 0;
+        }
+        
+        /**
+         * Returns the potion ID if this is a potion entry.
+         */
+        public String getPotionId() {
+            if (componentString != null && componentString.startsWith("potion:")) {
+                return componentString.substring("potion:".length());
+            }
+            return null;
+        }
+        
+        /**
+         * Checks if the given ItemStack matches this shop entry.
+         * For items with component data, the components must also match.
+         */
+        public boolean matches(ItemStack stack) {
+            if (stack.isEmpty()) return false;
+            
+            ResourceLocation itemLoc = ResourceLocation.tryParse(itemId);
+            if (itemLoc == null) return false;
+            
+            var expectedItem = BuiltInRegistries.ITEM.get(itemLoc);
+            if (expectedItem == null || !stack.is(expectedItem)) return false;
+            
+            // If no component data, match any item of this type
+            if (componentString == null || componentString.isEmpty()) {
+                return true;
+            }
+            
+            // Compare component data based on item type
+            if (componentString.startsWith("enchanted_book:")) {
+                // Compare stored enchantments by checking the enchantment ID
+                String enchantmentId = getEnchantmentId();
+                int expectedLevel = getEnchantmentLevel();
+                
+                if (enchantmentId == null) return false;
+                
+                var actualEnchants = stack.get(DataComponents.STORED_ENCHANTMENTS);
+                if (actualEnchants == null) return false;
+                
+                // Check if stack has this enchantment at this level
+                ResourceLocation enchantLoc = ResourceLocation.tryParse(enchantmentId);
+                if (enchantLoc == null) return false;
+                
+                // Iterate through the enchantments on the stack
+                for (var entry : actualEnchants.entrySet()) {
+                    Holder<net.minecraft.world.item.enchantment.Enchantment> enchantHolder = entry.getKey();
+                    int level = entry.getIntValue();
+                    
+                    // Get the key from the holder
+                    var key = enchantHolder.unwrapKey();
+                    if (key.isPresent() && key.get().location().equals(enchantLoc) && level == expectedLevel) {
+                        return true;
+                    }
+                }
+                return false;
+            } else if (componentString.startsWith("potion:")) {
+                // Compare potion contents
+                String potionId = getPotionId();
+                if (potionId == null) return false;
+                
+                ResourceLocation potionLoc = ResourceLocation.tryParse(potionId);
+                if (potionLoc == null) return false;
+                
+                var actualPotion = stack.get(DataComponents.POTION_CONTENTS);
+                if (actualPotion == null) return false;
+                
+                // Compare potion type
+                Optional<Holder<Potion>> actualPotionType = actualPotion.potion();
+                if (actualPotionType.isEmpty()) return false;
+                
+                var key = actualPotionType.get().unwrapKey();
+                return key.isPresent() && key.get().location().equals(potionLoc);
+            }
+            
+            // For other items with component data, just match by item type
+            return true;
+        }
+        
+        /**
+         * Returns whether this entry has custom component data.
+         */
+        public boolean hasComponentData() {
+            return componentString != null && !componentString.isEmpty();
         }
     }
 }

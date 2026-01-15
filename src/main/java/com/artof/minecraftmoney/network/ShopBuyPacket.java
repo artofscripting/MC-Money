@@ -3,7 +3,6 @@ package com.artof.minecraftmoney.network;
 import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.data.PlayerCurrencyData;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -43,28 +42,46 @@ public record ShopBuyPacket(int itemIndex, int quantity) implements CustomPacket
                     int quantity = Math.max(1, Math.min(64, packet.quantity()));
                     long totalCost = entry.price() * quantity;
                     
+                    // Create the item stack first to check if it fits in inventory
+                    ItemStack stack = entry.createItemStackWithRegistry(quantity, 
+                            serverPlayer.level().registryAccess());
+                    
+                    if (stack.isEmpty()) {
+                        serverPlayer.sendSystemMessage(
+                                Component.literal("Failed to create item: " + entry.displayName())
+                                        .withStyle(net.minecraft.ChatFormatting.RED)
+                        );
+                        return;
+                    }
+                    
+                    // Check if player has space in inventory
+                    if (!canFitInInventory(serverPlayer, stack)) {
+                        serverPlayer.sendSystemMessage(
+                                Component.translatable("message.minecraftmoney.shop_inventory_full")
+                                        .withStyle(net.minecraft.ChatFormatting.RED)
+                        );
+                        return;
+                    }
+                    
                     // Check if player has enough currency
                     if (PlayerCurrencyData.removeCurrency(serverPlayer, totalCost)) {
-                        // Give the items
-                        ResourceLocation itemLoc = ResourceLocation.tryParse(entry.itemId());
-                        if (itemLoc != null) {
-                            var item = BuiltInRegistries.ITEM.get(itemLoc);
-                            if (item != null) {
-                                ItemStack stack = new ItemStack(item, quantity);
-                                if (!serverPlayer.getInventory().add(stack)) {
-                                    serverPlayer.drop(stack, false);
-                                }
-                                
-                                // Force sync inventory to client
-                                serverPlayer.inventoryMenu.broadcastChanges();
-                                
-                                String itemName = quantity > 1 ? quantity + "x " + entry.displayName() : entry.displayName();
-                                serverPlayer.sendSystemMessage(
-                                        Component.translatable("message.minecraftmoney.shop_purchased", itemName)
-                                                .withStyle(net.minecraft.ChatFormatting.GREEN)
-                                );
-                            }
-                        }
+                        // Re-create the stack since we need a fresh one to add
+                        ItemStack purchaseStack = entry.createItemStackWithRegistry(quantity, 
+                                serverPlayer.level().registryAccess());
+                        
+                        serverPlayer.getInventory().add(purchaseStack);
+                        
+                        // Force sync inventory to client
+                        serverPlayer.getInventory().setChanged();
+                        serverPlayer.containerMenu.broadcastChanges();
+                        serverPlayer.inventoryMenu.broadcastChanges();
+                        serverPlayer.containerMenu.sendAllDataToRemote();
+                        
+                        String itemName = quantity > 1 ? quantity + "x " + entry.displayName() : entry.displayName();
+                        serverPlayer.sendSystemMessage(
+                                Component.translatable("message.minecraftmoney.shop_purchased", itemName)
+                                        .withStyle(net.minecraft.ChatFormatting.GREEN)
+                        );
                     } else {
                         serverPlayer.sendSystemMessage(
                                 Component.translatable("message.minecraftmoney.shop_insufficient")
@@ -74,5 +91,24 @@ public record ShopBuyPacket(int itemIndex, int quantity) implements CustomPacket
                 }
             }
         });
+    }
+    
+    /**
+     * Check if the item stack can fit in the player's inventory
+     */
+    private static boolean canFitInInventory(ServerPlayer player, ItemStack stack) {
+        // Check if there's an empty slot
+        for (int i = 0; i < player.getInventory().items.size(); i++) {
+            ItemStack existing = player.getInventory().items.get(i);
+            if (existing.isEmpty()) {
+                return true;
+            }
+            // Check if we can stack with an existing item
+            if (ItemStack.isSameItemSameComponents(existing, stack) && 
+                existing.getCount() + stack.getCount() <= existing.getMaxStackSize()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

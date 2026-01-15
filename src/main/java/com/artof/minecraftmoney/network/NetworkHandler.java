@@ -43,6 +43,18 @@ public class NetworkHandler {
                 ShopSellPacket.STREAM_CODEC,
                 ShopSellPacket::handle
         );
+        
+        registrar.playToServer(
+                ExperienceActionPacket.TYPE,
+                ExperienceActionPacket.STREAM_CODEC,
+                ExperienceActionPacket::handle
+        );
+        
+        registrar.playToServer(
+                PortableBankActionPacket.TYPE,
+                PortableBankActionPacket.STREAM_CODEC,
+                PortableBankActionPacket::handle
+        );
     }
     
     public static void sendToPlayer(ServerPlayer player, SyncCurrencyPacket packet) {

@@ -22,6 +22,7 @@
     "message.minecraftmoney.deposited": "Deposited %s currency!",
     "message.minecraftmoney.shop_purchased": "Purchased %s!",
     "message.minecraftmoney.shop_insufficient": "Not enough currency!",
+    "message.minecraftmoney.shop_inventory_full": "Your inventory is full!",
     "message.minecraftmoney.shop_sold": "Sold %s for %s currency!",
     "message.minecraftmoney.shop_no_item": "You don't have that item to sell!",
     
@@ -40,5 +41,29 @@
     "gui.minecraftmoney.withdraw": "Withdraw",
     "gui.minecraftmoney.bank_balance": "Bank Balance: %s",
     "gui.minecraftmoney.wallet_balance": "Wallet Balance: %s",
-    "gui.minecraftmoney.your_balance": "Your Balance: %s"
+    "gui.minecraftmoney.your_balance": "Your Balance: %s",
+    
+    "item.minecraftmoney.magic_ledger": "Magic Ledger",
+    "tooltip.minecraftmoney.magic_ledger_1": "A mystical tome of commerce",
+    "tooltip.minecraftmoney.magic_ledger_2": "Right-click: Trade Experience",
+    "tooltip.minecraftmoney.magic_ledger_3": "Shift+Right-click: Open Bank",
+    
+    "gui.minecraftmoney.magic_ledger_bank": "Magic Ledger - Bank",
+    "gui.minecraftmoney.experience_trade": "Experience Exchange",
+    "gui.minecraftmoney.buy_xp": "Buy XP",
+    "gui.minecraftmoney.sell_xp": "Sell XP",
+    "gui.minecraftmoney.xp_amount": "Your XP: %s",
+    "gui.minecraftmoney.xp_price": "Price: %s per XP",
+    
+    "message.minecraftmoney.xp_bought": "Bought %s XP for %s currency!",
+    "message.minecraftmoney.xp_sold": "Sold %s XP for %s currency!",
+    "message.minecraftmoney.no_xp": "You don't have enough XP!",
+    
+    "gui.minecraftmoney.withdraw_coins": "Withdraw as Coins",
+    "gui.minecraftmoney.withdraw_info": "Convert currency to coins",
+    
+    "item.minecraftmoney.shop_book": "Dark Trade Tome",
+    "tooltip.minecraftmoney.shop_book_1": "A shadowy grimoire of commerce",
+    "tooltip.minecraftmoney.shop_book_2": "Right-click: Open Shop",
+    "gui.minecraftmoney.shop_book": "Shop"
 }

@@ -30,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -45,6 +46,71 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
     private int tickCounter = 0;
     private int totalEarned = 0;
     private int pendingEarnings = 0; // Earnings while owner was offline
+    private long totalFEEarned = 0; // Total currency earned from FE
+    
+    // Energy storage that instantly converts FE to currency
+    private final IEnergyStorage energyStorage = new IEnergyStorage() {
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            if (!ShopConfig.isPersonalSellerAcceptFE() || ownerUUID == null) {
+                return 0;
+            }
+            
+            // Accept all energy offered
+            int accepted = maxReceive;
+            
+            if (!simulate && accepted > 0 && level instanceof ServerLevel serverLevel) {
+                // Convert FE to currency immediately
+                int fePerCurrency = ShopConfig.getFePerCurrency();
+                long currencyEarned = accepted / fePerCurrency;
+                
+                if (currencyEarned > 0) {
+                    Player owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
+                    if (owner != null) {
+                        PlayerCurrencyData.addCurrency(owner, currencyEarned);
+                    } else {
+                        // Owner offline - store for later
+                        addOfflineEarnings(level, currencyEarned);
+                    }
+                    totalFEEarned += currencyEarned;
+                    totalEarned += currencyEarned;
+                    setChanged();
+                    
+                    // Play effects occasionally (not every tick to avoid spam)
+                    if (level.getGameTime() % 20 == 0) {
+                        playSellEffects(serverLevel);
+                    }
+                }
+            }
+            
+            return accepted;
+        }
+        
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+            return 0; // Cannot extract energy
+        }
+        
+        @Override
+        public int getEnergyStored() {
+            return 0; // We don't store energy, we convert it immediately
+        }
+        
+        @Override
+        public int getMaxEnergyStored() {
+            return Integer.MAX_VALUE; // Accept unlimited energy
+        }
+        
+        @Override
+        public boolean canExtract() {
+            return false;
+        }
+        
+        @Override
+        public boolean canReceive() {
+            return ShopConfig.isPersonalSellerAcceptFE() && ownerUUID != null;
+        }
+    };
     
     public PersonalSellerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PERSONAL_SELLER_BLOCK_ENTITY.get(), pos, state);
@@ -72,6 +138,10 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         return totalEarned;
     }
     
+    public long getTotalFEEarned() {
+        return totalFEEarned;
+    }
+    
     public int getPendingEarnings() {
         return pendingEarnings;
     }
@@ -86,6 +156,14 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
             setChanged();
         }
         return claimed;
+    }
+    
+    /**
+     * Get the energy storage for this block.
+     * Accepts FE from any side and instantly converts to currency.
+     */
+    public IEnergyStorage getEnergyStorage() {
+        return energyStorage;
     }
     
     public static void serverTick(Level level, BlockPos pos, BlockState state, PersonalSellerBlockEntity entity) {
@@ -165,11 +243,8 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
     }
     
     private long getSellPriceForItem(ItemStack stack) {
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        String itemIdStr = itemId.toString();
-        
         for (ShopConfig.ShopEntry entry : ShopConfig.getShopItems()) {
-            if (entry.itemId().equals(itemIdStr)) {
+            if (entry.matches(stack)) {
                 return entry.getSellPrice();
             }
         }
@@ -188,6 +263,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         }
         tag.putInt("TotalEarned", totalEarned);
         tag.putInt("PendingEarnings", pendingEarnings);
+        tag.putLong("TotalFEEarned", totalFEEarned);
     }
     
     @Override
@@ -202,6 +278,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         }
         totalEarned = tag.getInt("TotalEarned");
         pendingEarnings = tag.getInt("PendingEarnings");
+        totalFEEarned = tag.getLong("TotalFEEarned");
     }
     
     @Nullable
