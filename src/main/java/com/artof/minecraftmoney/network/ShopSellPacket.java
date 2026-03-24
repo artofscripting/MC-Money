@@ -74,12 +74,7 @@ public record ShopSellPacket(int itemIndex, int quantity) implements CustomPacke
                     int soldCount = toSell - remaining;
                     long sellPrice = entry.getSellPrice() * soldCount;
                     PlayerCurrencyData.addCurrency(serverPlayer, sellPrice);
-                    
-                    // Force sync inventory to client
-                    serverPlayer.getInventory().setChanged();
-                    serverPlayer.containerMenu.broadcastChanges();
-                    serverPlayer.inventoryMenu.broadcastChanges();
-                    serverPlayer.containerMenu.sendAllDataToRemote();
+                    forceSyncInventory(serverPlayer);
                     
                     String itemName = soldCount > 1 ? soldCount + "x " + entry.displayName() : entry.displayName();
                     serverPlayer.sendSystemMessage(
@@ -89,5 +84,13 @@ public record ShopSellPacket(int itemIndex, int quantity) implements CustomPacke
                 }
             }
         });
+    }
+
+    private static void forceSyncInventory(ServerPlayer serverPlayer) {
+        serverPlayer.getInventory().setChanged();
+        serverPlayer.containerMenu.broadcastChanges();
+        serverPlayer.containerMenu.sendAllDataToRemote();
+        serverPlayer.inventoryMenu.broadcastChanges();
+        serverPlayer.inventoryMenu.sendAllDataToRemote();
     }
 }
