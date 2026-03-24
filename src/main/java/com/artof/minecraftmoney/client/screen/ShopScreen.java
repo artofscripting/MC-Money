@@ -2,6 +2,7 @@ package com.artof.minecraftmoney.client.screen;
 
 import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.client.ClientCurrencyData;
+import com.artof.minecraftmoney.client.ClientShopData;
 import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.menu.ShopMenu;
 import com.artof.minecraftmoney.network.ShopBuyPacket;
@@ -22,7 +23,6 @@ import com.artof.minecraftmoney.util.CurrencyFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     private static final int ROW_HEIGHT = 12;
@@ -31,18 +31,20 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     private int maxPages = 1;
     private final List<ShopConfig.ShopEntry> allShopItems = new ArrayList<>();
     private final List<ShopConfig.ShopEntry> filteredItems = new ArrayList<>();
+    private final List<Integer> filteredItemIndices = new ArrayList<>();
     private final List<Button> actionButtons = new ArrayList<>();
     private EditBox searchBox;
     private String searchQuery = "";
     private final Inventory playerInventory;
     private int hoveredRowIndex = -1;
+    private int lastShopRevision = -1;
     
     public ShopScreen(ShopMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.playerInventory = playerInventory;
         this.imageWidth = 256;
         // Big screen mode: 20 rows, normal: 10 rows
-        boolean bigScreen = ShopConfig.isBigScreen();
+        boolean bigScreen = ClientShopData.isBigScreen();
         this.itemsPerPage = bigScreen ? 20 : 10;
         // Height: base 60 + (rows * ROW_HEIGHT) + footer 20
         this.imageHeight = bigScreen ? 300 : 180;
@@ -51,9 +53,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     @Override
     protected void init() {
         super.init();
-        
-        allShopItems.clear();
-        allShopItems.addAll(ShopConfig.getShopItems());
+        refreshShopItems();
         
         int centerX = (width - imageWidth) / 2;
         int centerY = (height - imageHeight) / 2;
@@ -71,6 +71,22 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         filterItems();
         rebuildButtons();
     }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        if (lastShopRevision != ClientShopData.getSyncRevision()) {
+            refreshShopItems();
+            filterItems();
+            rebuildButtons();
+        }
+    }
+
+    private void refreshShopItems() {
+        allShopItems.clear();
+        allShopItems.addAll(ClientShopData.getShopItems());
+        lastShopRevision = ClientShopData.getSyncRevision();
+    }
     
     private void onSearchChanged(String query) {
         this.searchQuery = query.toLowerCase().trim();
@@ -81,8 +97,12 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     
     private void filterItems() {
         filteredItems.clear();
+        filteredItemIndices.clear();
         if (searchQuery.isEmpty()) {
-            filteredItems.addAll(allShopItems);
+            for (int i = 0; i < allShopItems.size(); i++) {
+                filteredItems.add(allShopItems.get(i));
+                filteredItemIndices.add(i);
+            }
         } else if (searchQuery.startsWith("@")) {
             // Mod search: filter by mod ID prefix, optionally with item name filter
             // Format: @modid or @modid searchterms
@@ -100,46 +120,50 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                     itemSearch = "";
                 }
                 
-                filteredItems.addAll(allShopItems.stream()
-                    .filter(entry -> {
-                        // Extract mod ID from item ID (format: "modid:item_name")
-                        String itemId = entry.itemId().toLowerCase();
-                        int colonIndex = itemId.indexOf(':');
-                        if (colonIndex > 0) {
-                            String modId = itemId.substring(0, colonIndex);
-                            // Check if mod ID contains the prefix
-                            if (!modId.contains(modPrefix)) {
-                                return false;
-                            }
-                            // If there's an item search term, filter by item name too
-                            if (!itemSearch.isEmpty()) {
-                                return entry.displayName().toLowerCase().contains(itemSearch) ||
-                                       itemId.substring(colonIndex + 1).contains(itemSearch);
-                            }
-                            return true;
-                        }
-                        return false;
-                    })
-                    .collect(Collectors.toList()));
+                for (int i = 0; i < allShopItems.size(); i++) {
+                    ShopConfig.ShopEntry entry = allShopItems.get(i);
+                    String itemId = entry.itemId().toLowerCase();
+                    int colonIndex = itemId.indexOf(':');
+                    if (colonIndex <= 0) {
+                        continue;
+                    }
+
+                    String modId = itemId.substring(0, colonIndex);
+                    if (!modId.contains(modPrefix)) {
+                        continue;
+                    }
+
+                    if (!itemSearch.isEmpty() &&
+                            !entry.displayName().toLowerCase().contains(itemSearch) &&
+                            !itemId.substring(colonIndex + 1).contains(itemSearch)) {
+                        continue;
+                    }
+
+                    filteredItems.add(entry);
+                    filteredItemIndices.add(i);
+                }
             } else {
                 // Just "@" with nothing after - show all items
-                filteredItems.addAll(allShopItems);
+                for (int i = 0; i < allShopItems.size(); i++) {
+                    filteredItems.add(allShopItems.get(i));
+                    filteredItemIndices.add(i);
+                }
             }
         } else {
             // Regular search: filter by item name or full item ID
-            filteredItems.addAll(allShopItems.stream()
-                .filter(entry -> entry.displayName().toLowerCase().contains(searchQuery) ||
-                                 entry.itemId().toLowerCase().contains(searchQuery))
-                .collect(Collectors.toList()));
+            for (int i = 0; i < allShopItems.size(); i++) {
+                ShopConfig.ShopEntry entry = allShopItems.get(i);
+                if (entry.displayName().toLowerCase().contains(searchQuery) ||
+                        entry.itemId().toLowerCase().contains(searchQuery)) {
+                    filteredItems.add(entry);
+                    filteredItemIndices.add(i);
+                }
+            }
         }
         maxPages = Math.max(1, (int) Math.ceil((double) filteredItems.size() / itemsPerPage));
         if (currentPage >= maxPages) {
             currentPage = maxPages - 1;
         }
-    }
-    
-    private int getOriginalIndex(ShopConfig.ShopEntry entry) {
-        return allShopItems.indexOf(entry);
     }
     
     private void rebuildButtons() {
@@ -158,7 +182,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             int itemIndex = startIndex + i;
             if (itemIndex < filteredItems.size()) {
                 ShopConfig.ShopEntry entry = filteredItems.get(itemIndex);
-                final int originalIndex = getOriginalIndex(entry);
+                final int originalIndex = filteredItemIndices.get(itemIndex);
                 int rowY = centerY + 38 + i * ROW_HEIGHT;
                 
                 // Buy button - shift click buys a stack
@@ -270,7 +294,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 guiGraphics.drawString(font, CurrencyFormatter.format(buyPrice), 140, rowY + 2, buyColor);
                 
                 // Sell price - check if player has item in inventory
-                long sellPrice = entry.getSellPrice();
+                long sellPrice = ClientShopData.getSellPrice(entry.price());
                 boolean hasItem = playerHasItem(entry);
                 int sellColor = hasItem ? 0xFFAA00 : 0xFF5555;
                 guiGraphics.drawString(font, CurrencyFormatter.format(sellPrice), 180, rowY + 2, sellColor);
@@ -306,7 +330,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
                 if (itemIndex < filteredItems.size()) {
                     int rowY = y + 38 + i * ROW_HEIGHT;
                     if (mouseY >= rowY && mouseY < rowY + ROW_HEIGHT) {
-                        hoveredRowIndex = itemIndex;
+                        hoveredRowIndex = filteredItemIndices.get(itemIndex);
                         break;
                     }
                 }
@@ -324,8 +348,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         }
         
         // Render item tooltip if hovering over a row
-        if (hoveredRowIndex >= 0 && hoveredRowIndex < filteredItems.size()) {
-            ShopConfig.ShopEntry entry = filteredItems.get(hoveredRowIndex);
+        if (hoveredRowIndex >= 0 && hoveredRowIndex < allShopItems.size()) {
+            ShopConfig.ShopEntry entry = allShopItems.get(hoveredRowIndex);
             renderItemTooltip(guiGraphics, entry, mouseX, mouseY);
         } else {
             renderTooltip(guiGraphics, mouseX, mouseY);
@@ -367,7 +391,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         
         // Pricing info
         long buyPrice = entry.price();
-        long sellPrice = entry.getSellPrice();
+        long sellPrice = ClientShopData.getSellPrice(entry.price());
         long balance = ClientCurrencyData.getClientCurrency();
         
         ChatFormatting buyColor = balance >= buyPrice ? ChatFormatting.GREEN : ChatFormatting.RED;

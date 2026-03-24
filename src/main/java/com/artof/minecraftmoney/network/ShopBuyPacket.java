@@ -70,12 +70,7 @@ public record ShopBuyPacket(int itemIndex, int quantity) implements CustomPacket
                                 serverPlayer.level().registryAccess());
                         
                         serverPlayer.getInventory().add(purchaseStack);
-                        
-                        // Force sync inventory to client
-                        serverPlayer.getInventory().setChanged();
-                        serverPlayer.containerMenu.broadcastChanges();
-                        serverPlayer.inventoryMenu.broadcastChanges();
-                        serverPlayer.containerMenu.sendAllDataToRemote();
+                        forceSyncInventory(serverPlayer);
                         
                         String itemName = quantity > 1 ? quantity + "x " + entry.displayName() : entry.displayName();
                         serverPlayer.sendSystemMessage(
@@ -110,5 +105,16 @@ public record ShopBuyPacket(int itemIndex, int quantity) implements CustomPacket
             }
         }
         return false;
+    }
+
+    private static void forceSyncInventory(ServerPlayer serverPlayer) {
+        // The player is usually viewing a shop menu, not the inventory menu, so we need to
+        // explicitly refresh both. This fixes stacked purchases not visually updating until
+        // another inventory action happens client-side.
+        serverPlayer.getInventory().setChanged();
+        serverPlayer.containerMenu.broadcastChanges();
+        serverPlayer.containerMenu.sendAllDataToRemote();
+        serverPlayer.inventoryMenu.broadcastChanges();
+        serverPlayer.inventoryMenu.sendAllDataToRemote();
     }
 }

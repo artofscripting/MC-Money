@@ -1,6 +1,7 @@
 package com.artof.minecraftmoney.client.screen;
 
 import com.artof.minecraftmoney.client.ClientCurrencyData;
+import com.artof.minecraftmoney.client.ClientShopData;
 import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.menu.PortableShopMenu;
 import com.artof.minecraftmoney.network.ShopBuyPacket;
@@ -20,7 +21,6 @@ import com.artof.minecraftmoney.util.CurrencyFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A portable shop screen that works without a shop block.
@@ -33,18 +33,20 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
     private int maxPages = 1;
     private final List<ShopConfig.ShopEntry> allShopItems = new ArrayList<>();
     private final List<ShopConfig.ShopEntry> filteredItems = new ArrayList<>();
+    private final List<Integer> filteredItemIndices = new ArrayList<>();
     private final List<Button> actionButtons = new ArrayList<>();
     private EditBox searchBox;
     private String searchQuery = "";
     private final Inventory playerInventory;
     private int hoveredRowIndex = -1;
+    private int lastShopRevision = -1;
     
     public PortableShopScreen(PortableShopMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.playerInventory = playerInventory;
         this.imageWidth = 256;
         // Big screen mode: 20 rows, normal: 10 rows
-        boolean bigScreen = ShopConfig.isBigScreen();
+        boolean bigScreen = ClientShopData.isBigScreen();
         this.itemsPerPage = bigScreen ? 20 : 10;
         // Height: base 60 + (rows * ROW_HEIGHT) + footer 20
         this.imageHeight = bigScreen ? 300 : 180;
@@ -53,9 +55,7 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
     @Override
     protected void init() {
         super.init();
-        
-        allShopItems.clear();
-        allShopItems.addAll(ShopConfig.getShopItems());
+        refreshShopItems();
         
         int centerX = (width - imageWidth) / 2;
         int centerY = (height - imageHeight) / 2;
@@ -73,6 +73,22 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
         filterItems();
         rebuildButtons();
     }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        if (lastShopRevision != ClientShopData.getSyncRevision()) {
+            refreshShopItems();
+            filterItems();
+            rebuildButtons();
+        }
+    }
+
+    private void refreshShopItems() {
+        allShopItems.clear();
+        allShopItems.addAll(ClientShopData.getShopItems());
+        lastShopRevision = ClientShopData.getSyncRevision();
+    }
     
     private void onSearchChanged(String query) {
         this.searchQuery = query.toLowerCase().trim();
@@ -83,8 +99,12 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
     
     private void filterItems() {
         filteredItems.clear();
+        filteredItemIndices.clear();
         if (searchQuery.isEmpty()) {
-            filteredItems.addAll(allShopItems);
+            for (int i = 0; i < allShopItems.size(); i++) {
+                filteredItems.add(allShopItems.get(i));
+                filteredItemIndices.add(i);
+            }
         } else if (searchQuery.startsWith("@")) {
             // Mod search: filter by mod ID prefix, optionally with item name filter
             String afterAt = searchQuery.substring(1);
@@ -100,41 +120,48 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
                     itemSearch = "";
                 }
                 
-                filteredItems.addAll(allShopItems.stream()
-                    .filter(entry -> {
-                        String itemId = entry.itemId().toLowerCase();
-                        int colonIndex = itemId.indexOf(':');
-                        if (colonIndex > 0) {
-                            String modId = itemId.substring(0, colonIndex);
-                            if (!modId.contains(modPrefix)) {
-                                return false;
-                            }
-                            if (!itemSearch.isEmpty()) {
-                                return entry.displayName().toLowerCase().contains(itemSearch) ||
-                                       itemId.substring(colonIndex + 1).contains(itemSearch);
-                            }
-                            return true;
-                        }
-                        return false;
-                    })
-                    .collect(Collectors.toList()));
+                for (int i = 0; i < allShopItems.size(); i++) {
+                    ShopConfig.ShopEntry entry = allShopItems.get(i);
+                    String itemId = entry.itemId().toLowerCase();
+                    int colonIndex = itemId.indexOf(':');
+                    if (colonIndex <= 0) {
+                        continue;
+                    }
+
+                    String modId = itemId.substring(0, colonIndex);
+                    if (!modId.contains(modPrefix)) {
+                        continue;
+                    }
+
+                    if (!itemSearch.isEmpty() &&
+                            !entry.displayName().toLowerCase().contains(itemSearch) &&
+                            !itemId.substring(colonIndex + 1).contains(itemSearch)) {
+                        continue;
+                    }
+
+                    filteredItems.add(entry);
+                    filteredItemIndices.add(i);
+                }
             } else {
-                filteredItems.addAll(allShopItems);
+                for (int i = 0; i < allShopItems.size(); i++) {
+                    filteredItems.add(allShopItems.get(i));
+                    filteredItemIndices.add(i);
+                }
             }
         } else {
-            filteredItems.addAll(allShopItems.stream()
-                .filter(entry -> entry.displayName().toLowerCase().contains(searchQuery) ||
-                                 entry.itemId().toLowerCase().contains(searchQuery))
-                .collect(Collectors.toList()));
+            for (int i = 0; i < allShopItems.size(); i++) {
+                ShopConfig.ShopEntry entry = allShopItems.get(i);
+                if (entry.displayName().toLowerCase().contains(searchQuery) ||
+                        entry.itemId().toLowerCase().contains(searchQuery)) {
+                    filteredItems.add(entry);
+                    filteredItemIndices.add(i);
+                }
+            }
         }
         maxPages = Math.max(1, (int) Math.ceil((double) filteredItems.size() / itemsPerPage));
         if (currentPage >= maxPages) {
             currentPage = maxPages - 1;
         }
-    }
-    
-    private int getOriginalIndex(ShopConfig.ShopEntry entry) {
-        return allShopItems.indexOf(entry);
     }
     
     private void rebuildButtons() {
@@ -151,7 +178,7 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
             int itemIndex = startIndex + i;
             if (itemIndex < filteredItems.size()) {
                 ShopConfig.ShopEntry entry = filteredItems.get(itemIndex);
-                final int originalIndex = getOriginalIndex(entry);
+                final int originalIndex = filteredItemIndices.get(itemIndex);
                 int rowY = centerY + 38 + i * ROW_HEIGHT;
                 
                 Button buyButton = Button.builder(Component.literal("B"), button -> {
@@ -254,7 +281,7 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
                 int buyColor = balance >= buyPrice ? 0x55FF55 : 0xFF5555;
                 guiGraphics.drawString(font, CurrencyFormatter.format(buyPrice), 140, rowY + 2, buyColor);
                 
-                long sellPrice = entry.getSellPrice();
+                long sellPrice = ClientShopData.getSellPrice(entry.price());
                 boolean hasItem = playerHasItem(entry);
                 int sellColor = hasItem ? 0xFFAA00 : 0xFF5555;
                 guiGraphics.drawString(font, CurrencyFormatter.format(sellPrice), 180, rowY + 2, sellColor);
@@ -286,7 +313,7 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
                 if (itemIndex < filteredItems.size()) {
                     int rowY = y + 38 + i * ROW_HEIGHT;
                     if (mouseY >= rowY && mouseY < rowY + ROW_HEIGHT) {
-                        hoveredRowIndex = itemIndex;
+                        hoveredRowIndex = filteredItemIndices.get(itemIndex);
                         break;
                     }
                 }
@@ -303,8 +330,8 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
             return;
         }
         
-        if (hoveredRowIndex >= 0 && hoveredRowIndex < filteredItems.size()) {
-            ShopConfig.ShopEntry entry = filteredItems.get(hoveredRowIndex);
+        if (hoveredRowIndex >= 0 && hoveredRowIndex < allShopItems.size()) {
+            ShopConfig.ShopEntry entry = allShopItems.get(hoveredRowIndex);
             renderItemTooltip(guiGraphics, entry, mouseX, mouseY);
         } else {
             renderTooltip(guiGraphics, mouseX, mouseY);
@@ -337,7 +364,7 @@ public class PortableShopScreen extends AbstractContainerScreen<PortableShopMenu
         tooltipLines.add(Component.empty());
         
         long buyPrice = entry.price();
-        long sellPrice = entry.getSellPrice();
+        long sellPrice = ClientShopData.getSellPrice(entry.price());
         long balance = ClientCurrencyData.getClientCurrency();
         
         ChatFormatting buyColor = balance >= buyPrice ? ChatFormatting.GREEN : ChatFormatting.RED;

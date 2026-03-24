@@ -1,10 +1,10 @@
 package com.artof.minecraftmoney.network;
 
 import com.artof.minecraftmoney.MinecraftMoney;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -24,6 +24,12 @@ public class NetworkHandler {
                 SyncCurrencyPacket.TYPE,
                 SyncCurrencyPacket.STREAM_CODEC,
                 SyncCurrencyPacket::handle
+        );
+
+        registrar.playToClient(
+                SyncShopDataPacket.TYPE,
+                SyncShopDataPacket.STREAM_CODEC,
+                SyncShopDataPacket::handle
         );
         
         registrar.playToServer(
@@ -57,7 +63,7 @@ public class NetworkHandler {
         );
     }
     
-    public static void sendToPlayer(ServerPlayer player, SyncCurrencyPacket packet) {
+    public static void sendToPlayer(ServerPlayer player, CustomPacketPayload packet) {
         PacketDistributor.sendToPlayer(player, packet);
     }
     

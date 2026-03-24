@@ -10,6 +10,7 @@ import com.artof.minecraftmoney.data.PlayerCurrencyData;
 import com.artof.minecraftmoney.item.ModItems;
 import com.artof.minecraftmoney.menu.ModMenuTypes;
 import com.artof.minecraftmoney.network.NetworkHandler;
+import com.artof.minecraftmoney.network.SyncShopDataPacket;
 import com.artof.minecraftmoney.network.SyncCurrencyPacket;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -93,6 +94,7 @@ public class MinecraftMoney {
         // Load enchanted books from the data-driven registry
         // This includes modded enchantments
         ShopConfig.loadEnchantedBooksFromRegistry(event.getServer().registryAccess());
+        ShopConfig.validateShopItems(event.getServer().registryAccess());
     }
     
     @SubscribeEvent
@@ -111,6 +113,7 @@ public class MinecraftMoney {
             }
             
             PacketDistributor.sendToPlayer(serverPlayer, new SyncCurrencyPacket(currency));
+            NetworkHandler.sendToPlayer(serverPlayer, SyncShopDataPacket.fromCurrentConfig());
         }
     }
     

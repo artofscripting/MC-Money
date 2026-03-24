@@ -44,8 +44,8 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
     private UUID ownerUUID;
     private String ownerName = "";
     private int tickCounter = 0;
-    private int totalEarned = 0;
-    private int pendingEarnings = 0; // Earnings while owner was offline
+    private long totalEarned = 0;
+    private long pendingEarnings = 0; // Earnings while owner was offline
     private long totalFEEarned = 0; // Total currency earned from FE
     
     // Energy storage that instantly converts FE to currency
@@ -134,7 +134,7 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         return ownerUUID;
     }
     
-    public int getTotalEarned() {
+    public long getTotalEarned() {
         return totalEarned;
     }
     
@@ -142,15 +142,15 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         return totalFEEarned;
     }
     
-    public int getPendingEarnings() {
+    public long getPendingEarnings() {
         return pendingEarnings;
     }
     
     /**
      * Called when the owner logs in to claim pending earnings
      */
-    public int claimPendingEarnings() {
-        int claimed = pendingEarnings;
+    public long claimPendingEarnings() {
+        long claimed = pendingEarnings;
         pendingEarnings = 0;
         if (claimed > 0) {
             setChanged();
@@ -261,8 +261,8 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         if (ownerName != null) {
             tag.putString("OwnerName", ownerName);
         }
-        tag.putInt("TotalEarned", totalEarned);
-        tag.putInt("PendingEarnings", pendingEarnings);
+        tag.putLong("TotalEarned", totalEarned);
+        tag.putLong("PendingEarnings", pendingEarnings);
         tag.putLong("TotalFEEarned", totalFEEarned);
     }
     
@@ -276,8 +276,8 @@ public class PersonalSellerBlockEntity extends BlockEntity implements MenuProvid
         if (tag.contains("OwnerName")) {
             ownerName = tag.getString("OwnerName");
         }
-        totalEarned = tag.getInt("TotalEarned");
-        pendingEarnings = tag.getInt("PendingEarnings");
+        totalEarned = tag.getLong("TotalEarned");
+        pendingEarnings = tag.getLong("PendingEarnings");
         totalFEEarned = tag.getLong("TotalFEEarned");
     }
     

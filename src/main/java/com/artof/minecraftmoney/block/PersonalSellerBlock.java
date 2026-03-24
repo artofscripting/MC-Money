@@ -2,6 +2,8 @@ package com.artof.minecraftmoney.block;
 
 import com.artof.minecraftmoney.block.entity.PersonalSellerBlockEntity;
 import com.artof.minecraftmoney.block.entity.ModBlockEntities;
+import com.artof.minecraftmoney.network.NetworkHandler;
+import com.artof.minecraftmoney.network.SyncShopDataPacket;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -71,6 +73,7 @@ public class PersonalSellerBlock extends BaseEntityBlock {
             if (blockEntity instanceof PersonalSellerBlockEntity sellerEntity) {
                 // Only owner can access
                 if (sellerEntity.isOwner(player)) {
+                    NetworkHandler.sendToPlayer(serverPlayer, SyncShopDataPacket.fromCurrentConfig());
                     serverPlayer.openMenu(sellerEntity, pos);
                 } else {
                     player.sendSystemMessage(Component.literal("This seller belongs to " + sellerEntity.getOwnerName()));

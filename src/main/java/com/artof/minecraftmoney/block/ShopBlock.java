@@ -1,6 +1,8 @@
 package com.artof.minecraftmoney.block;
 
 import com.artof.minecraftmoney.block.entity.ShopBlockEntity;
+import com.artof.minecraftmoney.network.NetworkHandler;
+import com.artof.minecraftmoney.network.SyncShopDataPacket;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,6 +44,7 @@ public class ShopBlock extends BaseEntityBlock {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof ShopBlockEntity shopBlockEntity) {
+                NetworkHandler.sendToPlayer(serverPlayer, SyncShopDataPacket.fromCurrentConfig());
                 serverPlayer.openMenu(shopBlockEntity, pos);
             }
         }

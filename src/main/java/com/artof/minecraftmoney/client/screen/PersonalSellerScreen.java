@@ -2,13 +2,13 @@ package com.artof.minecraftmoney.client.screen;
 
 import com.artof.minecraftmoney.MinecraftMoney;
 import com.artof.minecraftmoney.client.ClientCurrencyData;
+import com.artof.minecraftmoney.client.ClientShopData;
 import com.artof.minecraftmoney.config.ShopConfig;
 import com.artof.minecraftmoney.menu.PersonalSellerMenu;
 import com.artof.minecraftmoney.util.CurrencyFormatter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -79,9 +79,9 @@ public class PersonalSellerScreen extends AbstractContainerScreen<PersonalSeller
     }
     
     private long getSellPriceForItem(ItemStack stack) {
-        for (ShopConfig.ShopEntry entry : ShopConfig.getShopItems()) {
+        for (ShopConfig.ShopEntry entry : ClientShopData.getShopItems()) {
             if (entry.matches(stack)) {
-                return entry.getSellPrice();
+                return ClientShopData.getSellPrice(entry.price());
             }
         }
         return 0;

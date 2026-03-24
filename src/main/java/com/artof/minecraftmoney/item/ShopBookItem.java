@@ -1,6 +1,8 @@
 package com.artof.minecraftmoney.item;
 
 import com.artof.minecraftmoney.menu.PortableShopMenu;
+import com.artof.minecraftmoney.network.NetworkHandler;
+import com.artof.minecraftmoney.network.SyncShopDataPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +32,7 @@ public class ShopBookItem extends Item {
         
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             // Open the portable shop screen
+            NetworkHandler.sendToPlayer(serverPlayer, SyncShopDataPacket.fromCurrentConfig());
             serverPlayer.openMenu(new SimpleMenuProvider(
                     (containerId, playerInventory, p) -> new PortableShopMenu(containerId, playerInventory),
                     Component.translatable("gui.minecraftmoney.shop_book")
