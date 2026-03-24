@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -511,7 +512,7 @@ public class ShopConfig {
     }
     
     public static boolean isBigScreen() {
-        return BIG_SCREEN.get();
+        return bigScreen;
     }
     
     public static int getPersonalSellerMaxItems() {
@@ -600,16 +601,14 @@ public class ShopConfig {
                     String potionId = itemId.substring("lingering_potion:".length());
                     parsedShopItems.add(new ShopEntry("minecraft:lingering_potion", price, displayName, "potion:" + potionId));
                     validCount++;
-                } else if (isValidItem(itemId)) {
-                    // Regular item
+                } else {
+                    // Keep regular items even if the item registry is not fully ready yet.
+                    // They are validated after the server finishes loading registries.
                     parsedShopItems.add(new ShopEntry(itemId, price, displayName, null));
                     validCount++;
-                } else {
-                    LOGGER.warn("Shop item '{}' ({}) does not exist in the item registry and will be skipped", 
-                            displayName, itemId);
-                    invalidCount++;
                 }
             } catch (NumberFormatException e) {
+                invalidCount++;
                 LOGGER.warn("Invalid price or level format for shop entry: {}", entry);
             }
         }
@@ -639,6 +638,27 @@ public class ShopConfig {
         
         // Reset the flag so modded enchantments get loaded on next server start
         enchantedBooksLoaded = false;
+    }
+
+    public static void validateShopItems(RegistryAccess registryAccess) {
+        Registry<Enchantment> enchantmentRegistry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
+        int removedCount = 0;
+
+        for (Iterator<ShopEntry> iterator = parsedShopItems.iterator(); iterator.hasNext(); ) {
+            ShopEntry entry = iterator.next();
+            if (isResolvableEntry(entry, enchantmentRegistry)) {
+                continue;
+            }
+
+            iterator.remove();
+            removedCount++;
+            LOGGER.warn("Shop item '{}' ({}) could not be resolved after registry load and was removed",
+                    entry.displayName(), entry.itemId());
+        }
+
+        if (removedCount > 0) {
+            LOGGER.info("Removed {} unresolved shop entries after registry validation", removedCount);
+        }
     }
     
     /**
@@ -918,9 +938,33 @@ public class ShopConfig {
         var item = BuiltInRegistries.ITEM.get(location);
         return item != null && item != Items.AIR;
     }
+
+    private static boolean isResolvableEntry(ShopEntry entry, Registry<Enchantment> enchantmentRegistry) {
+        if (!isValidItem(entry.itemId())) {
+            return false;
+        }
+
+        if (!entry.hasComponentData()) {
+            return true;
+        }
+
+        if (entry.componentString().startsWith("potion:")) {
+            String potionId = entry.getPotionId();
+            ResourceLocation potionLocation = potionId == null ? null : ResourceLocation.tryParse(potionId);
+            return potionLocation != null && BuiltInRegistries.POTION.containsKey(potionLocation);
+        }
+
+        if (entry.componentString().startsWith("enchanted_book:")) {
+            String enchantmentId = entry.getEnchantmentId();
+            ResourceLocation enchantmentLocation = enchantmentId == null ? null : ResourceLocation.tryParse(enchantmentId);
+            return enchantmentLocation != null && enchantmentRegistry.containsKey(enchantmentLocation);
+        }
+
+        return true;
+    }
     
     public static List<ShopEntry> getShopItems() {
-        return parsedShopItems;
+        return List.copyOf(parsedShopItems);
     }
     
     public static double getSellMultiplier() {
